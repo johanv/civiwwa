@@ -1,0 +1,14 @@
+# Ignore backup files from merge conflicts
+
+*.orig
+
+# Ignore configuration files that may contain sensitive information.
+/docroot/sites/default
+
+# Ignore paths that contain user-generated content.
+/docroot/sites/*/files
+/docroot/sites/*/private
+/docroot/sites/default/*.settings.php
+/docroot/sites/all/modules/custom_civicrm_extensions/cache
+/dumps
+
