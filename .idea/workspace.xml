@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b85e6f3d-4a43-46c0-ac36-1925e6757ecc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/setup/l10n/civicrm-4.7.13-l10n.tar.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/civiwwa.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/setup/build.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.docker/buildkit/Dockerfile" afterPath="$PROJECT_DIR$/.docker/buildkit/Dockerfile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docker-compose.yml" afterPath="$PROJECT_DIR$/docker-compose.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docroot/sites/all/modules/civicrm/drupal/drush/civicrm.drush.inc" afterPath="$PROJECT_DIR$/docroot/sites/all/modules/civicrm/drupal/drush/civicrm.drush.inc" />
-    </list>
+    <list default="true" id="b85e6f3d-4a43-46c0-ac36-1925e6757ecc" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
