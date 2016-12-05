@@ -24,7 +24,10 @@ RUN groupadd civi \
 user=root \n\
 password=blablablaroot \n\
 host=db " > /home/civi/.my.cnf \
-  && su -c "/opt/buildkit/bin/amp config:set --db_type=mysql_mycnf --hosts_type=none --perm_type=worldWritable" civi
+  && su -c "/opt/buildkit/bin/amp config:set --db_type=mysql_mycnf --hosts_type=none --perm_type=worldWritable" civi \
+  && cp /home/civi/.my.cnf /root
+
+RUN apt-get install -yq wget
 
 ENV PATH /opt/buildkit/bin:$PATH
 
