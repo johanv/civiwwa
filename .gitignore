@@ -11,4 +11,4 @@
 /docroot/sites/default/*.settings.php
 /docroot/sites/all/modules/custom_civicrm_extensions/cache
 /dumps
-
+/.idea/workspace.xml
