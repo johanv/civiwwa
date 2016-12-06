@@ -12,3 +12,4 @@
 /docroot/sites/all/modules/custom_civicrm_extensions/cache
 /dumps
 /.idea/workspace.xml
+/setup/l10n
