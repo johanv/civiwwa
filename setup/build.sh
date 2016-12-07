@@ -38,6 +38,10 @@ $DRUSH fra -y
 $DRUSH cc all
 $DRUSH cc all
 
+## deploy
+
+$DRUSH en -y civiwwa_deploy
+
 ## TODO: enable devel.
 
 $DRUSH vset clean_url 0
