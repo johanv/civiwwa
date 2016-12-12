@@ -1,7 +1,7 @@
-diff --git a/drush/civicrm.drush.inc b/drush/civicrm.drush.inc
+diff --git a/docroot/sites/all/modules/civicrm/drupal/drush/civicrm.drush.inc b/docroot/sites/all/modules/civicrm/drupal/drush/civicrm.drush.inc
 index 414ecd5..5185010 100644
---- a/drush/civicrm.drush.inc
-+++ b/drush/civicrm.drush.inc
+--- a/docroot/sites/all/modules/civicrm/drupal/drush/civicrm.drush.inc
++++ b/docroot/sites/all/modules/civicrm/drupal/drush/civicrm.drush.inc
 @@ -401,7 +401,7 @@ function _civicrm_install_db($dbuser, $dbpass, $dbhost, $dbname,
    }
  
