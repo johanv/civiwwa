@@ -24,6 +24,7 @@ $DRUSH si minimal --db-url=mysql://dev:DbDevPw@db/drupal --db-su=root --db-su-pw
 $DRUSH cc all
 
 $CHMOD -R ugo+rwx sites/default
+echo Installing CiviCRM.
 $DRUSH --include=sites/all/modules/civicrm/drupal/drush cvi --dbuser=dev --dbpass=DbDevPw --dbhost=db --dbname=civi --destination=./sites/all/modules --site_url=localhost --lang=nl_NL --langtarfile=$L10N/civicrm-4.7.13-l10n.tar.gz
 $CHMOD -R go-w sites/default
 
