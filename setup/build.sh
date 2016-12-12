@@ -10,6 +10,7 @@ mkdir $L10N 2> /dev/null
 
 pushd $L10N
 wget -nc https://download.civicrm.org/civicrm-4.7.13-l10n.tar.gz
+rm civicrm-4.7.13-l10n.tar
 popd
 
 mysql -h db << EOF
@@ -22,6 +23,7 @@ pushd $DOCROOT
 $DRUSH si minimal --db-url=mysql://dev:DbDevPw@db/drupal --db-su=root --db-su-pw=blablablaroot --site-name="CivIWWA" --locale=nl --account-name=civiwwadmin --account-mail=helpdesk@johanv.org -y
 
 $CHMOD -R ugo+rwx sites/default
+drush cc all
 echo Installing CiviCRM.
 $DRUSH --include=/var/www/html/sites/all/modules/civicrm/drupal/drush cvi --dbuser=dev --dbpass=DbDevPw --dbhost=db --dbname=civi --destination=./sites/all/modules --site_url=localhost --lang=nl_NL --langtarfile=$L10N/civicrm-4.7.13-l10n.tar.gz
 $CHMOD -R go-w sites/default
