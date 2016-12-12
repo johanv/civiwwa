@@ -401,7 +401,7 @@ function _civicrm_install_db($dbuser, $dbpass, $dbhost, $dbname,
   }
 
   // setup database with civicrm structure and data
-  $dsn = "mysqli://{$dbuser}:{$dbpass}@{$dbhost}/{$dbname}?new_link=true";
+  $dsn = "mysql://{$dbuser}:{$dbpass}@{$dbhost}/{$dbname}?new_link=true";
   drush_log(dt("Loading CiviCRM database structure .."));
   civicrm_source($dsn, $sqlPath . '/civicrm.mysql');
   drush_log(dt("Loading CiviCRM database with required data .."));
@@ -576,7 +576,11 @@ function civicrm_drush_help($section) {
 function drush_civicrm_ext_list() {
   civicrm_initialize();
   try{
-    $result = civicrm_api('extension', 'get', array('version' => 3));
+    $result = civicrm_api3('extension', 'get', array(
+      'options' => array(
+        'limit' => 0,
+      ),
+    ));
     $rows = array(array(dt('App name'), dt('Status')));
     foreach ($result['values'] as $k => $extension_data) {
       $rows[] = array(

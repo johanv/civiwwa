@@ -2,6 +2,5 @@ name = Deployment module
 description = This module will enable everything else.
 core = 7.x
 package = CivIWWA
-dependencies[] = migrate
 dependencies[] = migrate_ui
-dependencies[] = civimigrate
+dependencies[] = civiwwa_migrate
