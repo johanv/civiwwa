@@ -1,8 +1,0 @@
-diff --git a/civimigrate.info b/civimigrate.info
-index 39debc8..650ed68 100755
---- a/civimigrate.info
-+++ b/civimigrate.info
-@@ -1 +1,2 @@
--"name = civimigrate" 
-+name = civimigrate
-+dependencies[] = migrate

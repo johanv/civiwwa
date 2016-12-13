@@ -1,2 +1,0 @@
-name = civimigrate
-dependencies[] = migrate

@@ -1,0 +1,4 @@
+name = civimigrate
+dependencies[] = migrate
+core = 7.x
+files[] = destinations/civicrm_api.inc
