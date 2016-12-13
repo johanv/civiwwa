@@ -70,5 +70,8 @@ class peopleMigration extends Civimigration {
     else {
       $row->preferred_language = 'nl_NL';
     }
+    if (!empty($row->birth_date)) {
+      $row->birth_date = date('Y-m-d', strtotime($row->birth_date));
+    }
   }
 }
