@@ -10,6 +10,8 @@
 /docroot/sites/*/private
 /docroot/sites/default/*.settings.php
 /docroot/sites/all/modules/custom_civicrm_extensions/cache
+/docroot/sites/all/modules/civicrm/l10n
+/docroot/sites/all/modules/civicrm/sql/civicrm_data.*
 /dumps
 /.idea/workspace.xml
 /setup/l10n
