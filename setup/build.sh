@@ -1,16 +1,16 @@
 #!/bin/bash
 
 DRUSH=drush8
-CHGRP=chgrp
-CHMOD=chmod
 DOCROOT=/var/www/html
 L10N=`dirname ${0}`/l10n
 
 mkdir $L10N 2> /dev/null
 
 pushd $L10N
+# CiviCRM installation seems to unzip the tar.gz file, and leaves
+# a tar file. So if a tar file already exists, just zip it again.
+gzip civicrm-4.7.13-l10n.tar
 wget -nc https://download.civicrm.org/civicrm-4.7.13-l10n.tar.gz
-rm civicrm-4.7.13-l10n.tar
 popd
 
 mysql -h db << EOF
@@ -22,11 +22,11 @@ EOF
 pushd $DOCROOT
 $DRUSH si minimal --db-url=mysql://dev:DbDevPw@db/drupal --db-su=root --db-su-pw=blablablaroot --site-name="CivIWWA" --locale=nl --account-name=civiwwadmin --account-mail=helpdesk@johanv.org -y
 
-$CHMOD -R ugo+rwx sites/default
+chmod -R ugo+rwx sites/default
 drush cc all
 echo Installing CiviCRM.
 $DRUSH --include=/var/www/html/sites/all/modules/civicrm/drupal/drush cvi --dbuser=dev --dbpass=DbDevPw --dbhost=db --dbname=civi --destination=./sites/all/modules --site_url=localhost --lang=nl_NL --langtarfile=$L10N/civicrm-4.7.13-l10n.tar.gz
-$CHMOD -R go-w sites/default
+chmod -R go-w sites/default
 
 APACHE_GROUP=www-data
 
@@ -47,8 +47,9 @@ $DRUSH en -y civiwwa_deploy
 
 $DRUSH vset clean_url 0
 
-# chgrp inside the container, to get the correct id for www-data.
-# $CHGRP -R $APACHE_GROUP /var/www/html/sites/default/files
-# $CHMOD -R ug+rwX sites/default/files
+chown -R civi:www-data /var/www/html/sites/default/files
+chmod -R ug+rwX sites/default/files
+
+$DRUSH uli --uri=http://localhost
 
 popd
