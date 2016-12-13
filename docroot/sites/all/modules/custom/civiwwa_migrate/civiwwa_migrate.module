@@ -24,6 +24,9 @@
 function civiwwa_migrate_migrate_api() {
   $api = array(
     'api' => 2,
+    'migrations' => [
+      'People' => ['class_name' => 'peopleMigration'],
+    ]
   );
   return $api;
 }

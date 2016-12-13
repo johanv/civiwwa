@@ -6,7 +6,7 @@
  */
 function civimigrate_example_people_schema() {
   $schema['civimigrate_example_people_names'] = civimigrate_example_people_schema_names();
-  $schema['civimigrate_example_people_payments'] = civimigrate_example_people_schema_payments(); 
+  $schema['civimigrate_example_people_payments'] = civimigrate_example_people_schema_payments();
   return $schema;
 }
 
@@ -21,8 +21,8 @@ function civimigrate_example_people_uninstall() {
 }
 
 function civimigrate_example_people_disable() {
-  Migration::deregisterMigration('BeerTerm');
-  Migration::deregisterMigration('BeerUser');
+  Migration::deregisterMigration('peopleMigration');
+  Migration::deregisterMigration('paymentsMigration');
 }
 
 

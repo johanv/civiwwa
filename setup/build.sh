@@ -16,6 +16,9 @@ popd
 mysql -h db << EOF
 drop database if exists civi;
 create database civi;
+-- recreate drupal to make sure migrations are gone.
+drop database if exists drupal;
+create database drupal;
 grant all on civi.* to dev;
 EOF
 
