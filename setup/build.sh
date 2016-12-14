@@ -53,6 +53,10 @@ $DRUSH vset clean_url 0
 chown -R civi:www-data /var/www/html/sites/default/files
 chmod -R ug+rwX sites/default/files
 
+$DRUSH cc all
+$DRUSH migrate-register
+$DRUSH ms
+$DRUSH migrate-import people
 $DRUSH uli --uri=http://localhost
 
 popd
