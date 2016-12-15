@@ -28,7 +28,7 @@ $DRUSH si minimal --db-url=mysql://dev:DbDevPw@db/drupal --db-su=root --db-su-pw
 chmod -R ugo+rwx sites/default
 drush cc all
 echo Installing CiviCRM.
-$DRUSH --include=/var/www/html/sites/all/modules/civicrm/drupal/drush cvi --dbuser=dev --dbpass=DbDevPw --dbhost=db --dbname=civi --destination=./sites/all/modules --site_url=localhost --lang=nl_NL --langtarfile=$L10N/civicrm-4.7.13-l10n.tar.gz
+$DRUSH --include=$DOCROOT/sites/all/modules/civicrm/drupal/drush cvi --dbuser=dev --dbpass=DbDevPw --dbhost=db --dbname=civi --destination=./sites/all/modules --site_url=localhost --lang=nl_NL --langtarfile=$L10N/civicrm-4.7.13-l10n.tar.gz
 chmod -R go-w sites/default
 
 APACHE_GROUP=www-data
