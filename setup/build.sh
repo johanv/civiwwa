@@ -58,5 +58,8 @@ $DRUSH migrate-register
 $DRUSH ms
 $DRUSH migrate-import people
 
+chown -R civi:www-data sites/default/files
+chmod -R ug+rwX sites/default/files
+
 $DRUSH uli --uri=http://localhost
 popd
