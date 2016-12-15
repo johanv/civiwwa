@@ -50,16 +50,13 @@ $DRUSH en -y civiwwa_deploy
 
 $DRUSH vset clean_url 0
 
-chown -R civi:www-data /var/www/html/sites/default/files
+chown -R civi:www-data sites/default/files
 chmod -R ug+rwX sites/default/files
 
 $DRUSH cc all
 $DRUSH migrate-register
 $DRUSH ms
 $DRUSH migrate-import people
-
-chown -R civi:www-data /var/www/html/sites/default/files
-chmod -R ug+rwX sites/default/files
 
 $DRUSH uli --uri=http://localhost
 popd
