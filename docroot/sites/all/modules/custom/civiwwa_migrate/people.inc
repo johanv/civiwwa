@@ -49,10 +49,12 @@ class peopleMigration extends Civimigration {
 
     $this->addFieldMapping('first_name', 'first_name');
     $this->addFieldMapping('last_name', 'last_name');
-    $this->addFieldMapping('street_address', 'street_address');
-    $this->addFieldMapping('postal_code', 'postal_code');
     $this->addFieldMapping('preferred_language', 'preferred_language');
-    $this->addFieldMapping('city', 'city');
+
+    // Migrating the address like this does not seem to work:
+    // $this->addFieldMapping('street_address', 'street_address');
+    // $this->addFieldMapping('postal_code', 'postal_code');
+    // $this->addFieldMapping('city', 'city');
     $this->addFieldMapping('phone', 'phone');
     $this->addFieldMapping('email', 'email');
     $this->addFieldMapping('birth_date', 'birth_date');
@@ -73,5 +75,17 @@ class peopleMigration extends Civimigration {
     if (!empty($row->birth_date)) {
       $row->birth_date = date('Y-m-d', strtotime($row->birth_date));
     }
+  }
+
+  public function complete($entity, stdClass $row) {
+    if (!empty($row->city)) {
+      return;
+    }
+    civicrm_api3('Address', 'create', [
+      'contact_id' => $entity['contact_id'],
+      'street_address' => $row->street_address,
+      'postal_code' => $row->postal_code,
+      'city' => $row->city,
+    ]);
   }
 }
