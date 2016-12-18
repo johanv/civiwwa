@@ -78,14 +78,15 @@ class peopleMigration extends Civimigration {
   }
 
   public function complete($entity, stdClass $row) {
-    if (!empty($row->city)) {
+    if (empty($row->postal_code)) {
       return;
     }
-    civicrm_api3('Address', 'create', [
-      'contact_id' => $entity['contact_id'],
+    $result = civicrm_api3('Address', 'create', [
+      'contact_id' => $entity['id'],
       'street_address' => $row->street_address,
       'postal_code' => $row->postal_code,
       'city' => $row->city,
+      'location_type_id' => 1,
     ]);
   }
 }
