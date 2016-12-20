@@ -1,0 +1,9 @@
+name = civiwwa_users_roles
+description = Users and roles for CivIWWA.
+core = 7.x
+package = CivIWWA
+version = 7.x-1.0
+features[features_api][] = api:2
+features[user_role][] = CivIWWA power user
+features_exclude[dependencies][features] = features
+project path = sites/all/modules/custom

@@ -37,14 +37,14 @@ APACHE_GROUP=www-data
 rm -rf sites/default/files/civicrm/templates_c/*
 rm -rf sites/default/files/civicrm/ConfigAndLog/CiviCRM.*
 
+## deploy
+
+$DRUSH en -y civiwwa_deploy
+
 ## revert features, by design followed by double cache clear
 $DRUSH fra -y
 $DRUSH cc all
 $DRUSH cc all
-
-## deploy
-
-$DRUSH en -y civiwwa_deploy
 
 ## TODO: enable devel.
 
