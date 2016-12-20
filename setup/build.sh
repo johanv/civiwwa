@@ -41,10 +41,13 @@ rm -rf sites/default/files/civicrm/ConfigAndLog/CiviCRM.*
 
 $DRUSH en -y civiwwa_deploy
 
-## revert features, by design followed by double cache clear
+## revert features
 $DRUSH fra -y
 $DRUSH cc all
-$DRUSH cc all
+
+## create users again, so that they assigned the correct roles.
+$DRUSH dis -y civiwwa_users_roles
+$DRUSH en -y civiwwa_deploy
 
 ## TODO: enable devel.
 
