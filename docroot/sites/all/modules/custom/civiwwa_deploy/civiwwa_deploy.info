@@ -5,4 +5,4 @@ package = CivIWWA
 dependencies[] = migrate_ui
 dependencies[] = civiwwa_migrate
 dependencies[] = features
-dependencies[] = civiwwa_users
+dependencies[] = civiwwa_users_roles
