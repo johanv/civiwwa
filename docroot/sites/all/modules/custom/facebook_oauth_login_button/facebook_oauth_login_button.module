@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ */
+function facebook_oauth_login_button_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'user_login' || $form_id == 'user_login_block') {
+    $items = array();
+    $items[] = fb_signin_button();
+    $form['fb_signin'] = array(
+      '#markup' => theme('item_list', array('items' => $items)),
+    );
+  return $form;
+  }
+
+}
+
+/**
+ * returns an image link for signing in with twitter
+ */
+function fb_signin_button() {
+ $link = fboauth_action_display('connect');
+ return $link;
+}

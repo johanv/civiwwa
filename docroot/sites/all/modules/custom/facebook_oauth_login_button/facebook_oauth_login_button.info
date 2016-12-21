@@ -1,0 +1,6 @@
+name = Facebook OAuth Login Button
+description = Adds the connect button to the login block
+core = 7.x
+version = 1.x
+files[] = facebook_oauth_login_button.module
+dependencies[] = fboauth

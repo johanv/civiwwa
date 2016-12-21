@@ -1,0 +1,4 @@
+fboauth
+=======
+https://www.drupal.org/node/1794458
+https://www.drupal.org/files/fboauth-keep_the_scheme_consistent-1794458-1.patch

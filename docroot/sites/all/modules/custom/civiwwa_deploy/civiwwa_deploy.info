@@ -6,3 +6,4 @@ dependencies[] = migrate_ui
 dependencies[] = civiwwa_migrate
 dependencies[] = features
 dependencies[] = civiwwa_users_roles
+dependencies[] = facebook_oauth_login_button
