@@ -1,0 +1,14 @@
+{
+  "lid_van": {
+    "name_a_b": "lid_van",
+    "label_a_b": "Lid van club",
+    "name_b_a": "club_van",
+    "label_b_a": "Club van",
+    "description": "Geeft aan wie er bij welke club(s) hoort.",
+    "contact_type_a": "Individual",
+    "contact_type_b": "Organization",
+    "contact_sub_type_b": "club",
+    "is_reserved": 1,
+    "is_active": "1"
+  }
+}

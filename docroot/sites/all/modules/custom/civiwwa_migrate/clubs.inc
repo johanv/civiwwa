@@ -60,6 +60,7 @@ class clubsMigration extends Civimigration {
 
     $this->addFieldMapping('organization_name', 'club');
     $this->addFieldMapping('contact_type')->defaultValue('Organization');
+    $this->addFieldMapping('contact_sub_type')->defaultValue('Club');
   }
 
   public function prepareRow($row) {

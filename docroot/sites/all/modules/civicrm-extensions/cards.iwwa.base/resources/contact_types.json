@@ -1,0 +1,9 @@
+{
+  "Ploeg": {
+    "name": "Club",
+    "label": "club",
+    "description": "Kaartersclub",
+    "parent_id": 3,
+    "is_active": 1
+  }
+}
