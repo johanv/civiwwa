@@ -60,6 +60,8 @@ $DRUSH cc all
 $DRUSH migrate-register
 $DRUSH ms
 $DRUSH migrate-import people
+$DRUSH migrate-import clubs
+$DRUSH ms
 
 chown -R civi:www-data sites/default/files
 chmod -R ug+rwX sites/default/files

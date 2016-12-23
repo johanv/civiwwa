@@ -17,13 +17,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class peopleMigration extends Civimigration {
+/**
+ * Created by PhpStorm.
+ * User: johanv
+ * Date: 12/23/16
+ * Time: 11:03 AM
+ */
+class clubsMigration extends Civimigration {
   protected $entity = 'contact';
   protected $debug = 1;
 
-  public function __construct($arguments) {
+  public function __construct(array $arguments) {
     parent::__construct($arguments);
-    $this->description = t('Import contacts');
+    $this->description = t('Import clubs');
 
     $columns = [
       ['last_name', t('Last Name')],
@@ -46,54 +52,28 @@ class peopleMigration extends Civimigration {
     $this->map = new MigrateSQLMap($this->machineName,
       // Source keys
       [
-        'last_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
-        'first_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
+        'club' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
       ]
       // Corresponding destination keys
       , MigrateDestinationCivicrmApi::getKeySchema()
     );
 
-    $this->addFieldMapping('first_name', 'first_name');
-    $this->addFieldMapping('last_name', 'last_name');
-    $this->addFieldMapping('preferred_language', 'preferred_language');
-
-    // Migrating the address like this does not seem to work:
-    // $this->addFieldMapping('street_address', 'street_address');
-    // $this->addFieldMapping('postal_code', 'postal_code');
-    // $this->addFieldMapping('city', 'city');
-    $this->addFieldMapping('phone', 'phone');
-    $this->addFieldMapping('email', 'email');
-    $this->addFieldMapping('birth_date', 'birth_date');
-    $this->addFieldMapping('contact_type')->defaultValue('Individual');
-    $this->addFieldMapping('country')->defaultValue('BE');
+    $this->addFieldMapping('organization_name', 'club');
+    $this->addFieldMapping('contact_type')->defaultValue('Organization');
   }
 
   public function prepareRow($row) {
     if (!parent::prepareRow($row)) {
       return FALSE;
     }
-    if ($row->preferred_language == 'F') {
-      $row->preferred_language = 'fr_FR';
-    }
-    else {
-      $row->preferred_language = 'nl_NL';
-    }
-    if (!empty($row->birth_date)) {
-      $row->birth_date = date('Y-m-d', strtotime($row->birth_date));
+    $clubsToIgnore = [
+      '',
+      '***',
+      '-',
+    ];
+    if (in_array($row->club, $clubsToIgnore)) {
+      return FALSE;
     }
     return TRUE;
-  }
-
-  public function complete($entity, stdClass $row) {
-    if (empty($row->postal_code)) {
-      return;
-    }
-    $result = civicrm_api3('Address', 'create', [
-      'contact_id' => $entity['id'],
-      'street_address' => $row->street_address,
-      'postal_code' => $row->postal_code,
-      'city' => $row->city,
-      'location_type_id' => 1,
-    ]);
   }
 }

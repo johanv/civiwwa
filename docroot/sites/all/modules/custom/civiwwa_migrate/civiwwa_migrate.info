@@ -6,3 +6,4 @@ dependencies[] = civimigrate
 
 files[] = civiwwa_migrate.module
 files[] = people.inc
+files[] = clubs.inc
