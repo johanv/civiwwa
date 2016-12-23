@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<extension key="be.chiro.civi.idcache" type="module">
+  <file>idcache</file>
+  <name>ID cache</name>
+  <description>A cache for ID's of your custom CiviCRM entities.</description>
+  <license>AGPL-3.0</license>
+  <maintainer>
+    <author>Chirojeugd-Vlaanderen vzw</author>
+    <email>helpdesk@chiro.be</email>
+  </maintainer>
+  <urls>
+    <url desc="Main Extension Page">https://github.com/Chirojeugd-Vlaanderen/idcache</url>
+    <url desc="Documentation">https://github.com/Chirojeugd-Vlaanderen/idcache</url>
+    <url desc="Support">https://github.com/Chirojeugd-Vlaanderen/idcache</url>
+    <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
+  </urls>
+  <releaseDate>2016-11-24</releaseDate>
+  <version>0.1-beta</version>
+  <compatibility>
+    <ver>4.7</ver>
+  </compatibility>
+  <comments>Use the CiviCRM cache to store and retrieve entity IDs.</comments>
+  <civix>
+    <namespace>CRM/IdCache</namespace>
+  </civix>
+</extension>

@@ -1,0 +1,18 @@
+{
+  "professional":
+  {
+      "domain_id":1,
+      "name":"Professional Annual",
+      "description":"Annual Professional Membership",
+      "member_of_contact":"Default organization",
+      "duration_unit":"year",
+      "duration_interval":1,
+      "period_type":"fixed",
+      "fixed_period_start_day":101,
+      "fixed_period_rollover_day":1231,
+      "minimum_fee":515,
+      "visibility":"Admin",
+      "weight":-160,
+      "is_active":1
+    }
+}
