@@ -18,39 +18,28 @@
  */
 
 /**
- * Generic ID cache class.
- *
- * This will work for entities that can be identified by their names.
+ * Custom field ID cache class.
  */
-class CRM_IdCache_Cache_Generic extends CRM_IdCache_Cache {
-
+class CRM_IdCache_Cache_RelationshipType extends CRM_IdCache_Cache {
   /**
    * @return array of entity type names that this class supports.
    */
-  public static function acceptedEntityTypes() {
-    return [
-      'CaseType',
-      'ContactType',
-      'CustomGroup',
-      'FinancialAccount',
-      'FinancialType',
-      'Group',
-      'LocationType',
-      'MembershipType',
-      'OptionGroup',
-      'Tag',
-    ];
+  public static function acceptedEntityTypes()
+  {
+    return ['RelationshipType'];
   }
 
   /**
    * Returns API params for the entity defined by $entityType, $name and $extra.
    *
    * @param string $name name of the CiviCRM entity
-   * @param string $extra (optional) extra information to determine entity
+   * @param string $extra name of the custom field set
    * @return array
    */
   protected static function getApiParams($name, $extra)
   {
-    return ['name' => $name];
+    return [
+      'name_a_b' => $name,
+    ];
   }
 }
