@@ -63,6 +63,7 @@ $DRUSH migrate-register
 $DRUSH ms
 $DRUSH migrate-import people
 $DRUSH migrate-import clubs
+$DRUSH migrate-import memberships
 $DRUSH ms
 
 chown -R civi:www-data sites/default/files

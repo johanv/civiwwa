@@ -27,7 +27,8 @@ function civiwwa_migrate_migrate_api() {
     'migrations' => [
       'People' => ['class_name' => 'peopleMigration'],
       'Clubs' => ['class_name' => 'clubsMigration'],
-    ]
+      'Memberships' => ['class_name' => 'membershipsMigration'],
+    ],
   );
   return $api;
 }
