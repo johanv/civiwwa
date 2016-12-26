@@ -29,7 +29,6 @@ class CRM_Base_Upgrader extends CRM_Base_Upgrader_Base {
       // there should be a better way to do this.
       'path' => realpath(__DIR__ . '/../../') . '/resources/'
     ]);
-    print_r($configResult);
     return (!$configResult['is_error']);
   }
 }
