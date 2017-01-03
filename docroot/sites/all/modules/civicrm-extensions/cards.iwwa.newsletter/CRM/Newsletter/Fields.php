@@ -1,7 +1,7 @@
 <?php
 /*
-  civiwwa_deploy - Enables all necessary modules and extensions.
-  Copyright (C) 2016  Johan Vervloet
+  civiwwa_newsletter - Sets up the CiviCRM newsletter.
+  Copyright (C) 2017  Johan Vervloet
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as
@@ -18,13 +18,10 @@
 */
 
 /**
- * Implements hook_install.
+ * Names of custom fields.
  */
-function civiwwa_deploy_enable() {
-  civicrm_initialize();
-  civicrm_api3('Extension', 'enable', ['key' => 'org.civicoop.configitems']);
-  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.base']);
-  civicrm_api3('Extension', 'enable', ['key' => 'uk.co.vedaconsulting.mailchimp']);
-  civicrm_api3('Extension', 'enable', ['key' => 'be.chiro.civi.idcache']);
-  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.newsletter']);
+class CRM_Newsletter_Fields {
+  public static function MC_LIST_ID() {
+    return CRM_IdCache_Cache_CustomField::getApiField('Mailchimp_Settings', 'Mailchimp_List');
+  }
 }
