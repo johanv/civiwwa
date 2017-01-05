@@ -63,7 +63,9 @@ $DRUSH migrate-register
 $DRUSH ms
 $DRUSH migrate-import people
 $DRUSH migrate-import clubs
-$DRUSH migrate-import memberships
+# ignore dependencies for memberships, because the people-
+# and clubs-migrations will fail because of duplicates.
+$DRUSH migrate-import --force memberships
 $DRUSH ms
 
 chown -R civi:www-data sites/default/files
