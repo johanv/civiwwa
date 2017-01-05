@@ -35,7 +35,7 @@ abstract class CRM_IdCache_Cache {
    * @throws Exception
    * @return int
    */
-  public static function getId($entityType, $name, $extra) {
+  public static function getId($entityType, $name, $extra = NULL) {
     if (!in_array($entityType, static::acceptedEntityTypes())) {
       throw new Exception("Entity type ${entityType} not supported by this cache.");
     }
