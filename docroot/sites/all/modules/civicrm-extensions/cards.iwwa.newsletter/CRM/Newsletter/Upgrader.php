@@ -22,6 +22,23 @@
  */
 class CRM_Newsletter_Upgrader extends CRM_Newsletter_Upgrader_Base {
   /**
+   * Install the extension
+   *
+   * @return bool
+   */
+  public function install() {
+    $result = civicrm_api3('Job', 'get', array(
+      'api_entity' => 'Mailchimp',
+      'api_action' => 'pushsync',
+      'api.Job.create' => array(
+        'id' => '$value.id',
+        'is_active' => 1,
+      ),
+    ));
+    return !$result['is_error'] && $result['count'] == 1;
+  }
+
+  /**
    * Enable the extension.
    *
    * @return bool
