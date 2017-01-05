@@ -19,7 +19,6 @@
 
 class peopleMigration extends Civimigration {
   protected $entity = 'contact';
-  protected $debug = 1;
 
   public function __construct($arguments) {
     parent::__construct($arguments);
@@ -85,10 +84,17 @@ class peopleMigration extends Civimigration {
   }
 
   public function complete($entity, stdClass $row) {
+    // Initially everybody is subscribed to the newsletter.
+    $result = civicrm_api3('GroupContact', 'create', [
+      'contact_id' => $entity['id'],
+      'group_id' => CRM_Newsletter_Groups::NEWSLETTER(),
+      'status' => 'Added',
+    ]);
+
     if (empty($row->postal_code)) {
       return;
     }
-    $result = civicrm_api3('Address', 'create', [
+    civicrm_api3('Address', 'create', [
       'contact_id' => $entity['id'],
       'street_address' => $row->street_address,
       'postal_code' => $row->postal_code,
