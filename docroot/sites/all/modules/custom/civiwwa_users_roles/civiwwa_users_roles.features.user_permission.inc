@@ -133,6 +133,15 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'system',
   );
 
+  // Exported permission: 'allow webhook posts'.
+  $permissions['allow webhook posts'] = array(
+    'name' => 'allow webhook posts',
+    'roles' => array(
+      'anonymous user' => 'anonymous user',
+    ),
+    'module' => 'civicrm',
+  );
+
   // Exported permission: 'delete activities'.
   $permissions['delete activities'] = array(
     'name' => 'delete activities',

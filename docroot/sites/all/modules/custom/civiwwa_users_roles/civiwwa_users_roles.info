@@ -22,6 +22,7 @@ features[user_permission][] = add contacts
 features[user_permission][] = administer Tagsets
 features[user_permission][] = administer nodes
 features[user_permission][] = administer themes
+features[user_permission][] = allow webhook posts
 features[user_permission][] = delete activities
 features[user_permission][] = delete contacts
 features[user_permission][] = delete in CiviContribute
