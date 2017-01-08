@@ -16,5 +16,11 @@ function civiwwa_users_roles_user_default_roles() {
     'weight' => 2,
   );
 
+  // Exported role: Website API user.
+  $roles['Website API user'] = array(
+    'name' => 'Website API user',
+    'weight' => 3,
+  );
+
   return $roles;
 }

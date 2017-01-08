@@ -10,11 +10,21 @@
 function civiwwa_users_roles_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'access AJAX API'.
+  $permissions['access AJAX API'] = array(
+    'name' => 'access AJAX API',
+    'roles' => array(
+      'Website API user' => 'Website API user',
+    ),
+    'module' => 'civicrm',
+  );
+
   // Exported permission: 'access CiviCRM'.
   $permissions['access CiviCRM'] = array(
     'name' => 'access CiviCRM',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -24,6 +34,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviContribute',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -33,6 +44,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviEvent',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -42,6 +54,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviMember',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -60,6 +73,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access all custom data',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -69,6 +83,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access contact reference fields',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -102,6 +117,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'add contacts',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -192,6 +208,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit all contacts',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -210,6 +227,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit contributions',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -219,6 +237,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit event participants',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -237,6 +256,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit memberships',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -255,6 +275,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit my contact',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -300,6 +321,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'merge duplicate contacts',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -354,6 +376,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'register for events',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -363,6 +386,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view all activities',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -372,6 +396,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view all contacts',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -388,6 +413,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view event info',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -397,6 +423,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view event participants',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
@@ -406,6 +433,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view my contact',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
   );
