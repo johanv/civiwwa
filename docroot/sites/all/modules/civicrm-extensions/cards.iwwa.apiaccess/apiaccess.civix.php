@@ -128,14 +128,14 @@ function _apiaccess_civix_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
 }
 
 /**
- * @return CRM_Apiaccess_Upgrader
+ * @return CRM_ApiAccess_Upgrader
  */
 function _apiaccess_civix_upgrader() {
-  if (!file_exists(__DIR__.'/CRM/Apiaccess/Upgrader.php')) {
+  if (!file_exists(__DIR__.'/CRM/ApiAccess/Upgrader.php')) {
     return NULL;
   }
   else {
-    return CRM_Apiaccess_Upgrader_Base::instance();
+    return CRM_ApiAccess_Upgrader_Base::instance();
   }
 }
 

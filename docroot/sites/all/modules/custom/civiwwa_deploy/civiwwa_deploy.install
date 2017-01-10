@@ -27,4 +27,10 @@ function civiwwa_deploy_enable() {
   civicrm_api3('Extension', 'enable', ['key' => 'uk.co.vedaconsulting.mailchimp']);
   civicrm_api3('Extension', 'enable', ['key' => 'be.chiro.civi.idcache']);
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.newsletter']);
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.apiaccess']);
+}
+
+function civiwwa_deploy_update_7100(&$sandbox) {
+  civicrm_initialize();
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.apiaccess']);
 }
