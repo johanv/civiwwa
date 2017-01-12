@@ -4,6 +4,9 @@ DRUSH=drush8
 DOCROOT=/var/www/html
 L10N=`dirname ${0}`/l10n
 
+echo Dit zetten we af, zodat ik het niet meer per ongeluk kan runnen.
+exit 1
+
 mkdir $L10N 2> /dev/null
 
 pushd $L10N

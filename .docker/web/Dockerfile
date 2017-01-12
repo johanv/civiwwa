@@ -16,3 +16,5 @@ RUN echo "[PHP] \n\
 memory_limit = 256M \n\
 max_execution_time = 120 \n\
 " > /usr/local/etc/php/php.ini
+
+RUN a2enmod rewrite
