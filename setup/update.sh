@@ -6,10 +6,15 @@ L10N=`dirname ${0}`/l10n
 APACHE_GROUP=www-data
 
 
+# creating backups and git pull will fail in docker, but that's ok.
+# I leave it here, because it is useful on the server.
+
 mysqldump drupal | gzip > /var/bak/drupal_`date +%Y-%m-%d_%Hu%M`.sql.gz
 mysqldump civi | gzip > /var/bak/civi_`date +%Y-%m-%d_%Hu%M`.sql.gz
 
 pushd $DOCROOT
+
+git pull
 
 $DRUSH cc all
 $DRUSH vset maintenace_mode 1
