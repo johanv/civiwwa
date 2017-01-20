@@ -17,13 +17,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class edegem2013Migration extends CiviMigration {
+class zandhoven2014Migration extends CiviMigration {
   protected $entity = 'participant';
   protected $debug = 1;
 
-   public function __construct($arguments) {
+  public function __construct($arguments) {
     parent::__construct($arguments);
-    $this->description = t('Import participants Edegem 2013');
+    $this->description = t('Import participants Zandhoven 2014');
 
     $columns = [
       // I suspect this to be a duplicate from 'preferred language'.
@@ -38,7 +38,7 @@ class edegem2013Migration extends CiviMigration {
     ];
 
     $this->source = new MigrateSourceCSV(
-      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/edegem2013.csv',
+      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/zandhoven2014.csv',
       $columns);
 
     // Mapping source and destination.
@@ -53,7 +53,7 @@ class edegem2013Migration extends CiviMigration {
     );
 
     $this->addFieldMapping('contact_id', 'constructed_key')->sourceMigration('people');
-    $this->addFieldMapping('event_id')->defaultValue('1');
+    $this->addFieldMapping('event_id')->defaultValue('2');
     // Deelgenomen
     $this->addFieldMapping('participant_status_id')->defaultValue('2');
     // Deelnemer
