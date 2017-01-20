@@ -31,6 +31,26 @@ function civiwwa_migrate_migrate_api() {
         'class_name' => 'membershipsMigration',
         'dependencies' => ['People', 'Clubs'],
       ],
+      'Edegem2013' => [
+        'class_name' => 'edegem2013Migration',
+        'dependencies' => ['People'],
+      ],
+      'Zandhoven2014' => [
+        'class_name' => 'zandhoven2014Migration',
+        'dependencies' => ['People'],
+      ],
+      'Zandhoven2015' => [
+        'class_name' => 'zandhoven2015Migration',
+        'dependencies' => ['People'],
+      ],
+      'Diest2015' => [
+        'class_name' => 'diest2015Migration',
+        'dependencies' => ['People'],
+      ],
+      'Winksele2016' => [
+        'class_name' => 'winksele2016Migration',
+        'dependencies' => ['People'],
+      ],
     ],
   );
   return $api;
