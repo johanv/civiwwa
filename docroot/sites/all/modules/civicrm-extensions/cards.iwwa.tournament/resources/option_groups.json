@@ -1,0 +1,62 @@
+{
+  "tournament_type": {
+    "name": "tournament_type",
+    "title": "Type kampioenschap",
+    "data_type": "Integer",
+    "is_reserved": 1,
+    "is_locked": 0,
+    "option_values": {
+      "wk": {
+        "name": "wk",
+        "value": 1,
+        "label": "WK",
+        "is_active": 1
+      },
+      "bk": {
+        "name": "bk",
+        "value": 2,
+        "label": "BK",
+        "is_active": 1
+      }
+    }
+  },
+  "participant_role": {
+    "name": "participant_role",
+    "title": "Rol van deelnemers",
+    "data_type": "Integer",
+    "is_reserved": 1,
+    "is_active": 1,
+    "option_values": {
+      "Attendee": {
+        "name": "Attendee",
+        "value": 1,
+        "label": "Deelnemer",
+        "is_active": 1
+      },
+      "Volunteer": {
+        "name": "Volunteer",
+        "value": 2,
+        "label": "Vrijwilliger",
+        "is_active": 1
+      },
+      "Crew": {
+        "name": "Crew",
+        "value": 3,
+        "label": "Medewerker",
+        "is_active": 1
+      },
+      "Jury": {
+        "name": "Jury",
+        "value": 4,
+        "label": "Jury",
+        "is_active": 1
+      },
+      "Pisser": {
+        "name": "Pisser",
+        "value": 5,
+        "label": "Pisser",
+        "is_active": 1
+      }
+    }
+  }
+}

@@ -34,3 +34,8 @@ function civiwwa_deploy_update_7100(&$sandbox) {
   civicrm_initialize();
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.apiaccess']);
 }
+
+function civiwwa_deploy_update_7101(&$sandbox) {
+  civicrm_initialize();
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.tournament']);
+}

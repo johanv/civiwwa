@@ -1,7 +1,7 @@
 <?php
 /*
-  civiwwa_base - CivIWWA base configuration.
-  Copyright (C) 2016  Johan Vervloet
+  civiwwa.tournament - CivIWWA tournament configuration.
+  Copyright (C) 2017  Johan Vervloet
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as
@@ -17,25 +17,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 /**
  * Collection of upgrade steps.
  */
-class CRM_Base_Upgrader extends CRM_Base_Upgrader_Base {
+class CRM_Tournament_Upgrader extends CRM_Tournament_Upgrader_Base {
   /**
-   * Configures CiviCRM with configitems each time this module is enabled.
+   * Apply configuration when module is enabled.
    */
   public function enable() {
-    $configResult = civicrm_api3('Civiconfig', 'load_json', [
-      // there should be a better way to do this.
-      'path' => realpath(__DIR__ . '/../../') . '/resources/'
-    ]);
-    return (!$configResult['is_error']);
-  }
-
-  /**
-   * Disable unused event types.
-   */
-  public function upgrade_4700() {
     $configResult = civicrm_api3('Civiconfig', 'load_json', [
       // there should be a better way to do this.
       'path' => realpath(__DIR__ . '/../../') . '/resources/'

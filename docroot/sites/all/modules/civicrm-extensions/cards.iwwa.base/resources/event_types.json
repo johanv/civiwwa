@@ -1,0 +1,22 @@
+{
+  "Conference": {
+    "name": "Conference",
+    "label": "Conferentie",
+    "is_active": 0
+  },
+  "Exhibition": {
+    "name": "Exhibition",
+    "label": "Tentoonstelling",
+    "is_active": 0
+  },
+  "Fundraiser": {
+    "name": "Fundraiser",
+    "label": "Fondsenwerving",
+    "is_active": 0
+  },
+  "Performance": {
+    "name": "Performance",
+    "label": "Voorstelling",
+    "is_active": 0
+  }
+}

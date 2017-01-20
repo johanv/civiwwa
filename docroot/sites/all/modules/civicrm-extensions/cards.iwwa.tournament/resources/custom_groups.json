@@ -1,0 +1,54 @@
+{
+  "event_details": {
+    "name": "event_details",
+    "title": "Event Details",
+    "extends": "Event",
+    "style": "Inline",
+    "collapse_display": 0,
+    "is_active": 1,
+    "table_name": "civicrm_value_event_details",
+    "is_multiple": 0,
+    "is_reserved": 1,
+    "fields": {
+      "tournament_type_id": {
+        "name": "tournament_type_id",
+        "label": "Type kampioenschap",
+        "data_type": "Integer",
+        "html_type": "Select",
+        "is_required": 0,
+        "is_searchable": 1,
+        "is_search_range": 0,
+        "is_active": 1,
+        "is_view": 0,
+        "column_name": "tournament_type_id",
+        "option_group": "tournament_type"
+      },
+      "organizer": {
+        "name": "organizer_id",
+        "label": "Organiserende club",
+        "data_type": "ContactReference",
+        "html_type": "Autocomplete-Select",
+        "is_required": 0,
+        "is_searchable": 1,
+        "is_search_range": 0,
+        "is_active": 1,
+        "is_view": 0,
+        "column_name": "organizer_id",
+        "filter": "action=lookup&contact_sub_type=Club"
+      },
+      "in_competition": {
+        "name": "in_competition",
+        "label": "Telt mee voor ranking",
+        "data_type": "Boolean",
+        "html_type": "Radio",
+        "default_value": 1,
+        "is_required": 1,
+        "is_searchable": 1,
+        "is_search_range": 0,
+        "is_active": 1,
+        "is_view": 0,
+        "column_name": "in_competition"
+      }
+    }
+  }
+}
