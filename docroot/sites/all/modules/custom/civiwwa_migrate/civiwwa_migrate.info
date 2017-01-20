@@ -8,6 +8,7 @@ files[] = civiwwa_migrate.module
 files[] = people.inc
 files[] = clubs.inc
 files[] = memberships.inc
+files[] = participants.inc
 files[] = edegem2013.inc
 files[] = zandhoven2014.inc
 files[] = zandhoven2015.inc

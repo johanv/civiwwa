@@ -17,62 +17,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class edegem2013Migration extends CiviMigration {
-  protected $entity = 'participant';
-  protected $debug = 1;
-
-   public function __construct($arguments) {
-    parent::__construct($arguments);
-    $this->description = t('Import participants Edegem 2013');
-
-    $columns = [
-      // I suspect this to be a duplicate from 'preferred language'.
-      ['n', t('n')],
-      ['last_name', t('Last Name')],
-      ['first_name', t('First Name')],
-      ['street_address', t('Street Address')],
-      ['postal_code', t('Postal Code')],
-      ['city', t('City')],
-      ['preferred_language', t('Preferred Language')],
-      ['full_name', t('Full Name')],
-    ];
-
-    $this->source = new MigrateSourceCSV(
-      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/edegem2013.csv',
-      $columns);
-
-    // Mapping source and destination.
-    $this->map = new MigrateSQLMap($this->machineName,
-      // Source keys (unique identification of participant)
-      [
-        'last_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
-        'first_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
-      ]
-      // Corresponding destination keys
-      , MigrateDestinationCivicrmApi::getKeySchema()
-    );
-
-    $this->addFieldMapping('contact_id', 'constructed_key')->sourceMigration('people');
-    $this->addFieldMapping('event_id')->defaultValue('1');
-    // Deelgenomen
-    $this->addFieldMapping('participant_status_id')->defaultValue('2');
-    // Deelnemer
-    $this->addFieldMapping('participant_role_id')->defaultValue('1');
+class edegem2013Migration extends participantsMigration {
+  public function getCiviEventId() {
+    return 1;
   }
 
-  public function prepareRow($row) {
-    if (parent::prepareRow($row) === FALSE) {
-      return FALSE;
-    }
-    // Some participants have first name and last name in the name field.
-    // Workaround.
-    if (empty($row->first_name)) {
-      $words = explode(' ', $row->last_name);
-      $row->first_name = $words[0];
-      array_shift($words);
-      $row->last_name = implode(' ', $words);
-    }
-    $row->constructed_key = [[$row->last_name, $row->first_name]];
-    return TRUE;
+  public function getSourceFile() {
+    return 'edegem2013.csv';
   }
 }
