@@ -1,0 +1,22 @@
+{
+  "wiezen":{
+    "name": "wiezen",
+    "label": "Toernooi Wiezen",
+    "is_active": 1
+  },
+  "kleurenwiezen":{
+    "name": "kleurenwiezen",
+    "label": "Tournooi Kleurenwiezen",
+    "is_active": 1
+  },
+  "manillen":{
+    "name": "manillen",
+    "label": "Tournooi Manillen",
+    "is_active": 1
+  },
+  "boomkewies":{
+    "name": "boomkewies",
+    "label": "Boomke Wies",
+    "is_active": 1
+  }
+}
