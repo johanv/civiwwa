@@ -31,4 +31,15 @@ class CRM_Base_Upgrader extends CRM_Base_Upgrader_Base {
     ]);
     return (!$configResult['is_error']);
   }
+
+  /**
+   * Disable unused event types.
+   */
+  public function upgrade_4700() {
+    $configResult = civicrm_api3('Civiconfig', 'load_json', [
+      // there should be a better way to do this.
+      'path' => realpath(__DIR__ . '/../../') . '/resources/'
+    ]);
+    return (!$configResult['is_error']);
+  }
 }
