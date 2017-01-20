@@ -18,3 +18,4 @@ max_execution_time = 120 \n\
 " > /usr/local/etc/php/php.ini
 
 RUN a2enmod rewrite
+RUN apachectl graceful

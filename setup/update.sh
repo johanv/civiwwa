@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DRUSH=drush8
-DOCROOT=/var/www/html/docroot
+DOCROOT=/var/www/html
 L10N=`dirname ${0}`/l10n
 APACHE_GROUP=www-data
 
@@ -30,4 +30,5 @@ $DRUSH -u 1 cvapi Extension.upgrade
 $DRUSH vset maintenance_mode 0
 $DRUSH cc all
 
+$DRUSH uli --uri=http://localhost
 popd

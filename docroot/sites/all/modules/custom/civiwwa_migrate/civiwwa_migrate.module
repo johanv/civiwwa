@@ -31,6 +31,10 @@ function civiwwa_migrate_migrate_api() {
         'class_name' => 'membershipsMigration',
         'dependencies' => ['People', 'Clubs'],
       ],
+      'Edegem2013' => [
+        'class_name' => 'edegem2013Migration',
+        'dependencies' => ['People'],
+      ],
     ],
   );
   return $api;
