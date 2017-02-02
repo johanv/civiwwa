@@ -27,6 +27,7 @@ $DRUSH fra -y
 $DRUSH cc all
 
 $DRUSH -u 1 cvapi Extension.upgrade
+$DRUSH -u 1 cvapi ApiAccess.reconfigure
 $DRUSH vset maintenance_mode 0
 $DRUSH cc all
 

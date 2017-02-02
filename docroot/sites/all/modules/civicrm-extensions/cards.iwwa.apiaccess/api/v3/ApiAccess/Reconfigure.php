@@ -50,6 +50,9 @@ function civicrm_api3_api_access_Reconfigure($params) {
   foreach (variable_get('civiwwa_users') as $user) {
     if (!empty($user['api_key'])) {
       $existing = user_load_by_name($user['name']);
+      if (!$existing) {
+        $existing = user_save(NULL, $user);
+      }
       $apiResult = civicrm_api3(
         'UFMatch', 'getsingle', [
           'uf_id' => $existing->uid,
