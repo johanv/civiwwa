@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the civiwwa_dev feature.
+ */
+
+include_once 'civiwwa_dev.features.inc';

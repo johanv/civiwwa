@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script backups the database, pulls the code,
+# and performs all necessary updates. If it is called with
+# the argument 'dev', it will enable the civiwwa_dev module.
+
+
 DRUSH=drush8
 DOCROOT=/var/www/html
 L10N=`dirname ${0}`/l10n
@@ -30,6 +35,11 @@ $DRUSH -u 1 cvapi Extension.upgrade
 $DRUSH -u 1 cvapi ApiAccess.reconfigure
 $DRUSH vset maintenance_mode 0
 $DRUSH cc all
+
+if [ "$1" = "dev" ]
+then
+    $DRUSH en civiwwa_dev
+fi
 
 $DRUSH uli --uri=http://localhost
 popd
