@@ -38,7 +38,7 @@ $DRUSH cc all
 
 if [ "$1" = "dev" ]
 then
-    $DRUSH en civiwwa_dev
+    $DRUSH en -y civiwwa_dev
 fi
 
 $DRUSH uli --uri=http://localhost
