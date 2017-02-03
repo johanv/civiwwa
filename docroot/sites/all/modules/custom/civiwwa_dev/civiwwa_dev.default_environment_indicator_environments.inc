@@ -20,8 +20,8 @@ function civiwwa_dev_default_environment_indicator_environment() {
     'color' => '#aa3333',
     'text_color' => '#ffffff',
     'weight' => '99',
-    'position' => 'top',
-    'fixed' => 0,
+    'position' => 'bottom',
+    'fixed' => 1,
   );
   $export['dev_environment'] = $environment;
 
@@ -35,8 +35,8 @@ function civiwwa_dev_default_environment_indicator_environment() {
     'color' => '#1a6d44',
     'text_color' => '#ffffff',
     'weight' => '',
-    'position' => 'top',
-    'fixed' => 0,
+    'position' => 'bottom',
+    'fixed' => 1,
   );
   $export['testomgeving'] = $environment;
 
