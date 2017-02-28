@@ -16,6 +16,12 @@ function civiwwa_users_roles_user_default_roles() {
     'weight' => 2,
   );
 
+  // Exported role: CivIWWA read only user.
+  $roles['CivIWWA read only user'] = array(
+    'name' => 'CivIWWA read only user',
+    'weight' => 4,
+  );
+
   // Exported role: Website API user.
   $roles['Website API user'] = array(
     'name' => 'Website API user',
