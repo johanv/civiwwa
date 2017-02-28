@@ -24,6 +24,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviCRM',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -34,6 +35,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviContribute',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -44,6 +46,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviEvent',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -54,6 +57,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access CiviMember',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -64,6 +68,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access Contact Dashboard',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
     ),
     'module' => 'civicrm',
   );
@@ -73,6 +78,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'access all custom data',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -275,6 +281,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit my contact',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -376,6 +383,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'register for events',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -386,6 +394,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view all activities',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -396,6 +405,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view all contacts',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -413,6 +423,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view event info',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -423,6 +434,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view event participants',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -433,6 +445,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view my contact',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
@@ -443,6 +456,7 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'view my invoices',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
+      'CivIWWA read only user' => 'CivIWWA read only user',
     ),
     'module' => 'civicrm',
   );

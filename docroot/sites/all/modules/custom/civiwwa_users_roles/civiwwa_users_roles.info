@@ -57,5 +57,6 @@ features[user_permission][] = view my contact
 features[user_permission][] = view my invoices
 features[user_permission][] = view own unpublished content
 features[user_role][] = CivIWWA power user
+features[user_role][] = CivIWWA read only user
 features[user_role][] = Website API user
 project path = sites/all/modules/custom
