@@ -19,6 +19,8 @@ services:
       - MYSQL_PASSWORD=DbDevPw
   buildkit:
     build: .docker/buildkit
+    volumes:
+      - ~/.ssh:/root/.ssh:z
     volumes_from:
       - web
     stdin_open: true

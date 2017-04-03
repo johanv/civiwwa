@@ -14,6 +14,9 @@ APACHE_GROUP=www-data
 # creating backups and git pull will fail in docker, but that's ok.
 # I leave it here, because it is useful on the server.
 
+echo "Creating a backup of current databases."
+echo "Don't worry if this fails on your dev environment."
+
 mysqldump drupal | gzip > /var/bak/drupal_`date +%Y-%m-%d_%Hu%M`.sql.gz
 mysqldump civi | gzip > /var/bak/civi_`date +%Y-%m-%d_%Hu%M`.sql.gz
 
