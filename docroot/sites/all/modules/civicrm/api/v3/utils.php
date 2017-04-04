@@ -3,7 +3,7 @@
   +--------------------------------------------------------------------+
   | CiviCRM version 4.7                                                |
   +--------------------------------------------------------------------+
-  | Copyright CiviCRM LLC (c) 2004-2016                                |
+  | Copyright CiviCRM LLC (c) 2004-2017                                |
   +--------------------------------------------------------------------+
   | This file is a part of CiviCRM.                                    |
   |                                                                    |
@@ -813,12 +813,6 @@ function _civicrm_api3_get_options_from_params(&$params, $queryObject = FALSE, $
       $returnProperties[$lowercase_entity . '_id'] = 1;
       unset($returnProperties['id']);
     }
-    switch (trim(strtolower($sort))) {
-      case 'id':
-      case 'id desc':
-      case 'id asc':
-        $sort = str_replace('id', $lowercase_entity . '_id', $sort);
-    }
   }
 
   $options = array(
@@ -833,6 +827,14 @@ function _civicrm_api3_get_options_from_params(&$params, $queryObject = FALSE, $
   if (!empty($sort)) {
     foreach ((array) $sort as $s) {
       if (CRM_Utils_Rule::mysqlOrderBy($s)) {
+        if ($entity && $action == 'get') {
+          switch (trim(strtolower($s))) {
+            case 'id':
+            case 'id desc':
+            case 'id asc':
+              $s = str_replace('id', $lowercase_entity . '_id', $s);
+          }
+        }
         $finalSort[] = $s;
       }
       else {
@@ -1399,6 +1401,7 @@ function _civicrm_api3_basic_delete($bao_name, &$params) {
  *
  * @param array $returnArray
  *   Array to append custom data too - generally $result[4] where 4 is the entity id.
+ * @param $checkPermission
  * @param string $entity
  *   E.g membership, event.
  * @param int $entity_id
@@ -1495,12 +1498,15 @@ function _civicrm_api3_validate($entity, $action, $params) {
 
   return array($errors);
 }
+
 /**
  * Used by the Validate API.
+ * @param $fieldName
  * @param array $fieldInfo
  * @param string $entity
  * @param array $params
  *
+ * @throws API_Exception
  * @throws Exception
  */
 function _civicrm_api3_validate_switch_cases($fieldName, $fieldInfo, $entity, $params) {
@@ -1635,7 +1641,7 @@ function _civicrm_api3_validate_foreign_keys($entity, $action, &$params, $fields
         _civicrm_api3_validate_constraint($params[$fieldName], $fieldName, $fieldInfo);
       }
       elseif (!empty($fieldInfo['required'])) {
-        throw new Exception("DB Constraint Violation - possibly $fieldName should possibly be marked as mandatory for this API. If so, please raise a bug report.");
+        throw new Exception("DB Constraint Violation - $fieldName should possibly be marked as mandatory for $entity,$action API. If so, please raise a bug report.");
       }
     }
     if (!empty($fieldInfo['api.unique'])) {
@@ -1881,8 +1887,10 @@ function _civicrm_api_get_fields($entity, $unique = FALSE, &$params = array()) {
   $d = new $dao();
   $fields = $d->fields();
 
-  // Set html attributes for text fields
   foreach ($fields as $name => &$field) {
+    // Denote as core field
+    $field['is_core_field'] = TRUE;
+    // Set html attributes for text fields
     if (isset($field['html'])) {
       $field['html'] += (array) $d::makeAttribute($field);
     }
@@ -2056,7 +2064,7 @@ function _civicrm_api3_swap_out_aliases(&$apiRequest, $fields) {
  *
  * @throws API_Exception
  */
-function _civicrm_api3_validate_integer(&$params, &$fieldName, &$fieldInfo, $entity) {
+function _civicrm_api3_validate_integer(&$params, $fieldName, &$fieldInfo, $entity) {
   list($fieldValue, $op) = _civicrm_api3_field_value_check($params, $fieldName);
   if (strpos($op, 'NULL') !== FALSE || strpos($op, 'EMPTY') !== FALSE) {
     return;
