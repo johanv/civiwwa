@@ -3,7 +3,7 @@
   +--------------------------------------------------------------------+
   | CiviCRM version 4.7                                                |
   +--------------------------------------------------------------------+
-  | Copyright CiviCRM LLC (c) 2004-2016                                |
+  | Copyright CiviCRM LLC (c) 2004-2017                                |
   +--------------------------------------------------------------------+
   | This file is a part of CiviCRM.                                    |
   |                                                                    |
@@ -28,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2016
+ * @copyright CiviCRM LLC (c) 2004-2017
  */
 
 /**
@@ -861,9 +861,16 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $fields, $lineItem
       );
 
+      $minAmt = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_PriceSet', $fields['priceSetId'], 'min_amount');
       if ($fields['amount'] < 0) {
         $errors['_qf_default'] = ts('Contribution can not be less than zero. Please select the options accordingly');
       }
+      elseif (!empty($minAmt) && $fields['amount'] < $minAmt) {
+        $errors['_qf_default'] = ts('A minimum amount of %1 should be selected from Contribution(s).', array(
+          1 => CRM_Utils_Money::format($minAmt),
+        ));
+      }
+
       $amount = $fields['amount'];
     }
 
@@ -1215,7 +1222,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('is_pay_later', $params['is_pay_later']);
     if ($params['is_pay_later']) {
       $this->assign('pay_later_text', $this->_values['pay_later_text']);
-      $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
+      $this->assign('pay_later_receipt', CRM_Utils_Array::value('pay_later_receipt', $this->_values));
     }
 
     if ($this->_membershipBlock['is_separate_payment'] && !empty($params['separate_amount'])) {

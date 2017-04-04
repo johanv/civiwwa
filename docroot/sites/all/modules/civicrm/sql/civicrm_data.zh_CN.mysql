@@ -1,7 +1,7 @@
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 4.7                                                |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2016                                |
+-- | Copyright CiviCRM LLC (c) 2004-2017                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -297,7 +297,7 @@ INSERT INTO civicrm_country (id, name,iso_code,region_id,is_province_abbreviated
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 4.7                                                |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2016                                |
+-- | Copyright CiviCRM LLC (c) 2004-2017                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -4317,7 +4317,7 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 4.7                                                |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2016                                |
+-- | Copyright CiviCRM LLC (c) 2004-2017                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -4531,7 +4531,7 @@ INSERT INTO civicrm_currency (id, name, symbol, numeric_code, full_name) VALUES
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 4.7                                                |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2016                                |
+-- | Copyright CiviCRM LLC (c) 2004-2017                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -4728,6 +4728,7 @@ VALUES
    ('communication_style'           , 'Communication Style'                , NULL, 1, 1, 0),
    ('msg_mode'                      , 'Message Mode'                       , NULL, 1, 1, 0),
    ('contact_date_reminder_options' , 'Contact Date Reminder Options'      , NULL, 1, 1, 1),
+   ('wysiwyg_presets'               , 'WYSIWYG Editor Presets'             , NULL, 1, 1, 0),
    ('relative_date_filters'         , 'Relative Date Filters'              , NULL, 1, 1, 0);
 
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
@@ -4807,6 +4808,7 @@ SELECT @option_group_id_communication_style := max(id) from civicrm_option_group
 SELECT @option_group_id_msg_mode := max(id) from civicrm_option_group where name = 'msg_mode';
 SELECT @option_group_id_contactDateMode := max(id) from civicrm_option_group where name = 'contact_date_reminder_options';
 SELECT @option_group_id_date_filter    := max(id) from civicrm_option_group where name = 'relative_date_filters';
+SELECT @option_group_id_wysiwyg_presets    := max(id) from civicrm_option_group where name = 'wysiwyg_presets';
 
 SELECT @contributeCompId := max(id) FROM civicrm_component where name = 'CiviContribute';
 SELECT @eventCompId      := max(id) FROM civicrm_component where name = 'CiviEvent';
@@ -4818,729 +4820,734 @@ SELECT @campaignCompId   := max(id) FROM civicrm_component where name = 'CiviCam
 SELECT @mailCompId       := max(id) FROM civicrm_component where name = 'CiviMail';
 
 INSERT INTO
-   `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `visibility_id`)
+   `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `visibility_id`, `icon`)
 VALUES
-   (@option_group_id_pcm, '电话', 1, 'Phone', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, '邮件', 2, 'Email', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, '邮政邮件', 3, 'Postal Mail', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, 'SMS', 4, 'SMS', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, '传真', 5, 'Fax', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_pcm, '电话',       1, 'Phone', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_pcm, '邮件',       2, 'Email', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_pcm, '邮政邮件', 3, 'Postal Mail', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_pcm, 'SMS',         4, 'SMS', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_pcm, '传真',         5, 'Fax', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_act, '会议',                            1, 'Meeting', NULL, 0, NULL, 1, NULL,                                                                       0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '电话呼叫',                         2, 'Phone Call',          NULL, 0, NULL, 2, NULL,                                                          0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '邮件',                              3, 'Email',               NULL, 1, NULL, 3, 'email已发送。',                                                          0, 1, 1, NULL, NULL),
-   (@option_group_id_act, 'Outbound SMS',                       4, 'SMS',                 NULL, 1, NULL, 4, '文字讯息(SMS)已发送。',                                             0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '事件注册',                 5, 'Event Registration',  NULL, 1, NULL, 5, '在线或离线事件注册。',                                0, 1, 1, @eventCompId, NULL),
-   (@option_group_id_act, '贡献',                       6, 'Contribution',        NULL, 1, NULL, 6, '在线或离线捐赠。',                                      0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, '会籍注册',                  7, 'Membership Signup',   NULL, 1, NULL, 7, '在线或离线会籍注册。',                                 0, 1, 1, @memberCompId, NULL),
-   (@option_group_id_act, '会籍续期',                 8, 'Membership Renewal',  NULL, 1, NULL, 8, '在线或离线会籍续期',                                0, 1, 1, @memberCompId, NULL),
-   (@option_group_id_act, '推荐给朋友',                      9, 'Tell a Friend',       NULL, 1, NULL, 9, '发送捐赠行动或事件信息给一位朋友。', 0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '认捐确认',              10, 'Pledge Acknowledgment',  NULL, 1, NULL, 10, '发送认捐确认。',                                     0, 1, 1, @pledgeCompId, NULL),
-   (@option_group_id_act, '认捐提醒',                    11, 'Pledge Reminder',    NULL, 1, NULL, 11, '发送认捐提醒。',                                               0, 1, 1, @pledgeCompId, NULL),
-   (@option_group_id_act, '入站email',                      12, 'Inbound Email',      NULL, 1, NULL, 12, '入站email。',                                                     0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '会议',                1,  'Meeting',               NULL, 0, NULL, 1,  NULL,                                                                                         0, 1, 1, NULL, NULL, 'fa-slideshare'),
+   (@option_group_id_act, '电话呼叫',             2,  'Phone Call',            NULL, 0, NULL, 2,  NULL,                                                                                         0, 1, 1, NULL, NULL, 'fa-phone'),
+   (@option_group_id_act, '邮件',                  3,  'Email',                 NULL, 1, NULL, 3,  'email已发送。',                                                          0, 1, 1, NULL, NULL, 'fa-envelope-o'),
+   (@option_group_id_act, 'Outbound SMS',           4,  'SMS',                   NULL, 1, NULL, 4,  '文字讯息(SMS)已发送。',                                             0, 1, 1, NULL, NULL, 'fa-mobile'),
+   (@option_group_id_act, '事件注册',     5,  'Event Registration',    NULL, 1, NULL, 5,  '在线或离线事件注册。',                                0, 1, 1, @eventCompId, NULL, NULL),
+   (@option_group_id_act, '贡献',           6,  'Contribution',          NULL, 1, NULL, 6,  '在线或离线捐赠。',                                      0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, '会籍注册',      7,  'Membership Signup',     NULL, 1, NULL, 7,  '在线或离线会籍注册。',                                 0, 1, 1, @memberCompId, NULL, NULL),
+   (@option_group_id_act, '会籍续期',     8,  'Membership Renewal',    NULL, 1, NULL, 8,  '在线或离线会籍续期',                                0, 1, 1, @memberCompId, NULL, NULL),
+   (@option_group_id_act, '推荐给朋友',          9,  'Tell a Friend',         NULL, 1, NULL, 9,  '发送捐赠行动或事件信息给一位朋友。', 0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, '认捐确认',  10, 'Pledge Acknowledgment', NULL, 1, NULL, 10, '发送认捐确认。',                                          0, 1, 1, @pledgeCompId, NULL, NULL),
+   (@option_group_id_act, '认捐提醒',        11, 'Pledge Reminder',       NULL, 1, NULL, 11, '发送认捐提醒。',                                                0, 1, 1, @pledgeCompId, NULL, NULL),
+   (@option_group_id_act, '入站email',          12, 'Inbound Email',         NULL, 1, NULL, 12, '入站email。',                                                       0, 1, 1, NULL, NULL, NULL),
 
 -- Activity Types for case activities
-   (@option_group_id_act, '开放案例',          13, 'Open Case',          NULL, 0,  0, 13, '', 0, 1, 1, @caseCompId, NULL),
-   (@option_group_id_act, '跟进',          14, 'Follow up',          NULL, 0,  0, 14, '', 0, 1, 1, @caseCompId, NULL ),
-   (@option_group_id_act, '改变案例类型',   15, 'Change Case Type',   NULL, 0,  0, 15, '', 0, 1, 1, @caseCompId, NULL ),
-   (@option_group_id_act, '改变案例状态', 16, 'Change Case Status', NULL, 0,  0, 16, '', 0, 1, 1, @caseCompId, NULL ),
+   (@option_group_id_act, '开放案例',          13, 'Open Case',          NULL, 0,  0, 13, '', 0, 1, 1, @caseCompId, NULL, 'fa-folder-open-o'),
+   (@option_group_id_act, '跟进',          14, 'Follow up',          NULL, 0,  0, 14, '', 0, 1, 1, @caseCompId, NULL, 'fa-share-square-o'),
+   (@option_group_id_act, '改变案例类型',   15, 'Change Case Type',   NULL, 0,  0, 15, '', 0, 1, 1, @caseCompId, NULL, 'fa-random'),
+   (@option_group_id_act, '改变案例状态', 16, 'Change Case Status', NULL, 0,  0, 16, '', 0, 1, 1, @caseCompId, NULL, 'fa-pencil-square-o'),
 
-   (@option_group_id_act, '会籍续期提醒',        17, 'Membership Renewal Reminder',  NULL, 1, NULL, 17, '离线会籍续期提醒',                      0, 1, 1, @memberCompId, NULL),
-   (@option_group_id_act, '改变案例开始日期',             18, 'Change Case Start Date',         NULL, 0,  0, 18, '', 0, 1, 1, @caseCompId, NULL ),
-   (@option_group_id_act, '大宗email',                         19, 'Bulk Email',         NULL, 1, NULL, 19, '大宗email已发送。',                                                    0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '分配案例角色',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 1, 1, @caseCompId, NULL),
-   (@option_group_id_act, '移除案例角色',                   21, 'Remove Case Role', NULL,0, 0, 21, '', 0, 1, 1, @caseCompId, NULL),
-   (@option_group_id_act, 'Print/Merge Document',               22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Export letters and other printable documents.',                                                  0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '合并案例',                         23, 'Merge Case', NULL, 0,  NULL, 23, '', 0, 1, 1, @caseCompId, NULL ),
-   (@option_group_id_act, '再次分配案例',                    24, 'Reassigned Case', NULL, 0,  NULL, 24, '', 0, 1, 1, @caseCompId, NULL ),
-   (@option_group_id_act, '链接案例',                         25, 'Link Cases', NULL, 0,  NULL, 25, '', 0, 1, 1, @caseCompId, NULL ),
-   (@option_group_id_act, '改变案例标签',                   26, 'Change Case Tags', NULL,0, 0, 26, '', 0, 1, 1, @caseCompId, NULL),
-   (@option_group_id_act, '将用户添加到案例',                 27, 'Add Client To Case', NULL,0, 0, 26, '', 0, 1, 1, @caseCompId, NULL),
+   (@option_group_id_act, '会籍续期提醒',        17, 'Membership Renewal Reminder',  NULL, 1, NULL, 17, '离线会籍续期提醒',                      0, 1, 1, @memberCompId, NULL, NULL),
+   (@option_group_id_act, '改变案例开始日期',             18, 'Change Case Start Date',         NULL, 0,  0, 18, '', 0, 1, 1, @caseCompId, NULL , 'fa-calendar'),
+   (@option_group_id_act, '大宗email',                         19, 'Bulk Email',         NULL, 1, NULL, 19, '大宗email已发送。',                                                    0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, '分配案例角色',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-plus'),
+   (@option_group_id_act, '移除案例角色',                   21, 'Remove Case Role', NULL,0, 0, 21, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-times'),
+   (@option_group_id_act, 'Print/Merge Document',               22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Export letters and other printable documents.',                     0, 1, 1, NULL, NULL, 'fa-file-pdf-o'),
+   (@option_group_id_act, '合并案例',                         23, 'Merge Case', NULL, 0,  NULL, 23, '', 0, 1, 1, @caseCompId, NULL , 'fa-compress'),
+   (@option_group_id_act, '再次分配案例',                    24, 'Reassigned Case', NULL, 0,  NULL, 24, '', 0, 1, 1, @caseCompId, NULL , 'fa-user-circle-o'),
+   (@option_group_id_act, '链接案例',                         25, 'Link Cases', NULL, 0,  NULL, 25, '', 0, 1, 1, @caseCompId, NULL , 'fa-link'),
+   (@option_group_id_act, '改变案例标签',                   26, 'Change Case Tags', NULL,0, 0, 26, '', 0, 1, 1, @caseCompId, NULL, 'fa-tags'),
+   (@option_group_id_act, '将用户添加到案例',                 27, 'Add Client To Case', NULL,0, 0, 26, '', 0, 1, 1, @caseCompId, NULL, 'fa-users'),
 
 -- Activity Types for CiviCampaign
-   (@option_group_id_act, '调查',                             28, 'Survey', NULL,0, 0, 27, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, '拉票',                            29, 'Canvass', NULL,0, 0, 28, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, '电话银行',                          30, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, '拜访名单',                           31, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, '申请签名',                           32, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL),
-   (@option_group_id_act, '批量短消息',                           34, 'Mass SMS',         NULL, 1, NULL, 34, '批量短消息',                                                    0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '调查',                             28, 'Survey', NULL,0, 0, 27, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, '拉票',                            29, 'Canvass', NULL,0, 0, 28, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, '电话银行',                          30, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, '拜访名单',                           31, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, '申请签名',                           32, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, '批量短消息',                           34, 'Mass SMS',         NULL, 1, NULL, 34, '批量短消息',                                                    0, 1, 1, NULL, NULL, NULL),
 
 -- Activity Types for CiviCampaign CiviCase
-   (@option_group_id_act, '改变用户数据',                 33, 'Change Custom Data', NULL,0, 0, 33, '', 0, 1, 1, @caseCompId, NULL),
+   (@option_group_id_act, '改变用户数据',                 33, 'Change Custom Data', NULL,0, 0, 33, '', 0, 1, 1, @caseCompId, NULL, 'fa-table'),
 
 -- Additional Membership-related Activity Types
-   (@option_group_id_act, '改变会籍状态',           35, 'Change Membership Status',   NULL, 1, NULL, 35, '改变会籍状态。',                         0, 1, 1, @memberCompId, NULL),
-   (@option_group_id_act, '改变会籍类型',             36, 'Change Membership Type',     NULL, 1, NULL, 36, '改变会籍类型。',                           0, 1, 1, @memberCompId, NULL),
+   (@option_group_id_act, '改变会籍状态',           35, 'Change Membership Status',   NULL, 1, NULL, 35, '改变会籍状态。',                         0, 1, 1, @memberCompId, NULL, NULL),
+   (@option_group_id_act, '改变会籍类型',             36, 'Change Membership Type',     NULL, 1, NULL, 36, '改变会籍类型。',                           0, 1, 1, @memberCompId, NULL, NULL),
 
-   (@option_group_id_act, '取消定期捐赠',      37, 'Cancel Recurring Contribution', NULL,1, 0, 37, '', 0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, '更新定期捐赠账单详情',      38, 'Update Recurring Contribution Billing Details', NULL,1, 0, 38, '', 0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, '更新定期捐赠',      39, 'Update Recurring Contribution', NULL,1, 0, 39, '', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, '取消定期捐赠',      37, 'Cancel Recurring Contribution', NULL,1, 0, 37, '', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, '更新定期捐赠账单详情',      38, 'Update Recurring Contribution Billing Details', NULL,1, 0, 38, '', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, '更新定期捐赠',      39, 'Update Recurring Contribution', NULL,1, 0, 39, '', 0, 1, 1, @contributeCompId, NULL, NULL),
 
-   (@option_group_id_act, '提醒已发出',                40, 'Reminder Sent', NULL, 1, 0, 40, '', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '提醒已发出',                40, 'Reminder Sent', NULL, 1, 0, 40, '', 0, 1, 1, NULL, NULL, NULL),
 
  -- Activity Types for Financial Transactions Batch
-   (@option_group_id_act, 'Export Accounting Batch', 41, 'Export Accounting Batch', NULL, 1, 0, 41, 'Export Accounting Batch', 0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, 'Create Batch', 42, 'Create Batch', NULL, 1, 0, 42, 'Create Batch', 0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, '编辑批次', 43, 'Edit Batch', NULL, 1, 0, 43, 'Edit Batch', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Export Accounting Batch', 41, 'Export Accounting Batch', NULL, 1, 0, 41, 'Export Accounting Batch', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, 'Create Batch', 42, 'Create Batch', NULL, 1, 0, 42, 'Create Batch', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, '编辑批次', 43, 'Edit Batch', NULL, 1, 0, 43, 'Edit Batch', 0, 1, 1, @contributeCompId, NULL, NULL),
 
 -- new sms options
-   (@option_group_id_act, 'SMS delivery', 44, 'SMS delivery', NULL, 1, NULL, 44, 'SMS delivery', 0, 1, 1, NULL, NULL),
-   (@option_group_id_act, 'Inbound SMS',  45, 'Inbound SMS', NULL, 1, NULL,  45, 'Inbound SMS', 0, 1, 1, NULL, NULL),
+   (@option_group_id_act, 'SMS delivery', 44, 'SMS delivery', NULL, 1, NULL, 44, 'SMS delivery', 0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, 'Inbound SMS',  45, 'Inbound SMS', NULL, 1, NULL,  45, 'Inbound SMS', 0, 1, 1, NULL, NULL, NULL),
 
 
  -- Activity types for particial payment
-   (@option_group_id_act, 'Payment', 46, 'Payment', NULL, 1, NULL, 46, 'Additional payment recorded for event or membership fee.', 0, 1, 1, @contributeCompId, NULL),
-   (@option_group_id_act, 'Refund', 47, 'Refund', NULL, 1, NULL, 47, 'Refund recorded for event or membership fee.', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Payment', 46, 'Payment', NULL, 1, NULL, 46, 'Additional payment recorded for event or membership fee.', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, 'Refund', 47, 'Refund', NULL, 1, NULL, 47, 'Refund recorded for event or membership fee.', 0, 1, 1, @contributeCompId, NULL, NULL),
 
  -- for selection changes
-   (@option_group_id_act, 'Change Registration', 48, 'Change Registration', NULL, 1, NULL, 48, 'Changes to an existing event registration.', 0, 1, 1, @eventCompId, NULL),
+   (@option_group_id_act, 'Change Registration', 48, 'Change Registration', NULL, 1, NULL, 48, 'Changes to an existing event registration.', 0, 1, 1, @eventCompId, NULL, NULL),
  -- for Print or Email Contribution Invoices
-   (@option_group_id_act, '已下载发票', 49, 'Downloaded Invoice',      NULL, 1, NULL, 49, '已下载发票。',0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '已电邮发票', 50, 'Emailed Invoice',      NULL, 1, NULL, 50, '已电邮发票。',0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '已下载发票', 49, 'Downloaded Invoice',      NULL, 1, NULL, 49, '已下载发票。',0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, '已电邮发票', 50, 'Emailed Invoice',      NULL, 1, NULL, 50, '已电邮发票。',0, 1, 1, NULL, NULL, NULL),
 
   -- for manual contact merge
-   (@option_group_id_act, '已合并联系人', 51, 'Contact Merged', NULL, 1, NULL, 51, '已合并联系人',0, 1, 1, NULL, NULL),
-   (@option_group_id_act, 'Contact Deleted by Merge', 52, 'Contact Deleted by Merge', NULL, 1, NULL, 52, 'Contact was merged into another contact',0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '已合并联系人', 51, 'Contact Merged', NULL, 1, NULL, 51, '已合并联系人',0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, 'Contact Deleted by Merge', 52, 'Contact Deleted by Merge', NULL, 1, NULL, 52, 'Contact was merged into another contact',0, 1, 1, NULL, NULL, NULL),
 
   -- Activity Type for failed payment
-   (@option_group_id_act, 'Failed Payment', 53, 'Failed Payment', NULL, 1, 0, 53, 'Failed Payment', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Failed Payment', 53, 'Failed Payment', NULL, 1, 0, 53, 'Failed Payment', 0, 1, 1, @contributeCompId, NULL, NULL),
 
   -- Activity Type for Close Accounting Period
-   (@option_group_id_act, 'Close Accounting Period', 54, 'Close Accounting Period', NULL, 1, 0, 54, 'Close Accounting Period', 0, 1, 1, @contributeCompId, NULL),
+   (@option_group_id_act, 'Close Accounting Period', 54, 'Close Accounting Period', NULL, 1, 0, 54, 'Close Accounting Period', 0, 1, 1, @contributeCompId, NULL, NULL),
 
-   (@option_group_id_gender, '女性',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_gender, '男性',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_gender, '变性', 3, 'Transgender', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_gender, '女性', 1, 'Female', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_gender, '男性',   2, 'Male',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_gender, '其他',  3, 'Other',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_IMProvider, 'Yahoo', 1, 'Yahoo', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'MSN',   2, 'Msn',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'AIM',   3, 'Aim',   NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'GTalk', 4, 'Gtalk', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'Jabber',5, 'Jabber',NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_IMProvider, 'Skype', 6, 'Skype', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_IMProvider, 'Yahoo', 1, 'Yahoo', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_IMProvider, 'MSN',   2, 'Msn',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_IMProvider, 'AIM',   3, 'Aim',   NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_IMProvider, 'GTalk', 4, 'Gtalk', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_IMProvider, 'Jabber',5, 'Jabber',NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_IMProvider, 'Skype', 6, 'Skype', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_mobileProvider, 'Sprint'  , 1, 'Sprint'  , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_mobileProvider, 'Verizon' , 2, 'Verizon' , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_mobileProvider, 'Cingular', 3, 'Cingular', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_mobileProvider, 'Sprint'  , 1, 'Sprint'  , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_mobileProvider, 'Verizon' , 2, 'Verizon' , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_mobileProvider, 'Cingular', 3, 'Cingular', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_prefix, '夫人', 1, 'Mrs.', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_prefix, '女士',  2, 'Ms.',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_prefix, '先生',  3, 'Mr.',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_prefix, '博士',  4, 'Dr.',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_prefix, '夫人', 1, 'Mrs.', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_prefix, '女士',  2, 'Ms.',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_prefix, '先生',  3, 'Mr.',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_prefix, '博士',  4, 'Dr.',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_suffix, '小',  1, 'Jr.', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, '老',  2, 'Sr.', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, 'II',  3, 'II',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, 'III', 4, 'III', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, 'IV',  5, 'IV',  NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, 'V',   6, 'V',   NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, 'VI',  7, 'VI',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_suffix, 'VII', 8, 'VII', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_suffix, '小',  1, 'Jr.', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, '老',  2, 'Sr.', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, 'II',  3, 'II',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, 'III', 4, 'III', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, 'IV',  5, 'IV',  NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, 'V',   6, 'V',   NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, 'VI',  7, 'VI',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_suffix, 'VII', 8, 'VII', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_aclRole, '管理员',  1, 'Admin', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_aclRole, '已通过身份验证',  2, 'Auth' , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+   (@option_group_id_aclRole, '管理员',  1, 'Admin', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aclRole, '已通过身份验证',  2, 'Auth' , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-   (@option_group_id_acc, 'Visa'      ,  1, 'Visa'      , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_acc, 'MasterCard',  2, 'MasterCard', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_acc, 'Amex'      ,  3, 'Amex'      , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_acc, 'Discover'  ,  4, 'Discover'  , NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_acc, 'Visa'      ,  1, 'Visa'      , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_acc, 'MasterCard',  2, 'MasterCard', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_acc, 'Amex'      ,  3, 'Amex'      , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_acc, 'Discover'  ,  4, 'Discover'  , NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_pi, '信用卡',  1, 'Credit Card', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, '借记卡',   2, 'Debit Card',  NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, '现金',         3, 'Cash',        NULL, 0, 0, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pi, '支票',        4, 'Check',       NULL, 0, 1, 4, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, '电汇',          5, 'EFT',         NULL, 0, 0, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '信用卡',  1, 'Credit Card', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pi, '借记卡',   2, 'Debit Card',  NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pi, '现金',         3, 'Cash',        NULL, 0, 0, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pi, '支票',        4, 'Check',       NULL, 0, 1, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pi, '电汇',          5, 'EFT',         NULL, 0, 0, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_cs, '已完成的'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, '等待中'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, '已取消的'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, '失败的'     , 4, 'Failed'     , NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, '进程中', 5, 'In Progress', NULL, 0, NULL, 5, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, '过期'    , 6, 'Overdue'    , NULL, 0, NULL, 6, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, 'Refunded'   , 7, 'Refunded'   , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, 'Partially paid', 8, 'Partially paid', NULL, 0, NULL, 8, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, 'Pending refund', 9, 'Pending refund', NULL, 0, NULL, 9, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cs, 'Chargeback', 10, 'Chargeback', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_cs, '已完成的'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, '等待中'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, '已取消的'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, '失败的'     , 4, 'Failed'     , NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, '进程中', 5, 'In Progress', NULL, 0, NULL, 5, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, '过期'    , 6, 'Overdue'    , NULL, 0, NULL, 6, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Refunded'   , 7, 'Refunded'   , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Partially paid', 8, 'Partially paid', NULL, 0, NULL, 8, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Pending refund', 9, 'Pending refund', NULL, 0, NULL, 9, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Chargeback', 10, 'Chargeback', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_pcp, '等候审查', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pcp, '已批准'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pcp, '未批准'  , 3, 'Not Approved'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pcp, '等候审查', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pcp, '已批准'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pcp, '未批准'  , 3, 'Not Approved'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_pcpOwnerNotify, 'Owner chooses whether to receive notifications', 1, 'owner_chooses', NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pcpOwnerNotify, 'Notifications are sent to ALL owners'      , 2, 'all_owners'      , NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pcpOwnerNotify, 'Notifications are NOT available'  , 3, 'no_notifications'  , NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pcpOwnerNotify, 'Owner chooses whether to receive notifications', 1, 'owner_chooses', NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pcpOwnerNotify, 'Notifications are sent to ALL owners'      , 2, 'all_owners'      , NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pcpOwnerNotify, 'Notifications are NOT available'  , 3, 'no_notifications'  , NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_pRole, '出席人',  1, 'Attendee',  NULL, 1, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pRole, '志愿者', 2, 'Volunteer', NULL, 1, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pRole, '主办人',      3, 'Host',      NULL, 1, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pRole, '演讲人',   4, 'Speaker',   NULL, 1, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pRole, '出席人',  1, 'Attendee',  NULL, 1, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pRole, '志愿者', 2, 'Volunteer', NULL, 1, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pRole, '主办人',      3, 'Host',      NULL, 1, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pRole, '演讲人',   4, 'Speaker',   NULL, 1, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_etype, '会议', 1, 'Conference',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '展览', 2, 'Exhibition',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '募捐人', 3, 'Fundraiser',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '会议',    4, 'Meeting',     NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '表现',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '研讨会',   6, 'Workshop',    NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_etype, '会议', 1, 'Conference',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_etype, '展览', 2, 'Exhibition',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_etype, '募捐人', 3, 'Fundraiser',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_etype, '会议',    4, 'Meeting',     NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_etype, '表现',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_etype, '研讨会',   6, 'Workshop',    NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- note that these are not ts'ed since they are used for logic in most cases and not display
 -- they are used for display only in the prefernces field settings
-  (@option_group_id_cvOpt, '活动'   ,   1, 'activity', NULL, 0, NULL,  1,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '关系',   2, 'rel', NULL, 0, NULL,  2,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '群组'       ,   3, 'group', NULL, 0, NULL,  3,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '注解'        ,   4, 'note', NULL, 0, NULL,  4,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '标签'         ,   5, 'tag', NULL, 0, NULL,  5,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '更改记录'   ,   6, 'log', NULL, 0, NULL,  6,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '捐赠',   7, 'CiviContribute', NULL, 0, NULL,  7,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '会籍'  ,   8, 'CiviMember', NULL, 0, NULL,  8,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '事件'       ,   9, 'CiviEvent', NULL, 0, NULL,  9,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '案例'        ,  10, 'CiviCase', NULL, 0, NULL,  10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '拨款'       ,  11, 'CiviGrant', NULL, 0, NULL,  11, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '认捐'      ,  13, 'CiviPledge', NULL, 0, NULL,  13, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '邮件'     ,  14, 'CiviMail', NULL, 0, NULL,  14, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_cvOpt, '活动'   ,   1, 'activity', NULL, 0, NULL,  1,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '关系',   2, 'rel', NULL, 0, NULL,  2,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '群组'       ,   3, 'group', NULL, 0, NULL,  3,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '注解'        ,   4, 'note', NULL, 0, NULL,  4,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '标签'         ,   5, 'tag', NULL, 0, NULL,  5,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '更改记录'   ,   6, 'log', NULL, 0, NULL,  6,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '捐赠',   7, 'CiviContribute', NULL, 0, NULL,  7,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '会籍'  ,   8, 'CiviMember', NULL, 0, NULL,  8,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '事件'       ,   9, 'CiviEvent', NULL, 0, NULL,  9,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '案例'        ,  10, 'CiviCase', NULL, 0, NULL,  10, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '拨款'       ,  11, 'CiviGrant', NULL, 0, NULL,  11, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '认捐'      ,  13, 'CiviPledge', NULL, 0, NULL,  13, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_cvOpt, '邮件'     ,  14, 'CiviMail', NULL, 0, NULL,  14, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 
-  (@option_group_id_csgOpt, 'Show Smart Groups on Demand',1, 'showondemand', NULL, 0, NULL,  1,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_csgOpt, 'Always Show Smart Groups',   2, 'alwaysshow', NULL, 0, NULL,  2,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_csgOpt, 'Hide Smart Groups'       ,   3, 'hide', NULL, 0, NULL,  3,  NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_csgOpt, 'Show Smart Groups on Demand',1, 'showondemand', NULL, 0, NULL,  1,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csgOpt, 'Always Show Smart Groups',   2, 'alwaysshow', NULL, 0, NULL,  2,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csgOpt, 'Hide Smart Groups'       ,   3, 'hide', NULL, 0, NULL,  3,  NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_ceOpt, '自定义数据'              ,   1, 'CustomData', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '地址'                  ,   2, 'Address', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '沟通偏好',   3, 'CommunicationPreferences', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '注解'                    ,   4, 'Notes', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '人口统计数据'             ,   5, 'Demographics', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '标签与群组'          ,   6, 'TagsAndGroups', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '邮件'                    ,   7, 'Email', NULL, 1, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '电话'                    ,   8, 'Phone', NULL, 1, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '即时通讯'        ,   9, 'IM', NULL, 1, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, 'Open ID'                  ,   10, 'OpenID', NULL, 1, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '网站'                  ,   11, 'Website', NULL, 1, NULL, 11, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '前缀'                   ,   12, 'Prefix', NULL, 2, NULL, 12, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, 'Formal Title'             ,   13, 'Formal Title', NULL, 2, NULL, 13, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '名'               ,   14, 'First Name', NULL, 2, NULL, 14, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '中间名'              ,   15, 'Middle Name', NULL, 2, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '姓'                ,   16, 'Last Name', NULL, 2, NULL, 16, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '称呼'                   ,   17, 'Suffix', NULL, 2, NULL, 17, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_ceOpt, '自定义数据'              ,   1, 'CustomData', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '地址'                  ,   2, 'Address', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '沟通偏好',   3, 'CommunicationPreferences', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '注解'                    ,   4, 'Notes', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '人口统计数据'             ,   5, 'Demographics', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '标签与群组'          ,   6, 'TagsAndGroups', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '邮件'                    ,   7, 'Email', NULL, 1, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '电话'                    ,   8, 'Phone', NULL, 1, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '即时通讯'        ,   9, 'IM', NULL, 1, NULL, 9, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, 'Open ID'                  ,   10, 'OpenID', NULL, 1, NULL, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '网站'                  ,   11, 'Website', NULL, 1, NULL, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '前缀'                   ,   12, 'Prefix', NULL, 2, NULL, 12, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, 'Formal Title'             ,   13, 'Formal Title', NULL, 2, NULL, 13, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '名'               ,   14, 'First Name', NULL, 2, NULL, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '中间名'              ,   15, 'Middle Name', NULL, 2, NULL, 15, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '姓'                ,   16, 'Last Name', NULL, 2, NULL, 16, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_ceOpt, '称呼'                   ,   17, 'Suffix', NULL, 2, NULL, 17, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_asOpt, '地址字段'          ,   1, 'location', NULL, 0, NULL,  1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '自定义字段'           ,   2, 'custom', NULL, 0, NULL,  2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '活动'              ,   3, 'activity', NULL, 0, NULL,  4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '关系'           ,   4, 'relationship', NULL, 0, NULL,  5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '注解'                   ,   5, 'notes', NULL, 0, NULL,  6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '改变 Log'              ,   6, 'changeLog', NULL, 0, NULL,  7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '捐赠'           ,   7, 'CiviContribute', NULL, 0, NULL,  8, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '会籍'             ,   8, 'CiviMember', NULL, 0, NULL,  9, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '事件'                  ,   9, 'CiviEvent', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '案例'                   ,  10, 'CiviCase', NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL),
-    (@option_group_id_asOpt, 'Grants'                                        ,  12, 'CiviGrant', NULL, 0, NULL, 14, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '人口统计数据'            ,  13, 'demographics', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '认捐'                 ,  15, 'CiviPledge', NULL, 0, NULL, 17, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '联系方式'            ,  16, 'contactType', NULL, 0, NULL, 18, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '群组'                  ,  17, 'groups', NULL, 0, NULL, 19, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '标签'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '邮寄'                 ,  19, 'CiviMail', NULL, 0, NULL, 21, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_asOpt, '地址字段'          ,   1, 'location', NULL, 0, NULL,  1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '自定义字段'           ,   2, 'custom', NULL, 0, NULL,  2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '活动'              ,   3, 'activity', NULL, 0, NULL,  4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '关系'           ,   4, 'relationship', NULL, 0, NULL,  5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '注解'                   ,   5, 'notes', NULL, 0, NULL,  6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '改变 Log'              ,   6, 'changeLog', NULL, 0, NULL,  7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '捐赠'           ,   7, 'CiviContribute', NULL, 0, NULL,  8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '会籍'             ,   8, 'CiviMember', NULL, 0, NULL,  9, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '事件'                  ,   9, 'CiviEvent', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '案例'                   ,  10, 'CiviCase', NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, 'Grants'                                        ,  12, 'CiviGrant', NULL, 0, NULL, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '人口统计数据'            ,  13, 'demographics', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '认捐'                 ,  15, 'CiviPledge', NULL, 0, NULL, 17, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '联系方式'            ,  16, 'contactType', NULL, 0, NULL, 18, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '群组'                  ,  17, 'groups', NULL, 0, NULL, 19, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '标签'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_asOpt, '邮寄'                 ,  19, 'CiviMail', NULL, 0, NULL, 21, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_udOpt, '群组'                     , 1, 'Groups', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '捐赠'              , 2, 'CiviContribute', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '会籍'                , 3, 'CiviMember', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '事件'                     , 4, 'CiviEvent', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '我的联系人/机构', 5, 'Permissioned Orgs', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '认捐'                    , 7, 'CiviPledge', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '个人行动页面'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '被分配的活动'        , 9, 'Assigned Activities', NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, 'Invoices / Credit Notes'     , 10, 'Invoices / Credit Notes', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_udOpt, '群组'                     , 1, 'Groups', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '捐赠'              , 2, 'CiviContribute', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '会籍'                , 3, 'CiviMember', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '事件'                     , 4, 'CiviEvent', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '我的联系人/机构', 5, 'Permissioned Orgs', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '认捐'                    , 7, 'CiviPledge', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '个人行动页面'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, '被分配的活动'        , 9, 'Assigned Activities', NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_udOpt, 'Invoices / Credit Notes'     , 10, 'Invoices / Credit Notes', NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_acsOpt, '电子邮件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '电话'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '街道地址'  , 4, 'street_address', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '城市'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '省份'  , 6, 'state_province', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '国家'         , 7, 'country'       , NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '邮编'     , 8, 'postal_code'   , NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acsOpt, '电子邮件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acsOpt, '电话'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acsOpt, '街道地址'  , 4, 'street_address', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acsOpt, '城市'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acsOpt, '省份'  , 6, 'state_province', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acsOpt, '国家'         , 7, 'country'       , NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acsOpt, '邮编'     , 8, 'postal_code'   , NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_acConRef, '电子邮件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acConRef, '电话'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acConRef, '街道地址'  , 4, 'street_address', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acConRef, '城市'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acConRef, '省份'  , 6, 'state_province', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acConRef, '国家'         , 7, 'country'       , NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acConRef, '邮编'     , 8, 'country'       , NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acConRef, '电子邮件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acConRef, '电话'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acConRef, '街道地址'  , 4, 'street_address', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acConRef, '城市'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acConRef, '省份'  , 6, 'state_province', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acConRef, '国家'         , 7, 'country'       , NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acConRef, '邮编'     , 8, 'country'       , NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_adOpt, '街道地址'    ,  1, 'street_address', NULL, 0, NULL,  1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, 'Supplemental Address 1'  ,  2, 'supplemental_address_1', NULL, 0, NULL,  2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, 'Supplemental Address 2'  ,  3, 'supplemental_address_2', NULL, 0, NULL,  3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '城市'              ,  4, 'city'          , NULL, 0, NULL,  4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '邮编' ,  5, 'postal_code'   , NULL, 0, NULL,  5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '邮编后缀',  6, 'postal_code_suffix', NULL, 0, NULL,  6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '县'            ,  7, 'county'        , NULL, 0, NULL,  7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '省份'  ,  8, 'state_province', NULL, 0, NULL,  8, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '国家'           ,  9, 'country'       , NULL, 0, NULL,  9, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '纬度'          , 10, 'geo_code_1'    , NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '经度'         , 11, 'geo_code_2', NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '地址名称'      , 12, 'address_name', NULL, 0, NULL, 12, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '街道地址解析', 13, 'street_address_parsing', NULL, 0, NULL, 13, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_adOpt, '街道地址'    ,  1, 'street_address', NULL, 0, NULL,  1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, 'Supplemental Address 1'  ,  2, 'supplemental_address_1', NULL, 0, NULL,  2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, 'Supplemental Address 2'  ,  3, 'supplemental_address_2', NULL, 0, NULL,  3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '城市'              ,  4, 'city'          , NULL, 0, NULL,  4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '邮编' ,  5, 'postal_code'   , NULL, 0, NULL,  5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '邮编后缀',  6, 'postal_code_suffix', NULL, 0, NULL,  6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '县'            ,  7, 'county'        , NULL, 0, NULL,  7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '省份'  ,  8, 'state_province', NULL, 0, NULL,  8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '国家'           ,  9, 'country'       , NULL, 0, NULL,  9, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '纬度'          , 10, 'geo_code_1'    , NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '经度'         , 11, 'geo_code_2', NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '地址名称'      , 12, 'address_name', NULL, 0, NULL, 12, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, '街道地址解析', 13, 'street_address_parsing', NULL, 0, NULL, 13, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_gType, '访问控制', 1, 'Access Control', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_gType, 'Mailing List',   2, 'Mailing List',   NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_gType, '访问控制', 1, 'Access Control', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_gType, 'Mailing List',   2, 'Mailing List',   NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_grantSt, 'Submitted', 1, 'Submitted',  NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, 'Eligible', 2, 'Eligible',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, 'Ineligible', 3, 'Ineligible', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, '已支付', 4, 'Paid', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, 'Awaiting Information', 5, 'Awaiting Information', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, 'Withdrawn', 6, 'Withdrawn', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, 'Approved for Payment',  7, 'Approved for Payment', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_grantSt, 'Submitted', 1, 'Submitted',  NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_grantSt, 'Eligible', 2, 'Eligible',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_grantSt, 'Ineligible', 3, 'Ineligible', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_grantSt, '已支付', 4, 'Paid', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_grantSt, 'Awaiting Information', 5, 'Awaiting Information', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_grantSt, 'Withdrawn', 6, 'Withdrawn', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_grantSt, 'Approved for Payment',  7, 'Approved for Payment', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Sample'               , 1, 'CRM_Contact_Form_Search_Custom_Sample'      , NULL, 0, NULL, 1, '家庭名字和州名', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContributionAggregate', 2, 'CRM_Contact_Form_Search_Custom_ContributionAggregate', NULL, 0, NULL, 2, '捐赠合计', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Basic'                , 3, 'CRM_Contact_Form_Search_Custom_Basic'       , NULL, 0, NULL, 3, '基本搜索', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Group'                , 4, 'CRM_Contact_Form_Search_Custom_Group'       , NULL, 0, NULL, 4, '包括 / 排除 搜索', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PostalMailing'        , 5, 'CRM_Contact_Form_Search_Custom_PostalMailing', NULL, 0, NULL, 5, '邮政信件', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Proximity'            , 6, 'CRM_Contact_Form_Search_Custom_Proximity', NULL, 0, NULL, 6, '相近搜索', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_EventAggregate'       , 7, 'CRM_Contact_Form_Search_Custom_EventAggregate', NULL, 0, NULL, 7, '事件总结', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ActivitySearch'       , 8, 'CRM_Contact_Form_Search_Custom_ActivitySearch', NULL, 0, NULL, 8, '活动搜索', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSet'             , 9, 'CRM_Contact_Form_Search_Custom_PriceSet', NULL, 0, NULL, 9, '给事件参加人的定价集', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ZipCodeRange'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, '邮政编码范围', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_DateAdded'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, '数据已加入CiviCRM', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_MultipleValues'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, '自定义字段组多值列表', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContribSYBNT'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, 'X年而不是Y年的捐赠', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_TagContributions'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '按标签查找捐赠金额', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_FullText'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '全文检索', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Sample'               , 1, 'CRM_Contact_Form_Search_Custom_Sample'      , NULL, 0, NULL, 1, '家庭名字和州名', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContributionAggregate', 2, 'CRM_Contact_Form_Search_Custom_ContributionAggregate', NULL, 0, NULL, 2, '捐赠合计', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Basic'                , 3, 'CRM_Contact_Form_Search_Custom_Basic'       , NULL, 0, NULL, 3, '基本搜索', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Group'                , 4, 'CRM_Contact_Form_Search_Custom_Group'       , NULL, 0, NULL, 4, '包括 / 排除 搜索', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PostalMailing'        , 5, 'CRM_Contact_Form_Search_Custom_PostalMailing', NULL, 0, NULL, 5, '邮政信件', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Proximity'            , 6, 'CRM_Contact_Form_Search_Custom_Proximity', NULL, 0, NULL, 6, '相近搜索', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_EventAggregate'       , 7, 'CRM_Contact_Form_Search_Custom_EventAggregate', NULL, 0, NULL, 7, '事件总结', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ActivitySearch'       , 8, 'CRM_Contact_Form_Search_Custom_ActivitySearch', NULL, 0, NULL, 8, '活动搜索', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSet'             , 9, 'CRM_Contact_Form_Search_Custom_PriceSet', NULL, 0, NULL, 9, '给事件参加人的定价集', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ZipCodeRange'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, '邮政编码范围', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_DateAdded'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, '数据已加入CiviCRM', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_MultipleValues'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, '自定义字段组多值列表', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContribSYBNT'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, 'X年而不是Y年的捐赠', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_TagContributions'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '按标签查找捐赠金额', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_FullText'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '全文检索', 0, 0, 1, NULL, NULL, NULL),
 
 -- report templates
-  (@option_group_id_report , '支持人报告(概要)',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '给出系统中支持者记录的地址和电话列表。', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report , '支持者报告(详情)',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  '给出联系人相关的捐赠、会籍、事件和活动信息。',   0, 0, 1, NULL, NULL),
-  (@option_group_id_report , 'Activity Details Report',                 'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  '给出支持者活动列表，包括特定日期范围内(必要)某个或所有联系人的活动统计', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report , '登门/电话拜访清单报告',                'walklist',                       'CRM_Report_Form_Walklist_Walklist',                       NULL, 0, NULL, 4,  'Provides a detailed report for your walk/phonelist for targeted contacts', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report , '当前雇主报告',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '给出雇主雇员关系的详细列表，以及雇佣详情如开始日期', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report , '捐赠概要报告',             'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  'Groups and totals contributions by criteria including contact, time period, financial type, contributor location, etc.', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '捐赠详情报告',              'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  'Lists specific contributions by criteria including contact, time period, financial type, contributor location, etc. Contribution summary report points to this report for contribution details.', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '重复捐赠报告',             'contribute/repeat',              'CRM_Report_Form_Contribute_Repeat',              NULL, 0, NULL, 8,  '给定两个日期范围，显示在两个范围内都做了捐赠的联系人，及每个范围内的捐赠金额，以及两者之间的增/减百分比。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '机构捐赠报告',    'contribute/organizationSummary', 'CRM_Report_Form_Contribute_OrganizationSummary', NULL, 0, NULL, 9,  '显示按机构的捐赠详情列表，其中包括机构员工所作的捐赠。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '家庭捐赠报告',       'contribute/householdSummary',    'CRM_Report_Form_Contribute_HouseholdSummary',    NULL, 0, NULL, 10, '按家庭分组显示捐赠详情，其中包括家庭成员所作的捐赠。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '名列前茅的捐赠人报告',                       'contribute/topDonor',            'CRM_Report_Form_Contribute_TopDonor',            NULL, 0, NULL, 11, '列出指定时间区间内名列前茅的捐赠人。您想列出多少个捐赠人都可以(例如，前100个捐赠人)。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , 'SYBUNT报告',                           'contribute/sybunt',              'CRM_Report_Form_Contribute_Sybunt',              NULL, 0, NULL, 12, 'SYBUNT代表某个(些)年份但不是当年。列出在机构历史中有过捐赠，但在您指定的时间期间未作捐赠的支持者。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , 'LYBUNT报告',                           'contribute/lybunt',              'CRM_Report_Form_Contribute_Lybunt',              NULL, 0, NULL, 13, 'LYBUNT代表去年但不是当年。列出在过去一年中有过捐赠，但在您指定的时间期间未作捐赠的支持者。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '软信用报告',                      'contribute/softcredit',          'CRM_Report_Form_Contribute_SoftCredit',          NULL, 0, NULL, 14, '列出那些为其他联系人带去过软信用的联系人的捐赠。', 0, 0, 1,@contributeCompId, NULL),
-  (@option_group_id_report , '会籍报告(概要)',             'member/summary',                 'CRM_Report_Form_Member_Summary',                 NULL, 0, NULL, 15, '按类型和加入日期列出会籍概要', 0, 0, 1, @memberCompId, NULL),
-  (@option_group_id_report , '会籍报告(详情)',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, '列出会员及他们的会籍状态和会籍详情(加入日期、开始日期、结束日期)。也可以显示与每个会籍相关的捐赠 (付款)。', 0, 0, 1, @memberCompId, NULL),
-  (@option_group_id_report , '会籍报告(流失的)',              'member/lapse',                   'CRM_Report_Form_Member_Lapse',                   NULL, 0, NULL, 17, '列出在指定日期前流失或将要流失的会籍', 0, 0, 1, @memberCompId, NULL),
-  (@option_group_id_report , '时间参加人报告(列表)',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, '列出某个事件的参加人。', 0, 0, 1, @eventCompId, NULL),
-  (@option_group_id_report , '时间收入报告(概要)',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, '给出时间收入概况。其中可以包括关键信息，如事件ID、注册情况、出席情况和事件收入等，以帮助您确定事件是否成功。', 0, 0, 1, @eventCompId, NULL),
-  (@option_group_id_report , '事件收入报告(详情)',            'event/income',                   'CRM_Report_Form_Event_Income',                   NULL, 0, NULL, 20, '帮助您分析某事件带来的收入。报告可以包括参加人类型、状态和付款方法的详情。', 0, 0, 1, @eventCompId, NULL),
-  (@option_group_id_report , 'Pledge Detail Report',                    'pledge/detail',                  'CRM_Report_Form_Pledge_Detail',                  NULL, 0, NULL, 21, 'List of pledges including amount pledged, pledge status, next payment date, balance due, total amount paid etc.', 0, 0, 1, @pledgeCompId, NULL),
-  (@option_group_id_report , '认捐但未付款报告',             'pledge/pbnp',                    'CRM_Report_Form_Pledge_Pbnp',                    NULL, 0, NULL, 22, '认捐但未付款报告', 0, 0, 1, @pledgeCompId, NULL),
-  (@option_group_id_report , '关系报告',                     'contact/relationship',           'CRM_Report_Form_Contact_Relationship',           NULL, 0, NULL, 23, '关系报告', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report , '案例概要报告',                     'case/summary',                   'CRM_Report_Form_Case_Summary',                   NULL, 0, NULL, 24, '按日期范围、状态、工作人员和/或案例角色，给出案例概要及时间期间。', 0, 0, 1, @caseCompId, NULL),
-  (@option_group_id_report , '案例时间花费报告',                  'case/timespent',                 'CRM_Report_Form_Case_TimeSpent',                 NULL, 0, NULL, 25, 'Aggregates time spent on case and / or non-case activities by activity type and contact.', 0, 0, 1, @caseCompId, NULL),
-  (@option_group_id_report , '联系人人口统计数据报告',             'case/demographics',              'CRM_Report_Form_Case_Demographics',              NULL, 0, NULL, 26, '数据库中案例联系人(或非案例联系人)的人口统计细分。包括自定义的联系人字段。', 0, 0, 1, @caseCompId, NULL),
-  (@option_group_id_report , '数据库日志报告',                     'contact/log',                    'CRM_Report_Form_Contact_Log',                    NULL, 0, NULL, 27, '联系人和活动记录在指定日期范围内的创建或更新日志', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report , 'Activity Summary Report',                 'activitySummary',                'CRM_Report_Form_ActivitySummary',                NULL, 0, NULL, 28, '按类型/日期显示活动统计', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report, '簿记交易报告',          'contribute/bookkeeping',         'CRM_Report_Form_Contribute_Bookkeeping',         NULL, 0, 0, 29,    '显示簿记交易报告', 0, 0, 1, 2, NULL),
-  (@option_group_id_report , '拨款报告(详情)', 'grant/detail', 'CRM_Report_Form_Grant_Detail', NULL, 0, 0, 30, '拨款报告详情', 0, 0, 1, @grantCompId, NULL),
-  (@option_group_id_report, '参加人清单人数报告', 'event/participantlist', 'CRM_Report_Form_Event_ParticipantListCount', NULL, 0, 0, 31, '显示参加人人数，及名单', 0, 0, 1, @eventCompId, NULL),
-  (@option_group_id_report, '收入概要报告', 'event/incomesummary', 'CRM_Report_Form_Event_IncomeCountSummary', NULL, 0, 0, 32, '显示事件收入概要及人数', 0, 0, 1, @eventCompId, NULL),
-  (@option_group_id_report, '案例详情报告', 'case/detail', 'CRM_Report_Form_Case_Detail', NULL, 0, 0, 33, '案例详情', 0, 0, 1, @caseCompId, NULL),
-  (@option_group_id_report, '邮件退回报告', 'Mailing/bounce', 'CRM_Report_Form_Mailing_Bounce', NULL, 0, NULL, 34, '邮件退回报告', 0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, '邮件概要报告', 'Mailing/summary', 'CRM_Report_Form_Mailing_Summary', NULL, 0, NULL, 35, '邮件发送概要统计', 0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, 'email打开报告', 'Mailing/opened', 'CRM_Report_Form_Mailing_Opened', NULL, 0, NULL, 36, '显示某次发送email已打开的联系人', 0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, 'Mail Click-Through Report', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, '显示来自每个邮件的点击', 0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, '联系人日志报告(概要)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, '日志设备联系人修改报告(概要)', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report, '联系人日志报告(详细)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, '日志设备联系人修改报告(详情)', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report, '捐赠日志报告(概要)', 'logging/contribute/summary', 'CRM_Report_Form_Contribute_LoggingSummary', NULL, 0, NULL, 40, '关于日志设备的捐赠修改报告(概要)', 0, 0, 0, @contributeCompId, NULL),
-  (@option_group_id_report, '捐赠日志报告(详情)', 'logging/contribute/detail', 'CRM_Report_Form_Contribute_LoggingDetail', NULL, 0, NULL, 41, '关于日志设备的捐赠修改报告(详情)', 0, 0, 0, @contributeCompId, NULL),
-  (@option_group_id_report, '拨款报告(统计数字)', 'grant/statistics', 'CRM_Report_Form_Grant_Statistics', NULL, 0, NULL, 42, '显示拨款统计', 0, 0, 1, @grantCompId, NULL),
-  (@option_group_id_report, '调查报告(详情)',    'survey/detail', 'CRM_Report_Form_Campaign_SurveyDetails',  NULL, 0, NULL, 43, '关于拉票，电话银行，拜访名单或其他调查。', 0, 0, 1, @campaignCompId, NULL),
-  (@option_group_id_report, '个人行动页面报告', 'contribute/pcp', 'CRM_Report_Form_Contribute_PCP', NULL, 0, NULL, 44, '对每个个人行动页面，概括其募集到的捐赠总额以及捐赠者个数。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report , '认捐概要报告', 'pledge/summary', 'CRM_Report_Form_Pledge_Summary', NULL, 0, NULL, 45, 'Groups and totals pledges by criteria including contact, time period, pledge status, location, etc.', 0, 0, 1, @pledgeCompId, NULL),
-  (@option_group_id_report , '按关系统计捐赠',                   'contribute/history',              'CRM_Report_Form_Contribute_History',              NULL, 0, NULL, 46,  '按年份分组，列出联系人的捐赠历史，以及与此联系人相关的任何联系人的捐赠情况。', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report,  '邮件详情报告',                                            'mailing/detail',     'CRM_Report_Form_Mailing_Detail',          NULL, 0, NULL, 47,  '提供关于义务的和成功的的发送、退订和自愿退出、回复及转发的报告。',   0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, '捐赠和会籍详情', 'member/contributionDetail', 'CRM_Report_Form_Member_ContributionDetail', NULL, 0, NULL, 48, '任何类型捐赠的详情，加上用作会籍费的捐赠的相关会籍信息。', 0, 0, 1, @memberCompId, NULL),
-  (@option_group_id_report, 'Recurring Contributions Report', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, '提供关于定期捐赠的信息', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report, 'Recurring Contributions Summary', 'contribute/recursummary', 'CRM_Report_Form_Contribute_RecurSummary',               NULL, 0, NULL, 49, 'Provides simple summary for each payment instrument for which there are recurring contributions (e.g. Credit Card, Standing Order, Direct Debit, etc.), showing within a given date range.', 0, 0, 1, @contributeCompId, NULL),
-  (@option_group_id_report, 'Deferred Revenue Details', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'Deferred Revenue Details Report', 0, 0, 1, @contributeCompId, NULL), 
+  (@option_group_id_report , '支持人报告(概要)',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '给出系统中支持者记录的地址和电话列表。', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , '支持者报告(详情)',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  '给出联系人相关的捐赠、会籍、事件和活动信息。',   0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'Activity Details Report',                 'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  '给出支持者活动列表，包括特定日期范围内(必要)某个或所有联系人的活动统计', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , '登门/电话拜访清单报告',                'walklist',                       'CRM_Report_Form_Walklist_Walklist',                       NULL, 0, NULL, 4,  'Provides a detailed report for your walk/phonelist for targeted contacts', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report , '当前雇主报告',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '给出雇主雇员关系的详细列表，以及雇佣详情如开始日期', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , '捐赠概要报告',             'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  'Groups and totals contributions by criteria including contact, time period, financial type, contributor location, etc.', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '捐赠详情报告',              'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  'Lists specific contributions by criteria including contact, time period, financial type, contributor location, etc. Contribution summary report points to this report for contribution details.', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '重复捐赠报告',             'contribute/repeat',              'CRM_Report_Form_Contribute_Repeat',              NULL, 0, NULL, 8,  '给定两个日期范围，显示在两个范围内都做了捐赠的联系人，及每个范围内的捐赠金额，以及两者之间的增/减百分比。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '机构捐赠报告',    'contribute/organizationSummary', 'CRM_Report_Form_Contribute_OrganizationSummary', NULL, 0, NULL, 9,  '显示按机构的捐赠详情列表，其中包括机构员工所作的捐赠。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '家庭捐赠报告',       'contribute/householdSummary',    'CRM_Report_Form_Contribute_HouseholdSummary',    NULL, 0, NULL, 10, '按家庭分组显示捐赠详情，其中包括家庭成员所作的捐赠。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '名列前茅的捐赠人报告',                       'contribute/topDonor',            'CRM_Report_Form_Contribute_TopDonor',            NULL, 0, NULL, 11, '列出指定时间区间内名列前茅的捐赠人。您想列出多少个捐赠人都可以(例如，前100个捐赠人)。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , 'SYBUNT报告',                           'contribute/sybunt',              'CRM_Report_Form_Contribute_Sybunt',              NULL, 0, NULL, 12, 'SYBUNT代表某个(些)年份但不是当年。列出在机构历史中有过捐赠，但在您指定的时间期间未作捐赠的支持者。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , 'LYBUNT报告',                           'contribute/lybunt',              'CRM_Report_Form_Contribute_Lybunt',              NULL, 0, NULL, 13, 'LYBUNT代表去年但不是当年。列出在过去一年中有过捐赠，但在您指定的时间期间未作捐赠的支持者。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '软信用报告',                      'contribute/softcredit',          'CRM_Report_Form_Contribute_SoftCredit',          NULL, 0, NULL, 14, '列出那些为其他联系人带去过软信用的联系人的捐赠。', 0, 0, 1,@contributeCompId, NULL, NULL),
+  (@option_group_id_report , '会籍报告(概要)',             'member/summary',                 'CRM_Report_Form_Member_Summary',                 NULL, 0, NULL, 15, '按类型和加入日期列出会籍概要', 0, 0, 1, @memberCompId, NULL, NULL),
+  (@option_group_id_report , '会籍报告(详情)',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, '列出会员及他们的会籍状态和会籍详情(加入日期、开始日期、结束日期)。也可以显示与每个会籍相关的捐赠 (付款)。', 0, 0, 1, @memberCompId, NULL, NULL),
+  (@option_group_id_report , '会籍报告(流失的)',              'member/lapse',                   'CRM_Report_Form_Member_Lapse',                   NULL, 0, NULL, 17, '列出在指定日期前流失或将要流失的会籍', 0, 0, 1, @memberCompId, NULL, NULL),
+  (@option_group_id_report , '时间参加人报告(列表)',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, '列出某个事件的参加人。', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report , '时间收入报告(概要)',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, '给出时间收入概况。其中可以包括关键信息，如事件ID、注册情况、出席情况和事件收入等，以帮助您确定事件是否成功。', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report , '事件收入报告(详情)',            'event/income',                   'CRM_Report_Form_Event_Income',                   NULL, 0, NULL, 20, '帮助您分析某事件带来的收入。报告可以包括参加人类型、状态和付款方法的详情。', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report , 'Pledge Detail Report',                    'pledge/detail',                  'CRM_Report_Form_Pledge_Detail',                  NULL, 0, NULL, 21, 'List of pledges including amount pledged, pledge status, next payment date, balance due, total amount paid etc.', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , '认捐但未付款报告',             'pledge/pbnp',                    'CRM_Report_Form_Pledge_Pbnp',                    NULL, 0, NULL, 22, '认捐但未付款报告', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , '关系报告',                     'contact/relationship',           'CRM_Report_Form_Contact_Relationship',           NULL, 0, NULL, 23, '关系报告', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , '案例概要报告',                     'case/summary',                   'CRM_Report_Form_Case_Summary',                   NULL, 0, NULL, 24, '按日期范围、状态、工作人员和/或案例角色，给出案例概要及时间期间。', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report , '案例时间花费报告',                  'case/timespent',                 'CRM_Report_Form_Case_TimeSpent',                 NULL, 0, NULL, 25, 'Aggregates time spent on case and / or non-case activities by activity type and contact.', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report , '联系人人口统计数据报告',             'case/demographics',              'CRM_Report_Form_Case_Demographics',              NULL, 0, NULL, 26, '数据库中案例联系人(或非案例联系人)的人口统计细分。包括自定义的联系人字段。', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report , '数据库日志报告',                     'contact/log',                    'CRM_Report_Form_Contact_Log',                    NULL, 0, NULL, 27, '联系人和活动记录在指定日期范围内的创建或更新日志', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'Activity Summary Report',                 'activitySummary',                'CRM_Report_Form_ActivitySummary',                NULL, 0, NULL, 28, '按类型/日期显示活动统计', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report, '簿记交易报告',          'contribute/bookkeeping',         'CRM_Report_Form_Contribute_Bookkeeping',         NULL, 0, 0, 29,    '显示簿记交易报告', 0, 0, 1, 2, NULL, NULL),
+  (@option_group_id_report , '拨款报告(详情)', 'grant/detail', 'CRM_Report_Form_Grant_Detail', NULL, 0, 0, 30, '拨款报告详情', 0, 0, 1, @grantCompId, NULL, NULL),
+  (@option_group_id_report, '参加人清单人数报告', 'event/participantlist', 'CRM_Report_Form_Event_ParticipantListCount', NULL, 0, 0, 31, '显示参加人人数，及名单', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report, '收入概要报告', 'event/incomesummary', 'CRM_Report_Form_Event_IncomeCountSummary', NULL, 0, 0, 32, '显示事件收入概要及人数', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report, '案例详情报告', 'case/detail', 'CRM_Report_Form_Case_Detail', NULL, 0, 0, 33, '案例详情', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report, '邮件退回报告', 'Mailing/bounce', 'CRM_Report_Form_Mailing_Bounce', NULL, 0, NULL, 34, '邮件退回报告', 0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, '邮件概要报告', 'Mailing/summary', 'CRM_Report_Form_Mailing_Summary', NULL, 0, NULL, 35, '邮件发送概要统计', 0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, 'email打开报告', 'Mailing/opened', 'CRM_Report_Form_Mailing_Opened', NULL, 0, NULL, 36, '显示某次发送email已打开的联系人', 0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, 'Mail Click-Through Report', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, '显示来自每个邮件的点击', 0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, '联系人日志报告(概要)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, '日志设备联系人修改报告(概要)', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report, '联系人日志报告(详细)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, '日志设备联系人修改报告(详情)', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report, '捐赠日志报告(概要)', 'logging/contribute/summary', 'CRM_Report_Form_Contribute_LoggingSummary', NULL, 0, NULL, 40, '关于日志设备的捐赠修改报告(概要)', 0, 0, 0, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, '捐赠日志报告(详情)', 'logging/contribute/detail', 'CRM_Report_Form_Contribute_LoggingDetail', NULL, 0, NULL, 41, '关于日志设备的捐赠修改报告(详情)', 0, 0, 0, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, '拨款报告(统计数字)', 'grant/statistics', 'CRM_Report_Form_Grant_Statistics', NULL, 0, NULL, 42, '显示拨款统计', 0, 0, 1, @grantCompId, NULL, NULL),
+  (@option_group_id_report, '调查报告(详情)',    'survey/detail', 'CRM_Report_Form_Campaign_SurveyDetails',  NULL, 0, NULL, 43, '关于拉票，电话银行，拜访名单或其他调查。', 0, 0, 1, @campaignCompId, NULL, NULL),
+  (@option_group_id_report, '个人行动页面报告', 'contribute/pcp', 'CRM_Report_Form_Contribute_PCP', NULL, 0, NULL, 44, '对每个个人行动页面，概括其募集到的捐赠总额以及捐赠者个数。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , '认捐概要报告', 'pledge/summary', 'CRM_Report_Form_Pledge_Summary', NULL, 0, NULL, 45, 'Groups and totals pledges by criteria including contact, time period, pledge status, location, etc.', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , '按关系统计捐赠',                   'contribute/history',              'CRM_Report_Form_Contribute_History',              NULL, 0, NULL, 46,  '按年份分组，列出联系人的捐赠历史，以及与此联系人相关的任何联系人的捐赠情况。', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report,  '邮件详情报告',                                            'mailing/detail',     'CRM_Report_Form_Mailing_Detail',          NULL, 0, NULL, 47,  '提供关于义务的和成功的的发送、退订和自愿退出、回复及转发的报告。',   0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, '捐赠和会籍详情', 'member/contributionDetail', 'CRM_Report_Form_Member_ContributionDetail', NULL, 0, NULL, 48, '任何类型捐赠的详情，加上用作会籍费的捐赠的相关会籍信息。', 0, 0, 1, @memberCompId, NULL, NULL),
+  (@option_group_id_report, 'Recurring Contributions Report', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, '提供关于定期捐赠的信息', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'Recurring Contributions Summary', 'contribute/recursummary', 'CRM_Report_Form_Contribute_RecurSummary',               NULL, 0, NULL, 49, 'Provides simple summary for each payment instrument for which there are recurring contributions (e.g. Credit Card, Standing Order, Direct Debit, etc., NULL), showing within a given date range.', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'Deferred Revenue Details', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'Deferred Revenue Details Report', 0, 0, 1, @contributeCompId, NULL, NULL), 
 
-  (@option_group_id_acs, '计划的',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_acs, '已完成的',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_acs, '已取消的',  3, 'Cancelled',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_acs, '所留信息', 4, 'Left Message', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acs, '找不到', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acs, '不是必要的',  6, 'Not Required',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acs, '可用',  7, 'Available',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acs, '缺席',  8, 'No_show',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acs, '计划的',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '已完成的',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '已取消的',  3, 'Cancelled',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '所留信息', 4, 'Left Message', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '找不到', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '不是必要的',  6, 'Not Required',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '可用',  7, 'Available',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, '缺席',  8, 'No_show',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_cas, '进行中' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cas, '已解决的', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cas, '紧急的'  , 3, 'Urgent',  'Opened', 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_cas, '进行中' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cas, '已解决的', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cas, '紧急的'  , 3, 'Urgent',  'Opened', 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_pl, '仅仅名字'     , 1, 'Name Only'      ,  NULL, 0, 0, 1, 'CRM_Event_Page_ParticipantListing_Name', 0, 1, 1, NULL, NULL),
-  (@option_group_id_pl, '名字和email', 2, 'Name and Email' ,  NULL, 0, 0, 2, 'CRM_Event_Page_ParticipantListing_NameAndEmail', 0, 1, 1, NULL, NULL),
-  (@option_group_id_pl, '名字、状态和注册日期' , 3, 'Name, Status and Register Date',  NULL, 0, 0, 3, 'CRM_Event_Page_ParticipantListing_NameStatusAndDate', 0, 1, 1, NULL, NULL),
+  (@option_group_id_pl, '仅仅名字'     , 1, 'Name Only'      ,  NULL, 0, 0, 1, 'CRM_Event_Page_ParticipantListing_Name', 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pl, '名字和email', 2, 'Name and Email' ,  NULL, 0, 0, 2, 'CRM_Event_Page_ParticipantListing_NameAndEmail', 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_pl, '名字、状态和注册日期' , 3, 'Name, Status and Register Date',  NULL, 0, 0, 3, 'CRM_Event_Page_ParticipantListing_NameStatusAndDate', 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_sfe, 'jpg',   1, 'jpg',   NULL, 0, 0,  1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'jpeg',  2, 'jpeg',  NULL, 0, 0,  2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'png',   3, 'png',   NULL, 0, 0,  3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'gif',   4, 'gif',   NULL, 0, 0,  4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'txt',   5, 'txt',   NULL, 0, 0,  5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'pdf',   6, 'pdf',   NULL, 0, 0,  6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'doc',   7, 'doc',   NULL, 0, 0,  7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'xls',   8, 'xls',   NULL, 0, 0,  8, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'rtf',   9, 'rtf',   NULL, 0, 0,  9, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'csv',  10, 'csv',   NULL, 0, 0, 10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'ppt',  11, 'ppt',   NULL, 0, 0, 11, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'docx', 12, 'docx',  NULL, 0, 0, 12, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'xlsx', 13, 'xlsx',  NULL, 0, 0, 13, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_sfe, 'odt',  14, 'odt',   NULL, 0, 0, 14, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'jpg',   1, 'jpg',   NULL, 0, 0,  1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'jpeg',  2, 'jpeg',  NULL, 0, 0,  2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'png',   3, 'png',   NULL, 0, 0,  3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'gif',   4, 'gif',   NULL, 0, 0,  4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'txt',   5, 'txt',   NULL, 0, 0,  5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'pdf',   6, 'pdf',   NULL, 0, 0,  6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'doc',   7, 'doc',   NULL, 0, 0,  7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'xls',   8, 'xls',   NULL, 0, 0,  8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'rtf',   9, 'rtf',   NULL, 0, 0,  9, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'csv',  10, 'csv',   NULL, 0, 0, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'ppt',  11, 'ppt',   NULL, 0, 0, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'docx', 12, 'docx',  NULL, 0, 0, 12, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'xlsx', 13, 'xlsx',  NULL, 0, 0, 13, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_sfe, 'odt',  14, 'odt',   NULL, 0, 0, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_we, 'Textarea', 1, 'Textarea', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_we, 'CKEditor', 2, 'CKEditor', NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_we, 'Textarea', 1, 'Textarea', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_we, 'CKEditor', 2, 'CKEditor', NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_mt, '搜索生成器',      1, 'Search Builder',      NULL, 0, 0,    1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导入联系人',      2, 'Import Contact',      NULL, 0, 0,    2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导入活动',     3, 'Import Activity',     NULL, 0, 0,    3, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导入捐款', 4, 'Import Contribution', NULL, 0, 0,    4, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导入会籍',   5, 'Import Membership',   NULL, 0, 0,    5, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导入参加人',  6, 'Import Participant',  NULL, 0, 0,    6, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出联系人',      7, 'Export Contact',      NULL, 0, 0,    7, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出捐赠', 8, 'Export Contribution', NULL, 0, 0,    8, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出会籍',   9, 'Export Membership',   NULL, 0, 0,    9, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出参加人', 10, 'Export Participant',  NULL, 0, 0,   10, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出认捐',      11, 'Export Pledge',       NULL, 0, 0,   11, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出案例',        12, 'Export Case',         NULL, 0, 0,   12, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出拨款',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '导出活动',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_mt, '搜索生成器',      1, 'Search Builder',      NULL, 0, 0,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导入联系人',      2, 'Import Contact',      NULL, 0, 0,    2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导入活动',     3, 'Import Activity',     NULL, 0, 0,    3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导入捐款', 4, 'Import Contribution', NULL, 0, 0,    4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导入会籍',   5, 'Import Membership',   NULL, 0, 0,    5, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导入参加人',  6, 'Import Participant',  NULL, 0, 0,    6, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出联系人',      7, 'Export Contact',      NULL, 0, 0,    7, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出捐赠', 8, 'Export Contribution', NULL, 0, 0,    8, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出会籍',   9, 'Export Membership',   NULL, 0, 0,    9, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出参加人', 10, 'Export Participant',  NULL, 0, 0,   10, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出认捐',      11, 'Export Pledge',       NULL, 0, 0,   11, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出案例',        12, 'Export Case',         NULL, 0, 0,   12, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出拨款',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_mt, '导出活动',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, 'week'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, '月'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, '年'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_fu, 'week'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_fu, '月'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_fu, '年'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
 
 -- phone types.
-  (@option_group_id_pht, '电话' ,        1, 'Phone'      , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pht, '手机',        2, 'Mobile'     , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pht, '传真'   ,        3, 'Fax'        , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pht, '呼机' ,        4, 'Pager'      , NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pht, '语音信箱' ,    5, 'Voicemail'  , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pht, '电话' ,        1, 'Phone'      , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pht, '手机',        2, 'Mobile'     , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pht, '传真'   ,        3, 'Fax'        , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pht, '呼机' ,        4, 'Pager'      , NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pht, '语音信箱' ,    5, 'Voicemail'  , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- custom data types.
-  (@option_group_id_cdt, 'Participant Role',       '1', 'ParticipantRole',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_cdt, 'Participant Event Name', '2', 'ParticipantEventName', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_cdt, 'Participant Event Type', '3', 'ParticipantEventType', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL ),
+  (@option_group_id_cdt, 'Participant Role',       '1', 'ParticipantRole',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_cdt, 'Participant Event Name', '2', 'ParticipantEventName', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_cdt, 'Participant Event Type', '3', 'ParticipantEventType', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL , NULL),
 
 -- visibility.
-  (@option_group_id_vis, 'Public', 1, 'public', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_vis, 'Admin', 2, 'admin', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL ),
+  (@option_group_id_vis, 'Public', 1, 'public', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_vis, 'Admin', 2, 'admin', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL , NULL),
 
 -- mail protocol.
-  (@option_group_id_mp, 'IMAP',    1, 'IMAP',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_mp, 'Maildir', 2, 'Maildir', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_mp, 'POP3',    3, 'POP3',    NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_mp, 'Localdir', 4, 'Localdir', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL ),
+  (@option_group_id_mp, 'IMAP',    1, 'IMAP',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_mp, 'Maildir', 2, 'Maildir', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_mp, 'POP3',    3, 'POP3',    NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_mp, 'Localdir', 4, 'Localdir', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL , NULL),
 
 -- priority
-  (@option_group_id_priority, '紧急的', 1, 'Urgent', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_priority, '正常的', 2, 'Normal', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_priority, '低的',    3, 'Low',    NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_priority, '紧急的', 1, 'Urgent', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_priority, '正常的', 2, 'Normal', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_priority, '低的',    3, 'Low',    NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- redaction rule FIXME: should this be in sample data instead?
-  (@option_group_id_rr, 'Vancouver', 'city_', 'city_', NULL, 0, NULL, 1, NULL, 0, 0, 0, NULL, NULL),
-  (@option_group_id_rr, '/(19|20)(\\d{2})-(\\d{1,2})-(\\d{1,2})/', 'date_', 'date_', NULL, 1, NULL, 2, NULL, 0, 0, 0, NULL, NULL),
+  (@option_group_id_rr, 'Vancouver', 'city_', 'city_', NULL, 0, NULL, 1, NULL, 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_rr, '/(19|20)(\\d{2})-(\\d{1,2})-(\\d{1,2})/', 'date_', 'date_', NULL, 1, NULL, 2, NULL, 0, 0, 0, NULL, NULL, NULL),
 
 -- email greeting.
-  (@option_group_id_emailGreeting, 'Dear {contact.first_name}',                                                 1, 'Dear {contact.first_name}',                                                 NULL,    1, 1, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_emailGreeting, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', 2, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', NULL,    1, 0, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_emailGreeting, 'Dear {contact.individual_prefix} {contact.last_name}',                      3, 'Dear {contact.individual_prefix} {contact.last_name}',                      NULL,    1, 0, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_emailGreeting, 'Customized',                                                                4, 'Customized',                                                                NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_emailGreeting, 'Dear {contact.household_name}',                                             5, 'Dear {contact.household_name}',                                             NULL,    2, 1, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_emailGreeting, 'Dear {contact.first_name}',                                                 1, 'Dear {contact.first_name}',                                                 NULL,    1, 1, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_emailGreeting, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', 2, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', NULL,    1, 0, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_emailGreeting, 'Dear {contact.individual_prefix} {contact.last_name}',                      3, 'Dear {contact.individual_prefix} {contact.last_name}',                      NULL,    1, 0, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_emailGreeting, 'Customized',                                                                4, 'Customized',                                                                NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_emailGreeting, 'Dear {contact.household_name}',                                             5, 'Dear {contact.household_name}',                                             NULL,    2, 1, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 -- postal greeting.
-  (@option_group_id_postalGreeting, 'Dear {contact.first_name}',                                                 1, 'Dear {contact.first_name}',                                                 NULL,    1, 1, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_postalGreeting, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', 2, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', NULL,    1, 0, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_postalGreeting, 'Dear {contact.individual_prefix} {contact.last_name}',                      3, 'Dear {contact.individual_prefix} {contact.last_name}',                      NULL,    1, 0, 3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_postalGreeting, 'Customized',                                                                4, 'Customized',                                                                NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_postalGreeting, 'Dear {contact.household_name}',                                             5, 'Dear {contact.household_name}',                                             NULL,    2, 1, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_postalGreeting, 'Dear {contact.first_name}',                                                 1, 'Dear {contact.first_name}',                                                 NULL,    1, 1, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_postalGreeting, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', 2, 'Dear {contact.individual_prefix} {contact.first_name} {contact.last_name}', NULL,    1, 0, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_postalGreeting, 'Dear {contact.individual_prefix} {contact.last_name}',                      3, 'Dear {contact.individual_prefix} {contact.last_name}',                      NULL,    1, 0, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_postalGreeting, 'Customized',                                                                4, 'Customized',                                                                NULL, 0, 0, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_postalGreeting, 'Dear {contact.household_name}',                                             5, 'Dear {contact.household_name}',                                             NULL,    2, 1, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- addressee
-  (@option_group_id_addressee, '{contact.individual_prefix}{ } {contact.first_name}{ }{contact.middle_name}{ }{contact.last_name}{ }{contact.individual_suffix}',          '1', '}{contact.individual_prefix}{ } {contact.first_name}{ }{contact.middle_name}{ }{contact.last_name}{ }{contact.individual_suffix}',         NULL ,   '1', '1', '1', NULL , '0', '0', '1', NULL , NULL),
-  (@option_group_id_addressee, '{contact.household_name}',    '2', '{contact.household_name}',    NULL ,   '2', '1', '2', NULL , '0', '0', '1', NULL , NULL),
-  (@option_group_id_addressee, '{contact.organization_name}', '3', '{contact.organization_name}', NULL ,   '3', '1', '3', NULL , '0', '0', '1', NULL , NULL),
-  (@option_group_id_addressee, 'Customized',                  '4', 'Customized',                  NULL ,    0 , '0', '4', NULL , '0', '1', '1', NULL , NULL),
+  (@option_group_id_addressee, '{contact.individual_prefix}{ } {contact.first_name}{ }{contact.middle_name}{ }{contact.last_name}{ }{contact.individual_suffix}',          '1', '}{contact.individual_prefix}{ } {contact.first_name}{ }{contact.middle_name}{ }{contact.last_name}{ }{contact.individual_suffix}',         NULL ,   '1', '1', '1', NULL , '0', '0', '1', NULL , NULL, NULL),
+  (@option_group_id_addressee, '{contact.household_name}',    '2', '{contact.household_name}',    NULL ,   '2', '1', '2', NULL , '0', '0', '1', NULL , NULL, NULL),
+  (@option_group_id_addressee, '{contact.organization_name}', '3', '{contact.organization_name}', NULL ,   '3', '1', '3', NULL , '0', '0', '1', NULL , NULL, NULL),
+  (@option_group_id_addressee, 'Customized',                  '4', 'Customized',                  NULL ,    0 , '0', '4', NULL , '0', '1', '1', NULL , NULL, NULL),
 
 -- website type
-   (@option_group_id_website, 'Work',     1, 'Work',     NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Main',     2, 'Main',     NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Facebook', 3, 'Facebook', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Google+',  4, 'Google_',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Instagram',  5, 'Instagram',  NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'LinkedIn',  6, 'LinkedIn',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'MySpace',  7, 'MySpace',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Pinterest',  8, 'Pinterest',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'SnapChat',  9, 'SnapChat',  NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Tumblr',  10, 'Tumblr',  NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Twitter',  11, 'Twitter',  NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_website, 'Vine',  12, 'Vine ',  NULL, 0, NULL, 12, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_website, 'Work',     1, 'Work',     NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Main',     2, 'Main',     NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Facebook', 3, 'Facebook', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Google+',  4, 'Google_',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Instagram',  5, 'Instagram',  NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'LinkedIn',  6, 'LinkedIn',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'MySpace',  7, 'MySpace',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Pinterest',  8, 'Pinterest',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'SnapChat',  9, 'SnapChat',  NULL, 0, NULL, 9, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Tumblr',  10, 'Tumblr',  NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Twitter',  11, 'Twitter',  NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_website, 'Vine',  12, 'Vine ',  NULL, 0, NULL, 12, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Tag used for
-   (@option_group_id_tuf, 'Contacts',   'civicrm_contact',  'Contacts',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_tuf, 'Activities', 'civicrm_activity', 'Activities',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_tuf, 'Cases',      'civicrm_case',     'Cases',        NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_tuf, 'Attachments','civicrm_file',     'Attachements', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_tuf, 'Contacts',   'civicrm_contact',  'Contacts',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_tuf, 'Activities', 'civicrm_activity', 'Activities',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_tuf, 'Cases',      'civicrm_case',     'Cases',        NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_tuf, 'Attachments','civicrm_file',     'Attachements', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-   (@option_group_id_currency, 'USD ($)',      'USD',     'USD',       NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_currency, 'USD ($)',      'USD',     'USD',       NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- event name badges
-  (@option_group_id_eventBadge,  '仅仅名字'     , 1, 'CRM_Event_Badge_Simple'  ,  NULL, 0, 0, 1, '简单事件名牌', 0, 1, 1, NULL, NULL),
-  (@option_group_id_eventBadge,  '名牌架'     , 2, 'CRM_Event_Badge_NameTent',  NULL, 0, 0, 2, '名牌架', 0, 1, 1, NULL, NULL),
-  (@option_group_id_eventBadge , '带Logo'     , 3, 'CRM_Event_Badge_Logo'    ,  NULL, 0, 0, 3, '可以设置自己的背景图片',                               0, 1, 1, NULL, NULL ),
-  (@option_group_id_eventBadge , ' 带 Logo的5395', 4, 'CRM_Event_Badge_Logo5395',  NULL, 0, 0, 4, '带logo的Avery 5395 兼容标签 (4 以上 x 2, 59.2mm x 85.7mm)', 0, 1, 1, NULL, NULL ),
+  (@option_group_id_eventBadge,  '仅仅名字'     , 1, 'CRM_Event_Badge_Simple'  ,  NULL, 0, 0, 1, '简单事件名牌', 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_eventBadge,  '名牌架'     , 2, 'CRM_Event_Badge_NameTent',  NULL, 0, 0, 2, '名牌架', 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_eventBadge , '带Logo'     , 3, 'CRM_Event_Badge_Logo'    ,  NULL, 0, 0, 3, '可以设置自己的背景图片',                               0, 1, 1, NULL, NULL , NULL),
+  (@option_group_id_eventBadge , ' 带 Logo的5395', 4, 'CRM_Event_Badge_Logo5395',  NULL, 0, 0, 4, '带logo的Avery 5395 兼容标签 (4 以上 x 2, 59.2mm x 85.7mm)', 0, 1, 1, NULL, NULL , NULL),
 
 -- note privacy levels
-  (@option_group_id_notePrivacy, '没有',        0, 'None',        NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_notePrivacy, '只供作者', 1, 'Author Only', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_notePrivacy, '没有',        0, 'None',        NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_notePrivacy, '只供作者', 1, 'Author Only', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
 
 -- Compaign Types
-  (@option_group_id_campaignType, '直接发邮件', 1, 'Direct Mail',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_campaignType, '推荐计划', 2, 'Referral Program',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_campaignType, '支持者参与', 3, 'Constituent Engagement',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_campaignType, '直接发邮件', 1, 'Direct Mail',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignType, '推荐计划', 2, 'Referral Program',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignType, '支持者参与', 3, 'Constituent Engagement',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Campaign Status
-  (@option_group_id_campaignStatus, '计划的', 1, 'Planned',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_campaignStatus, '进程中', 2, 'In Progress',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_campaignStatus, '已完成的', 3, 'Completed',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_campaignStatus, '已取消的', 4, 'Cancelled',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_campaignStatus, '计划的', 1, 'Planned',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignStatus, '进程中', 2, 'In Progress',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignStatus, '已完成的', 3, 'Completed',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignStatus, '已取消的', 4, 'Cancelled',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Engagement Level
-  (@option_group_id_engagement_index, '1', 1, '1',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_engagement_index, '2', 2, '2',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_engagement_index, '3', 3, '3',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_engagement_index, '4', 4, '4',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL ),
-  (@option_group_id_engagement_index, '5', 5, '5',  NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL ),
+  (@option_group_id_engagement_index, '1', 1, '1',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_engagement_index, '2', 2, '2',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_engagement_index, '3', 3, '3',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_engagement_index, '4', 4, '4',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL , NULL),
+  (@option_group_id_engagement_index, '5', 5, '5',  NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL , NULL),
 
 -- Paper Sizes
-  (@option_group_id_paperSize, '信',          '{"metric":"in","width":8.5,"height":11}',          'letter',      NULL, NULL, 1, 1,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '法律',           '{"metric":"in","width":8.5,"height":14}',          'legal',       NULL, NULL, 0, 2,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '总账',          '{"metric":"in","width":17,"height":11}',           'ledger',      NULL, NULL, 0, 3,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '小报',         '{"metric":"in","width":11,"height":17}',           'tabloid',     NULL, NULL, 0, 4,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '执行',       '{"metric":"in","width":7.25,"height":10.5}',       'executive',   NULL, NULL, 0, 5,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '对开',           '{"metric":"in","width":8.5,"height":13}',          'folio',       NULL, NULL, 0, 6,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '#9信封',     '{"metric":"pt","width":638.93,"height":278.93}',   'envelope-9',  NULL, NULL, 0, 7,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '#10信封',    '{"metric":"pt","width":684,"height":297}',         'envelope-10', NULL, NULL, 0, 8,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '#11信封',    '{"metric":"pt","width":747,"height":324}',         'envelope-11', NULL, NULL, 0, 9,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '#12信封',    '{"metric":"pt","width":792,"height":342}',         'envelope-12', NULL, NULL, 0, 10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, '#14信封',    '{"metric":"pt","width":828,"height":360}',         'envelope-14', NULL, NULL, 0, 11, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B4信封', '{"metric":"pt","width":1000.63,"height":708.66}',  'envelope-b4', NULL, NULL, 0, 12, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B5信封', '{"metric":"pt","width":708.66,"height":498.9}',    'envelope-b5', NULL, NULL, 0, 13, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B6信封', '{"metric":"pt","width":498.9,"height":354.33}',    'envelope-b6', NULL, NULL, 0, 14, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C3信封', '{"metric":"pt","width":1298.27,"height":918.42}',  'envelope-c3', NULL, NULL, 0, 15, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C4信封', '{"metric":"pt","width":918.42,"height":649.13}',   'envelope-c4', NULL, NULL, 0, 16, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C5信封', '{"metric":"pt","width":649.13,"height":459.21}',   'envelope-c5', NULL, NULL, 0, 17, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C6信封', '{"metric":"pt","width":459.21,"height":323.15}',   'envelope-c6', NULL, NULL, 0, 18, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO DL信封', '{"metric":"pt","width":623.622,"height":311.811}', 'envelope-dl', NULL, NULL, 0, 19, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A0',          '{"metric":"pt","width":2383.94,"height":3370.39}', 'a0',          NULL, NULL, 0, 20, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A1',          '{"metric":"pt","width":1683.78,"height":2383.94}', 'a1',          NULL, NULL, 0, 21, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A2',          '{"metric":"pt","width":1190.55,"height":1683.78}', 'a2',          NULL, NULL, 0, 22, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A3',          '{"metric":"pt","width":841.89,"height":1190.55}',  'a3',          NULL, NULL, 0, 23, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A4',          '{"metric":"pt","width":595.28,"height":841.89}',   'a4',          NULL, NULL, 0, 24, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A5',          '{"metric":"pt","width":419.53,"height":595.28}',   'a5',          NULL, NULL, 0, 25, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A6',          '{"metric":"pt","width":297.64,"height":419.53}',   'a6',          NULL, NULL, 0, 26, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A7',          '{"metric":"pt","width":209.76,"height":297.64}',   'a7',          NULL, NULL, 0, 27, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A8',          '{"metric":"pt","width":147.4,"height":209.76}',    'a8',          NULL, NULL, 0, 28, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A9',          '{"metric":"pt","width":104.88,"height":147.4}',    'a9',          NULL, NULL, 0, 29, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO A10',         '{"metric":"pt","width":73.7,"height":104.88}',     'a10',         NULL, NULL, 0, 30, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B0',          '{"metric":"pt","width":2834.65,"height":4008.19}', 'b0',          NULL, NULL, 0, 31, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B1',          '{"metric":"pt","width":2004.09,"height":2834.65}', 'b1',          NULL, NULL, 0, 32, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B2',          '{"metric":"pt","width":1417.32,"height":2004.09}', 'b2',          NULL, NULL, 0, 33, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B3',          '{"metric":"pt","width":1000.63,"height":1417.32}', 'b3',          NULL, NULL, 0, 34, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B4',          '{"metric":"pt","width":708.66,"height":1000.63}',  'b4',          NULL, NULL, 0, 35, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B5',          '{"metric":"pt","width":498.9,"height":708.66}',    'b5',          NULL, NULL, 0, 36, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B6',          '{"metric":"pt","width":354.33,"height":498.9}',    'b6',          NULL, NULL, 0, 37, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B7',          '{"metric":"pt","width":249.45,"height":354.33}',   'b7',          NULL, NULL, 0, 38, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B8',          '{"metric":"pt","width":175.75,"height":249.45}',   'b8',          NULL, NULL, 0, 39, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B9',          '{"metric":"pt","width":124.72,"height":175.75}',   'b9',          NULL, NULL, 0, 40, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO B10',         '{"metric":"pt","width":87.87,"height":124.72}',    'b10',         NULL, NULL, 0, 41, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C0',          '{"metric":"pt","width":2599.37,"height":3676.54}', 'c0',          NULL, NULL, 0, 42, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C1',          '{"metric":"pt","width":1836.85,"height":2599.37}', 'c1',          NULL, NULL, 0, 43, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C2',          '{"metric":"pt","width":1298.27,"height":1836.85}', 'c2',          NULL, NULL, 0, 44, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C3',          '{"metric":"pt","width":918.43,"height":1298.27}',  'c3',          NULL, NULL, 0, 45, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C4',          '{"metric":"pt","width":649.13,"height":918.43}',   'c4',          NULL, NULL, 0, 46, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C5',          '{"metric":"pt","width":459.21,"height":649.13}',   'c5',          NULL, NULL, 0, 47, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C6',          '{"metric":"pt","width":323.15,"height":459.21}',   'c6',          NULL, NULL, 0, 48, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C7',          '{"metric":"pt","width":229.61,"height":323.15}',   'c7',          NULL, NULL, 0, 49, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C8',          '{"metric":"pt","width":161.57,"height":229.61}',   'c8',          NULL, NULL, 0, 50, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C9',          '{"metric":"pt","width":113.39,"height":161.57}',   'c9',          NULL, NULL, 0, 51, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO C10',         '{"metric":"pt","width":79.37,"height":113.39}',    'c10',         NULL, NULL, 0, 52, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO RA0',         '{"metric":"pt","width":2437.8,"height":3458.27}',  'ra0',         NULL, NULL, 0, 53, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO RA1',         '{"metric":"pt","width":1729.13,"height":2437.8}',  'ra1',         NULL, NULL, 0, 54, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO RA2',         '{"metric":"pt","width":1218.9,"height":1729.13}',  'ra2',         NULL, NULL, 0, 55, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO RA3',         '{"metric":"pt","width":864.57,"height":1218.9}',   'ra3',         NULL, NULL, 0, 56, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO RA4',         '{"metric":"pt","width":609.45,"height":864.57}',   'ra4',         NULL, NULL, 0, 57, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO SRA0',        '{"metric":"pt","width":2551.18,"height":3628.35}', 'sra0',        NULL, NULL, 0, 58, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO SRA1',        '{"metric":"pt","width":1814.17,"height":2551.18}', 'sra1',        NULL, NULL, 0, 59, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO SRA2',        '{"metric":"pt","width":1275.59,"height":1814.17}', 'sra2',        NULL, NULL, 0, 60, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO SRA3',        '{"metric":"pt","width":907.09,"height":1275.59}',  'sra3',        NULL, NULL, 0, 61, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_paperSize, 'ISO SRA4',        '{"metric":"pt","width":637.8,"height":907.09}',    'sra4',        NULL, NULL, 0, 62, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_paperSize, '信',          '{"metric":"in","width":8.5,"height":11}',          'letter',      NULL, NULL, 1, 1,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '法律',           '{"metric":"in","width":8.5,"height":14}',          'legal',       NULL, NULL, 0, 2,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '总账',          '{"metric":"in","width":17,"height":11}',           'ledger',      NULL, NULL, 0, 3,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '小报',         '{"metric":"in","width":11,"height":17}',           'tabloid',     NULL, NULL, 0, 4,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '执行',       '{"metric":"in","width":7.25,"height":10.5}',       'executive',   NULL, NULL, 0, 5,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '对开',           '{"metric":"in","width":8.5,"height":13}',          'folio',       NULL, NULL, 0, 6,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '#9信封',     '{"metric":"pt","width":638.93,"height":278.93}',   'envelope-9',  NULL, NULL, 0, 7,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '#10信封',    '{"metric":"pt","width":684,"height":297}',         'envelope-10', NULL, NULL, 0, 8,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '#11信封',    '{"metric":"pt","width":747,"height":324}',         'envelope-11', NULL, NULL, 0, 9,  NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '#12信封',    '{"metric":"pt","width":792,"height":342}',         'envelope-12', NULL, NULL, 0, 10, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, '#14信封',    '{"metric":"pt","width":828,"height":360}',         'envelope-14', NULL, NULL, 0, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B4信封', '{"metric":"pt","width":1000.63,"height":708.66}',  'envelope-b4', NULL, NULL, 0, 12, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B5信封', '{"metric":"pt","width":708.66,"height":498.9}',    'envelope-b5', NULL, NULL, 0, 13, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B6信封', '{"metric":"pt","width":498.9,"height":354.33}',    'envelope-b6', NULL, NULL, 0, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C3信封', '{"metric":"pt","width":1298.27,"height":918.42}',  'envelope-c3', NULL, NULL, 0, 15, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C4信封', '{"metric":"pt","width":918.42,"height":649.13}',   'envelope-c4', NULL, NULL, 0, 16, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C5信封', '{"metric":"pt","width":649.13,"height":459.21}',   'envelope-c5', NULL, NULL, 0, 17, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C6信封', '{"metric":"pt","width":459.21,"height":323.15}',   'envelope-c6', NULL, NULL, 0, 18, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO DL信封', '{"metric":"pt","width":623.622,"height":311.811}', 'envelope-dl', NULL, NULL, 0, 19, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A0',          '{"metric":"pt","width":2383.94,"height":3370.39}', 'a0',          NULL, NULL, 0, 20, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A1',          '{"metric":"pt","width":1683.78,"height":2383.94}', 'a1',          NULL, NULL, 0, 21, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A2',          '{"metric":"pt","width":1190.55,"height":1683.78}', 'a2',          NULL, NULL, 0, 22, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A3',          '{"metric":"pt","width":841.89,"height":1190.55}',  'a3',          NULL, NULL, 0, 23, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A4',          '{"metric":"pt","width":595.28,"height":841.89}',   'a4',          NULL, NULL, 0, 24, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A5',          '{"metric":"pt","width":419.53,"height":595.28}',   'a5',          NULL, NULL, 0, 25, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A6',          '{"metric":"pt","width":297.64,"height":419.53}',   'a6',          NULL, NULL, 0, 26, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A7',          '{"metric":"pt","width":209.76,"height":297.64}',   'a7',          NULL, NULL, 0, 27, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A8',          '{"metric":"pt","width":147.4,"height":209.76}',    'a8',          NULL, NULL, 0, 28, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A9',          '{"metric":"pt","width":104.88,"height":147.4}',    'a9',          NULL, NULL, 0, 29, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO A10',         '{"metric":"pt","width":73.7,"height":104.88}',     'a10',         NULL, NULL, 0, 30, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B0',          '{"metric":"pt","width":2834.65,"height":4008.19}', 'b0',          NULL, NULL, 0, 31, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B1',          '{"metric":"pt","width":2004.09,"height":2834.65}', 'b1',          NULL, NULL, 0, 32, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B2',          '{"metric":"pt","width":1417.32,"height":2004.09}', 'b2',          NULL, NULL, 0, 33, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B3',          '{"metric":"pt","width":1000.63,"height":1417.32}', 'b3',          NULL, NULL, 0, 34, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B4',          '{"metric":"pt","width":708.66,"height":1000.63}',  'b4',          NULL, NULL, 0, 35, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B5',          '{"metric":"pt","width":498.9,"height":708.66}',    'b5',          NULL, NULL, 0, 36, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B6',          '{"metric":"pt","width":354.33,"height":498.9}',    'b6',          NULL, NULL, 0, 37, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B7',          '{"metric":"pt","width":249.45,"height":354.33}',   'b7',          NULL, NULL, 0, 38, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B8',          '{"metric":"pt","width":175.75,"height":249.45}',   'b8',          NULL, NULL, 0, 39, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B9',          '{"metric":"pt","width":124.72,"height":175.75}',   'b9',          NULL, NULL, 0, 40, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO B10',         '{"metric":"pt","width":87.87,"height":124.72}',    'b10',         NULL, NULL, 0, 41, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C0',          '{"metric":"pt","width":2599.37,"height":3676.54}', 'c0',          NULL, NULL, 0, 42, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C1',          '{"metric":"pt","width":1836.85,"height":2599.37}', 'c1',          NULL, NULL, 0, 43, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C2',          '{"metric":"pt","width":1298.27,"height":1836.85}', 'c2',          NULL, NULL, 0, 44, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C3',          '{"metric":"pt","width":918.43,"height":1298.27}',  'c3',          NULL, NULL, 0, 45, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C4',          '{"metric":"pt","width":649.13,"height":918.43}',   'c4',          NULL, NULL, 0, 46, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C5',          '{"metric":"pt","width":459.21,"height":649.13}',   'c5',          NULL, NULL, 0, 47, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C6',          '{"metric":"pt","width":323.15,"height":459.21}',   'c6',          NULL, NULL, 0, 48, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C7',          '{"metric":"pt","width":229.61,"height":323.15}',   'c7',          NULL, NULL, 0, 49, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C8',          '{"metric":"pt","width":161.57,"height":229.61}',   'c8',          NULL, NULL, 0, 50, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C9',          '{"metric":"pt","width":113.39,"height":161.57}',   'c9',          NULL, NULL, 0, 51, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO C10',         '{"metric":"pt","width":79.37,"height":113.39}',    'c10',         NULL, NULL, 0, 52, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO RA0',         '{"metric":"pt","width":2437.8,"height":3458.27}',  'ra0',         NULL, NULL, 0, 53, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO RA1',         '{"metric":"pt","width":1729.13,"height":2437.8}',  'ra1',         NULL, NULL, 0, 54, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO RA2',         '{"metric":"pt","width":1218.9,"height":1729.13}',  'ra2',         NULL, NULL, 0, 55, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO RA3',         '{"metric":"pt","width":864.57,"height":1218.9}',   'ra3',         NULL, NULL, 0, 56, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO RA4',         '{"metric":"pt","width":609.45,"height":864.57}',   'ra4',         NULL, NULL, 0, 57, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO SRA0',        '{"metric":"pt","width":2551.18,"height":3628.35}', 'sra0',        NULL, NULL, 0, 58, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO SRA1',        '{"metric":"pt","width":1814.17,"height":2551.18}', 'sra1',        NULL, NULL, 0, 59, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO SRA2',        '{"metric":"pt","width":1275.59,"height":1814.17}', 'sra2',        NULL, NULL, 0, 60, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO SRA3',        '{"metric":"pt","width":907.09,"height":1275.59}',  'sra3',        NULL, NULL, 0, 61, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_paperSize, 'ISO SRA4',        '{"metric":"pt","width":637.8,"height":907.09}',    'sra4',        NULL, NULL, 0, 62, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- activity_contacts
-   (@option_group_id_aco, '活动分配者', 1, 'Activity Assignees', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_aco, '活动来源', 2, 'Activity Source', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_aco, '活动目标', 3, 'Activity Targets', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_aco, '活动分配者', 1, 'Activity Assignees', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aco, '活动来源', 2, 'Activity Source', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aco, '活动目标', 3, 'Activity Targets', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- financial_account_type
 -- grouping field is specific to Quickbooks for mapping to .iif format
-   (@option_group_id_fat, '资产', 1, 'Asset', NULL, 0, 0, 1, 'Things you own', 0, 1, 1, 2, NULL),
-   (@option_group_id_fat, '责任', 2, 'Liability', NULL, 0, 0, 2, 'Things you owe, like a grant still to be disbursed', 0, 1, 1, 2, NULL),
-   (@option_group_id_fat, 'Revenue', 3, 'Revenue', NULL, 0, 1, 3, 'Income from contributions and sales of tickets and memberships', 0, 1, 1, 2, NULL),
-   (@option_group_id_fat, 'Cost of Sales', 4, 'Cost of Sales', NULL, 0, 0, 4, 'Costs incurred to get revenue, e.g. premiums for donations, dinner for a fundraising dinner ticket', 0, 1, 1, 2, NULL),
-   (@option_group_id_fat, 'Expenses', 5, 'Expenses', NULL, 0, 0, 5, 'Things that are paid for that are consumable, e.g. grants disbursed', 0, 1, 1, 2, NULL),
+   (@option_group_id_fat, '资产', 1, 'Asset', NULL, 0, 0, 1, 'Things you own', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_fat, '责任', 2, 'Liability', NULL, 0, 0, 2, 'Things you owe, like a grant still to be disbursed', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_fat, 'Revenue', 3, 'Revenue', NULL, 0, 1, 3, 'Income from contributions and sales of tickets and memberships', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_fat, 'Cost of Sales', 4, 'Cost of Sales', NULL, 0, 0, 4, 'Costs incurred to get revenue, e.g. premiums for donations, dinner for a fundraising dinner ticket', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_fat, 'Expenses', 5, 'Expenses', NULL, 0, 0, 5, 'Things that are paid for that are consumable, e.g. grants disbursed', 0, 1, 1, 2, NULL, NULL),
 
 -- account_relationship
-    (@option_group_id_arel, 'Income Account is', 1, 'Income Account is', NULL, 0, 1, 1, 'Income Account is', 0, 1, 1, 2, NULL),
-    (@option_group_id_arel, 'Credit/Contra Revenue Account is', 2, 'Credit/Contra Revenue Account is', NULL, 0, 0, 2, 'Credit/Contra Revenue Account is', 0, 1, 1, 2, NULL),
-    (@option_group_id_arel, 'Accounts Receivable Account is', 3, 'Accounts Receivable Account is', NULL, 0, 0, 3, 'Accounts Receivable Account is', 0, 1, 1, 2, NULL),
-    (@option_group_id_arel, 'Credit Liability Account is', 4, 'Credit Liability Account is', NULL, 0, 0, 4, 'Credit Liability Account is', 0, 1, 0, 2, NULL),
-     (@option_group_id_arel, 'Expense Account is', 5, 'Expense Account is', NULL, 0, 0, 5, 'Expense Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Asset Account is', 6, 'Asset Account is', NULL, 0, 0, 6, 'Asset Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Cost of Sales Account is', 7, 'Cost of Sales Account is', NULL, 0, 0, 7, 'Cost of Sales Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Premiums Inventory Account is', 8, 'Premiums Inventory Account is', NULL, 0, 0, 8, 'Premiums Inventory Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Discounts Account is', 9, 'Discounts Account is', NULL, 0, 0, 9, 'Discounts Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Sales Tax Account is', 10, 'Sales Tax Account is', NULL, 0, 0, 10, 'Sales Tax Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Chargeback Account is', 11, 'Chargeback Account is', NULL, 0, 0, 11, 'Chargeback Account is', 0, 1, 1, 2, NULL),
-     (@option_group_id_arel, 'Deferred Revenue Account is', 12, 'Deferred Revenue Account is', NULL, 0, 0, 12, 'Deferred Revenue Account is', 0, 1, 1, 2, NULL),
+    (@option_group_id_arel, 'Income Account is', 1, 'Income Account is', NULL, 0, 1, 1, 'Income Account is', 0, 1, 1, 2, NULL, NULL),
+    (@option_group_id_arel, 'Credit/Contra Revenue Account is', 2, 'Credit/Contra Revenue Account is', NULL, 0, 0, 2, 'Credit/Contra Revenue Account is', 0, 1, 1, 2, NULL, NULL),
+    (@option_group_id_arel, 'Accounts Receivable Account is', 3, 'Accounts Receivable Account is', NULL, 0, 0, 3, 'Accounts Receivable Account is', 0, 1, 1, 2, NULL, NULL),
+    (@option_group_id_arel, 'Credit Liability Account is', 4, 'Credit Liability Account is', NULL, 0, 0, 4, 'Credit Liability Account is', 0, 1, 0, 2, NULL, NULL),
+     (@option_group_id_arel, 'Expense Account is', 5, 'Expense Account is', NULL, 0, 0, 5, 'Expense Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Asset Account is', 6, 'Asset Account is', NULL, 0, 0, 6, 'Asset Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Cost of Sales Account is', 7, 'Cost of Sales Account is', NULL, 0, 0, 7, 'Cost of Sales Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Premiums Inventory Account is', 8, 'Premiums Inventory Account is', NULL, 0, 0, 8, 'Premiums Inventory Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Discounts Account is', 9, 'Discounts Account is', NULL, 0, 0, 9, 'Discounts Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Sales Tax Account is', 10, 'Sales Tax Account is', NULL, 0, 0, 10, 'Sales Tax Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Chargeback Account is', 11, 'Chargeback Account is', NULL, 0, 0, 11, 'Chargeback Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Deferred Revenue Account is', 12, 'Deferred Revenue Account is', NULL, 0, 0, 12, 'Deferred Revenue Account is', 0, 1, 1, 2, NULL, NULL),
 
 -- event_contacts
-   (@option_group_id_ere, '参加者角色', 1, 'participant_role', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_ere, '参加者角色', 1, 'participant_role', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- default conference slots
-   (@option_group_id_conference_slot, '上午时段', 1, 'Morning Sessions', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_conference_slot, '晚间时段', 2, 'Evening Sessions', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_conference_slot, '上午时段', 1, 'Morning Sessions', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_conference_slot, '晚间时段', 2, 'Evening Sessions', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- default batch types
-   (@option_group_id_batch_type, '贡献', 1, 'Contribution', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_batch_type, '会籍', 2, 'Membership', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_batch_type, 'Pledge Payment', 3, 'Pledge Payment', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_batch_type, '贡献', 1, 'Contribution', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_type, '会籍', 2, 'Membership', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_type, 'Pledge Payment', 3, 'Pledge Payment', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- default batch statuses
-   (@option_group_id_batch_status, '打开', 1, 'Open', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_batch_status, '关闭的', 2, 'Closed', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_batch_status, 'Data Entry', 3, 'Data Entry', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_batch_status, 'Reopened', 4, 'Reopened', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_batch_status, 'Exported', 5, 'Exported', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_batch_status, '打开', 1, 'Open', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_status, '关闭的', 2, 'Closed', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_status, 'Data Entry', 3, 'Data Entry', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_status, 'Reopened', 4, 'Reopened', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_status, 'Exported', 5, 'Exported', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- default batch modes
-   (@option_group_id_batch_mode, 'Manual Batch', 1, 'Manual Batch', NULL, 0, 0, 1, 'Manual Batch', 0, 1, 1, 2, NULL),
-   (@option_group_id_batch_mode, 'Automatic Batch', 2, 'Automatic Batch', NULL, 0, 0, 2, 'Automatic Batch', 0, 1, 1, 2, NULL),
+   (@option_group_id_batch_mode, 'Manual Batch', 1, 'Manual Batch', NULL, 0, 0, 1, 'Manual Batch', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_batch_mode, 'Automatic Batch', 2, 'Automatic Batch', NULL, 0, 0, 2, 'Automatic Batch', 0, 1, 1, 2, NULL, NULL),
 
 -- Financial Item Status
-   (@option_group_id_financial_item_status, '已支付', 1, 'Paid', NULL, 0, 0, 1, 'Paid', 0, 1, 1, 2, NULL),
-   (@option_group_id_financial_item_status, 'Partially paid', 2, 'Partially paid', NULL, 0, 0, 2, 'Partially paid', 0, 1, 1, 2, NULL),
-   (@option_group_id_financial_item_status, 'Unpaid', 3, 'Unpaid', NULL, 0, 0, 1, 'Unpaid', 0, 1, 1, 2, NULL),
+   (@option_group_id_financial_item_status, '已支付', 1, 'Paid', NULL, 0, 0, 1, 'Paid', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_financial_item_status, 'Partially paid', 2, 'Partially paid', NULL, 0, 0, 2, 'Partially paid', 0, 1, 1, 2, NULL, NULL),
+   (@option_group_id_financial_item_status, 'Unpaid', 3, 'Unpaid', NULL, 0, 0, 1, 'Unpaid', 0, 1, 1, 2, NULL, NULL),
 
 -- sms_api_type
-   (@option_group_id_sms_api_type, 'http', 1, 'http', NULL, NULL, 0, 1, NULL, 0, 1, 1, NULL, NULL),
-   (@option_group_id_sms_api_type, 'xml',  2, 'xml',  NULL, NULL, 0, 2, NULL, 0, 1, 1, NULL, NULL),
-   (@option_group_id_sms_api_type, 'smtp', 3, 'smtp', NULL, NULL, 0, 3, NULL, 0, 1, 1, NULL, NULL),
+   (@option_group_id_sms_api_type, 'http', 1, 'http', NULL, NULL, 0, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_sms_api_type, 'xml',  2, 'xml',  NULL, NULL, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_sms_api_type, 'smtp', 3, 'smtp', NULL, NULL, 0, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
 
 -- auto renew options
-   (@option_group_id_aro, 'Renewal Reminder (non-auto-renew memberships only)', 1, 'Renewal Reminder (non-auto-renew memberships only)', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_aro, 'Auto-renew Memberships Only', 2, 'Auto-renew Memberships Only', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_aro, 'Reminder for Both', 3, 'Reminder for Both', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_aro, 'Renewal Reminder (non-auto-renew memberships only)', 1, 'Renewal Reminder (non-auto-renew memberships only)', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aro, 'Auto-renew Memberships Only', 2, 'Auto-renew Memberships Only', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aro, 'Reminder for Both', 3, 'Reminder for Both', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Label Type
-   (@option_group_id_label_type, 'Event Badge', 1, 'Event Badge', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_label_type, 'Event Badge', 1, 'Event Badge', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Name Label format
-   (@option_group_id_name_badge, 'Avery 5395', '{"name":"Avery 5395","paper-size":"a4","metric":"mm","lMargin":15,"tMargin":26,"NX":2,"NY":4,"SpaceX":10,"SpaceY":5,"width":83,"height":57,"font-size":12,"orientation":"portrait","font-name":"helvetica","font-style":"","lPadding":3,"tPadding":3}', 'Avery 5395', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_name_badge, 'A6 Badge Portrait 150x106', '{"paper-size":"a4","orientation":"landscape","font-name":"times","font-size":6,"font-style":"","NX":2,"NY":1,"metric":"mm","lMargin":25,"tMargin":27,"SpaceX":0,"SpaceY":35,"width":106,"height":150,"lPadding":5,"tPadding":5}', 'A6 Badge Portrait 150x106', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_name_badge, 'Fattorini Name Badge 100x65', '{"paper-size":"a4","orientation":"portrait","font-name":"times","font-size":6,"font-style":"","NX":2,"NY":4,"metric":"mm","lMargin":6,"tMargin":19,"SpaceX":0,"SpaceY":0,"width":100,"height":65,"lPadding":0,"tPadding":0}', 'Fattorini Name Badge 100x65', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_name_badge, 'Hanging Badge 3-3/4\" x 4-3\"/4', '{"paper-size":"a4","orientation":"portrait","font-name":"times","font-size":6,"font-style":"","NX":2,"NY":2,"metric":"mm","lMargin":10,"tMargin":28,"SpaceX":0,"SpaceY":0,"width":96,"height":121,"lPadding":5,"tPadding":5}', 'Hanging Badge 3-3/4" x 4-3"/4', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_name_badge, 'Avery 5395', '{"name":"Avery 5395","paper-size":"a4","metric":"mm","lMargin":15,"tMargin":26,"NX":2,"NY":4,"SpaceX":10,"SpaceY":5,"width":83,"height":57,"font-size":12,"orientation":"portrait","font-name":"helvetica","font-style":"","lPadding":3,"tPadding":3}', 'Avery 5395', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_name_badge, 'A6 Badge Portrait 150x106', '{"paper-size":"a4","orientation":"landscape","font-name":"times","font-size":6,"font-style":"","NX":2,"NY":1,"metric":"mm","lMargin":25,"tMargin":27,"SpaceX":0,"SpaceY":35,"width":106,"height":150,"lPadding":5,"tPadding":5}', 'A6 Badge Portrait 150x106', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_name_badge, 'Fattorini Name Badge 100x65', '{"paper-size":"a4","orientation":"portrait","font-name":"times","font-size":6,"font-style":"","NX":2,"NY":4,"metric":"mm","lMargin":6,"tMargin":19,"SpaceX":0,"SpaceY":0,"width":100,"height":65,"lPadding":0,"tPadding":0}', 'Fattorini Name Badge 100x65', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_name_badge, 'Hanging Badge 3-3/4\" x 4-3\"/4', '{"paper-size":"a4","orientation":"portrait","font-name":"times","font-size":6,"font-style":"","NX":2,"NY":2,"metric":"mm","lMargin":10,"tMargin":28,"SpaceX":0,"SpaceY":0,"width":96,"height":121,"lPadding":5,"tPadding":5}', 'Hanging Badge 3-3/4" x 4-3"/4', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Mailing Label Formats
-  (@option_group_id_label, 'Avery 3475', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":10,"font-style":"","metric":"mm","lMargin":0,"tMargin":5,"NX":3,"NY":8,"SpaceX":0,"SpaceY":0,"width":70,"height":36,"lPadding":5.08,"tPadding":5.08}',                   '3475',  'Avery', NULL, 0, 1,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery 5160', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.21975,"tMargin":0.5,"NX":3,"NY":10,"SpaceX":0.14,"SpaceY":0,"width":2.5935,"height":1,"lPadding":0.20,"tPadding":0.20}', '5160',  'Avery', NULL, 0, 2,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery 5161', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.175,"tMargin":0.5,"NX":2,"NY":10,"SpaceX":0.15625,"SpaceY":0,"width":4,"height":1,"lPadding":0.20,"tPadding":0.20}',     '5161',  'Avery', NULL, 0, 3,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery 5162', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.1525,"tMargin":0.88,"NX":2,"NY":7,"SpaceX":0.195,"SpaceY":0,"width":4,"height":1.33,"lPadding":0.20,"tPadding":0.20}',   '5162',  'Avery', NULL, 0, 4,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery 5163', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.18,"tMargin":0.5,"NX":2,"NY":5,"SpaceX":0.14,"SpaceY":0,"width":4,"height":2,"lPadding":0.20,"tPadding":0.20}',          '5163',  'Avery', NULL, 0, 5,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery 5164', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":12,"font-style":"","metric":"in","lMargin":0.156,"tMargin":0.5,"NX":2,"NY":3,"SpaceX":0.1875,"SpaceY":0,"width":4,"height":3.33,"lPadding":0.20,"tPadding":0.20}',   '5164',  'Avery', NULL, 0, 6,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery 8600', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"mm","lMargin":7.1,"tMargin":19,"NX":3,"NY":10,"SpaceX":9.5,"SpaceY":3.1,"width":66.6,"height":25.4,"lPadding":5.08,"tPadding":5.08}',    '8600',  'Avery', NULL, 0, 7,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery L7160', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.28,"tMargin":0.6,"NX":3,"NY":7,"SpaceX":0.1,"SpaceY":0,"width":2.5,"height":1.5,"lPadding":0.20,"tPadding":0.20}',          'L7160', 'Avery', NULL, 0, 8,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery L7161', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.28,"tMargin":0.35,"NX":3,"NY":6,"SpaceX":0.1,"SpaceY":0,"width":2.5,"height":1.83,"lPadding":0.20,"tPadding":0.20}',        'L7161', 'Avery', NULL, 0, 9,  NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery L7162', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.18,"tMargin":0.51,"NX":2,"NY":8,"SpaceX":0.1,"SpaceY":0,"width":3.9,"height":1.33,"lPadding":0.20,"tPadding":0.20}',        'L7162', 'Avery', NULL, 0, 10, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_label, 'Avery L7163', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.18,"tMargin":0.6,"NX":2,"NY":7,"SpaceX":0.1,"SpaceY":0,"width":3.9,"height":1.5,"lPadding":0.20,"tPadding":0.20}',          'L7163', 'Avery', NULL, 0, 11, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_label, 'Avery 3475', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":10,"font-style":"","metric":"mm","lMargin":0,"tMargin":5,"NX":3,"NY":8,"SpaceX":0,"SpaceY":0,"width":70,"height":36,"lPadding":5.08,"tPadding":5.08}',                   '3475',  'Avery', NULL, 0, 1,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery 5160', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.21975,"tMargin":0.5,"NX":3,"NY":10,"SpaceX":0.14,"SpaceY":0,"width":2.5935,"height":1,"lPadding":0.20,"tPadding":0.20}', '5160',  'Avery', NULL, 0, 2,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery 5161', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.175,"tMargin":0.5,"NX":2,"NY":10,"SpaceX":0.15625,"SpaceY":0,"width":4,"height":1,"lPadding":0.20,"tPadding":0.20}',     '5161',  'Avery', NULL, 0, 3,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery 5162', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.1525,"tMargin":0.88,"NX":2,"NY":7,"SpaceX":0.195,"SpaceY":0,"width":4,"height":1.33,"lPadding":0.20,"tPadding":0.20}',   '5162',  'Avery', NULL, 0, 4,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery 5163', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"in","lMargin":0.18,"tMargin":0.5,"NX":2,"NY":5,"SpaceX":0.14,"SpaceY":0,"width":4,"height":2,"lPadding":0.20,"tPadding":0.20}',          '5163',  'Avery', NULL, 0, 5,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery 5164', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":12,"font-style":"","metric":"in","lMargin":0.156,"tMargin":0.5,"NX":2,"NY":3,"SpaceX":0.1875,"SpaceY":0,"width":4,"height":3.33,"lPadding":0.20,"tPadding":0.20}',   '5164',  'Avery', NULL, 0, 6,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery 8600', '{"paper-size":"letter","orientation":"portrait","font-name":"helvetica","font-size":8,"font-style":"","metric":"mm","lMargin":7.1,"tMargin":19,"NX":3,"NY":10,"SpaceX":9.5,"SpaceY":3.1,"width":66.6,"height":25.4,"lPadding":5.08,"tPadding":5.08}',    '8600',  'Avery', NULL, 0, 7,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery L7160', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.28,"tMargin":0.6,"NX":3,"NY":7,"SpaceX":0.1,"SpaceY":0,"width":2.5,"height":1.5,"lPadding":0.20,"tPadding":0.20}',          'L7160', 'Avery', NULL, 0, 8,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery L7161', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.28,"tMargin":0.35,"NX":3,"NY":6,"SpaceX":0.1,"SpaceY":0,"width":2.5,"height":1.83,"lPadding":0.20,"tPadding":0.20}',        'L7161', 'Avery', NULL, 0, 9,  NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery L7162', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.18,"tMargin":0.51,"NX":2,"NY":8,"SpaceX":0.1,"SpaceY":0,"width":3.9,"height":1.33,"lPadding":0.20,"tPadding":0.20}',        'L7162', 'Avery', NULL, 0, 10, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_label, 'Avery L7163', '{"paper-size":"a4","orientation":"portrait","font-name":"helvetica","font-size":9,"font-style":"","metric":"in","lMargin":0.18,"tMargin":0.6,"NX":2,"NY":7,"SpaceX":0.1,"SpaceY":0,"width":3.9,"height":1.5,"lPadding":0.20,"tPadding":0.20}',          'L7163', 'Avery', NULL, 0, 11, NULL, 0, 1, 1, NULL, NULL, NULL),
 
 -- Communication Styles
-  (@option_group_id_communication_style, 'Formal'  , 1, 'formal'  , NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_communication_style, 'Familiar', 2, 'familiar', NULL, 0, 0, 2, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_communication_style, 'Formal'  , 1, 'formal'  , NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_communication_style, 'Familiar', 2, 'familiar', NULL, 0, 0, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Message Mode
-(@option_group_id_msg_mode, '邮件', 'Email', 'Email', NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL),
-(@option_group_id_msg_mode, 'SMS', 'SMS', 'SMS', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL),
-(@option_group_id_msg_mode, 'User Preference', 'User_Preference', 'User Preference', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, NULL),
+(@option_group_id_msg_mode, '邮件', 'Email', 'Email', NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_msg_mode, 'SMS', 'SMS', 'SMS', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_msg_mode, 'User Preference', 'User_Preference', 'User Preference', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
 
 -- Reminder Options for Contact Date Fields
-(@option_group_id_contactDateMode, 'Actual date only', '1', 'Actual date only', NULL, NULL, 0, 1, NULL, 0, 1, 1, NULL, NULL),
-(@option_group_id_contactDateMode, 'Each anniversary', '2', 'Each anniversary', NULL, NULL, 0, 2, NULL, 0, 1, 1, NULL, NULL),
+(@option_group_id_contactDateMode, 'Actual date only', '1', 'Actual date only', NULL, NULL, 0, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_contactDateMode, 'Each anniversary', '2', 'Each anniversary', NULL, NULL, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+
+-- WYSIWYG Editor Presets
+(@option_group_id_wysiwyg_presets, '默认',   '1', 'default',   NULL, NULL, 1, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_wysiwyg_presets, 'CiviMail',  '2', 'civimail',  NULL, NULL, 0, 2, NULL, 0, 1, 1, @mailCompId, NULL, NULL),
+(@option_group_id_wysiwyg_presets, 'CiviEvent', '3', 'civievent', NULL, NULL, 0, 3, NULL, 0, 1, 1, @eventCompId, NULL, NULL),
 
 -- Relative Date Filters
-   (@option_group_id_date_filter, '今日', 'this.day', 'this.day', NULL, NULL, NULL,1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'This week', 'this.week', 'this.week', NULL, NULL, NULL,2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'This calendar month', 'this.month', 'this.month', NULL, NULL, NULL,3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'This quarter', 'this.quarter', 'this.quarter', NULL, NULL, NULL,4, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'This fiscal year', 'this.fiscal_year', 'this.fiscal_year', NULL, NULL, NULL,5, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'This calendar year', 'this.year', 'this.year', NULL, NULL, NULL,6, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, '昨天', 'previous.day', 'previous.day', NULL, NULL, NULL,7, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous week', 'previous.week', 'previous.week', NULL, NULL, NULL,8, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous calendar month', 'previous.month', 'previous.month', NULL, NULL, NULL,9, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous quarter', 'previous.quarter', 'previous.quarter', NULL, NULL, NULL,10, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous fiscal year', 'previous.fiscal_year', 'previous.fiscal_year', NULL, NULL, NULL,11, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous calendar year', 'previous.year', 'previous.year', NULL, NULL, NULL,12, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 7 days including today', 'ending.week', 'ending.week', NULL, NULL, NULL,13, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 30 days including today', 'ending.month', 'ending.month', NULL, NULL, NULL,14, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 60 days including today', 'ending_2.month', 'ending_2.month', NULL, NULL, NULL,15, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 90 days including today', 'ending.quarter', 'ending.quarter', NULL, NULL, NULL,16, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 12 months including today', 'ending.year', 'ending.year', NULL, NULL, NULL,17, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 2 years including today', 'ending_2.year', 'ending_2.year', NULL, NULL, NULL,18, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 3 years including today', 'ending_3.year', 'ending_3.year', NULL, NULL, NULL,19, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, '明天', 'starting.day', 'starting.day', NULL, NULL, NULL,20, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next week', 'next.week', 'next.week', NULL, NULL, NULL,21, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next calendar month', 'next.month', 'next.month', NULL, NULL, NULL,22, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next quarter', 'next.quarter', 'next.quarter', NULL, NULL, NULL,23, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next fiscal year', 'next.fiscal_year', 'next.fiscal_year', NULL, NULL, NULL,24, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next calendar year', 'next.year', 'next.year', NULL, NULL, NULL,25, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 7 days including today', 'starting.week', 'starting.week', NULL, NULL, NULL,26, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 30 days including today', 'starting.month', 'starting.month', NULL, NULL, NULL,27, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 60 days including today', 'starting_2.month', 'starting_2.month', NULL, NULL, NULL,28, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 90 days including today', 'starting.quarter', 'starting.quarter', NULL, NULL, NULL,29, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 12 months including today', 'starting.year', 'starting.year', NULL, NULL, NULL,30, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Current week to-date', 'current.week', 'current.week', NULL, NULL, NULL,31, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Current calendar month to-date', 'current.month', 'current.month', NULL, NULL, NULL,32, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Current quarter to-date', 'current.quarter', 'current.quarter', NULL, NULL, NULL,33, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Current calendar year to-date', 'current.year', 'current.year', NULL, NULL, NULL,34, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of yesterday', 'earlier.day', 'earlier.day', NULL, NULL, NULL,35, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous week', 'earlier.week', 'earlier.week', NULL, NULL, NULL,36, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous calendar month', 'earlier.month', 'earlier.month', NULL, NULL, NULL,37, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous quarter', 'earlier.quarter', 'earlier.quarter', NULL, NULL, NULL,38, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous calendar year', 'earlier.year', 'earlier.year', NULL, NULL, NULL,39, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current day', 'greater.day', 'greater.day', NULL, NULL, NULL,40, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current week', 'greater.week', 'greater.week', NULL, NULL, NULL,41, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current calendar month', 'greater.month', 'greater.month', NULL, NULL, NULL,42, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current quarter', 'greater.quarter', 'greater.quarter', NULL, NULL, NULL,43, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current calendar year', 'greater.year', 'greater.year', NULL, NULL, NULL,44, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current week', 'less.week', 'less.week', NULL, NULL, NULL,45, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current calendar month', 'less.month', 'less.month', NULL, NULL, NULL,46, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current quarter', 'less.quarter', 'less.quarter', NULL, NULL, NULL,47, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current calendar year', 'less.year', 'less.year', NULL, NULL, NULL,48, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 days', 'previous_2.day', 'previous_2.day', NULL, NULL, NULL,49, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 weeks', 'previous_2.week', 'previous_2.week', NULL, NULL, NULL,50, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 calendar months', 'previous_2.month', 'previous_2.month', NULL, NULL, NULL,51, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 quarters', 'previous_2.quarter', 'previous_2.quarter', NULL, NULL, NULL,52, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 calendar years', 'previous_2.year', 'previous_2.year', NULL, NULL, NULL,53, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Day prior to yesterday', 'previous_before.day', 'previous_before.day', NULL, NULL, NULL,54, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Week prior to previous week', 'previous_before.week', 'previous_before.week', NULL, NULL, NULL,55, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Month prior to previous calendar month', 'previous_before.month', 'previous_before.month', NULL, NULL, NULL,56, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Quarter prior to previous quarter', 'previous_before.quarter', 'previous_before.quarter', NULL, NULL, NULL,57, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'Year prior to previous calendar year', 'previous_before.year', 'previous_before.year', NULL, NULL, NULL,58, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous week', 'greater_previous.week', 'greater_previous.week', NULL, NULL, NULL,59, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous calendar month', 'greater_previous.month', 'greater_previous.month', NULL, NULL, NULL,60, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous quarter', 'greater_previous.quarter', 'greater_previous.quarter', NULL, NULL, NULL,61, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous calendar year', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL);
+   (@option_group_id_date_filter, '今日', 'this.day', 'this.day', NULL, NULL, NULL,1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'This week', 'this.week', 'this.week', NULL, NULL, NULL,2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'This calendar month', 'this.month', 'this.month', NULL, NULL, NULL,3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'This quarter', 'this.quarter', 'this.quarter', NULL, NULL, NULL,4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'This fiscal year', 'this.fiscal_year', 'this.fiscal_year', NULL, NULL, NULL,5, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'This calendar year', 'this.year', 'this.year', NULL, NULL, NULL,6, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, '昨天', 'previous.day', 'previous.day', NULL, NULL, NULL,7, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous week', 'previous.week', 'previous.week', NULL, NULL, NULL,8, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous calendar month', 'previous.month', 'previous.month', NULL, NULL, NULL,9, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous quarter', 'previous.quarter', 'previous.quarter', NULL, NULL, NULL,10, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous fiscal year', 'previous.fiscal_year', 'previous.fiscal_year', NULL, NULL, NULL,11, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous calendar year', 'previous.year', 'previous.year', NULL, NULL, NULL,12, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 7 days including today', 'ending.week', 'ending.week', NULL, NULL, NULL,13, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 30 days including today', 'ending.month', 'ending.month', NULL, NULL, NULL,14, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 60 days including today', 'ending_2.month', 'ending_2.month', NULL, NULL, NULL,15, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 90 days including today', 'ending.quarter', 'ending.quarter', NULL, NULL, NULL,16, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 12 months including today', 'ending.year', 'ending.year', NULL, NULL, NULL,17, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 2 years including today', 'ending_2.year', 'ending_2.year', NULL, NULL, NULL,18, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Last 3 years including today', 'ending_3.year', 'ending_3.year', NULL, NULL, NULL,19, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, '明天', 'starting.day', 'starting.day', NULL, NULL, NULL,20, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next week', 'next.week', 'next.week', NULL, NULL, NULL,21, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next calendar month', 'next.month', 'next.month', NULL, NULL, NULL,22, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next quarter', 'next.quarter', 'next.quarter', NULL, NULL, NULL,23, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next fiscal year', 'next.fiscal_year', 'next.fiscal_year', NULL, NULL, NULL,24, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next calendar year', 'next.year', 'next.year', NULL, NULL, NULL,25, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next 7 days including today', 'starting.week', 'starting.week', NULL, NULL, NULL,26, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next 30 days including today', 'starting.month', 'starting.month', NULL, NULL, NULL,27, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next 60 days including today', 'starting_2.month', 'starting_2.month', NULL, NULL, NULL,28, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next 90 days including today', 'starting.quarter', 'starting.quarter', NULL, NULL, NULL,29, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Next 12 months including today', 'starting.year', 'starting.year', NULL, NULL, NULL,30, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Current week to-date', 'current.week', 'current.week', NULL, NULL, NULL,31, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Current calendar month to-date', 'current.month', 'current.month', NULL, NULL, NULL,32, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Current quarter to-date', 'current.quarter', 'current.quarter', NULL, NULL, NULL,33, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Current calendar year to-date', 'current.year', 'current.year', NULL, NULL, NULL,34, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of yesterday', 'earlier.day', 'earlier.day', NULL, NULL, NULL,35, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of previous week', 'earlier.week', 'earlier.week', NULL, NULL, NULL,36, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of previous calendar month', 'earlier.month', 'earlier.month', NULL, NULL, NULL,37, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of previous quarter', 'earlier.quarter', 'earlier.quarter', NULL, NULL, NULL,38, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of previous calendar year', 'earlier.year', 'earlier.year', NULL, NULL, NULL,39, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From start of current day', 'greater.day', 'greater.day', NULL, NULL, NULL,40, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From start of current week', 'greater.week', 'greater.week', NULL, NULL, NULL,41, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From start of current calendar month', 'greater.month', 'greater.month', NULL, NULL, NULL,42, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From start of current quarter', 'greater.quarter', 'greater.quarter', NULL, NULL, NULL,43, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From start of current calendar year', 'greater.year', 'greater.year', NULL, NULL, NULL,44, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of current week', 'less.week', 'less.week', NULL, NULL, NULL,45, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of current calendar month', 'less.month', 'less.month', NULL, NULL, NULL,46, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of current quarter', 'less.quarter', 'less.quarter', NULL, NULL, NULL,47, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'To end of current calendar year', 'less.year', 'less.year', NULL, NULL, NULL,48, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous 2 days', 'previous_2.day', 'previous_2.day', NULL, NULL, NULL,49, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous 2 weeks', 'previous_2.week', 'previous_2.week', NULL, NULL, NULL,50, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous 2 calendar months', 'previous_2.month', 'previous_2.month', NULL, NULL, NULL,51, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous 2 quarters', 'previous_2.quarter', 'previous_2.quarter', NULL, NULL, NULL,52, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Previous 2 calendar years', 'previous_2.year', 'previous_2.year', NULL, NULL, NULL,53, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Day prior to yesterday', 'previous_before.day', 'previous_before.day', NULL, NULL, NULL,54, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Week prior to previous week', 'previous_before.week', 'previous_before.week', NULL, NULL, NULL,55, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Month prior to previous calendar month', 'previous_before.month', 'previous_before.month', NULL, NULL, NULL,56, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Quarter prior to previous quarter', 'previous_before.quarter', 'previous_before.quarter', NULL, NULL, NULL,57, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Year prior to previous calendar year', 'previous_before.year', 'previous_before.year', NULL, NULL, NULL,58, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From end of previous week', 'greater_previous.week', 'greater_previous.week', NULL, NULL, NULL,59, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From end of previous calendar month', 'greater_previous.month', 'greater_previous.month', NULL, NULL, NULL,60, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From end of previous quarter', 'greater_previous.quarter', 'greater_previous.quarter', NULL, NULL, NULL,61, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'From end of previous calendar year', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL);
 
 -- financial accounts
 SELECT @opval := value FROM civicrm_option_value WHERE name = 'Revenue' and option_group_id = @option_group_id_fat;
@@ -6283,7 +6290,7 @@ INSERT INTO civicrm_uf_field
        ( 10,     'receive_date',                1, 1, 4, 'User and User Admin Only', 0, 0, NULL, '收款日期', 'Contribution', NULL, NULL ),
        ( 10,     'contribution_source',         0, 0, 5, 'User and User Admin Only', 0, 0, NULL, '来源', 'Contribution', NULL, NULL ),
        ( 10,     'payment_instrument',          0, 0, 6, 'User and User Admin Only', 0, 0, NULL, 'Payment Method', 'Contribution', NULL, NULL ),
-       ( 10,     'check_number',                0, 0, 7, 'User and User Admin Only', 0, 0, NULL, '支票号码', 'Contribution', NULL, NULL ),
+       ( 10,     'contribution_check_number',                0, 0, 7, 'User and User Admin Only', 0, 0, NULL, '支票号码', 'Contribution', NULL, NULL ),
        ( 10,     'send_receipt',                0, 0, 8, 'User and User Admin Only', 0, 0, NULL, '发送收据', 'Contribution', NULL, NULL ),
        ( 10,     'invoice_id',                  0, 0, 9, 'User and User Admin Only', 0, 0, NULL, '发票号', 'Contribution', NULL, NULL ),
        ( 10,     'soft_credit',                 0, 0, 10, 'User and User Admin Only', 0, 0, NULL, '软信用', 'Contribution', NULL, NULL ),
@@ -6298,7 +6305,7 @@ INSERT INTO civicrm_uf_field
        ( 11,     'total_amount',                0, 1, 8, 'User and User Admin Only', 0, 0, NULL, '总额', 'Membership', NULL, NULL ),
        ( 11,     'receive_date',                1, 1, 9, 'User and User Admin Only', 0, 0, NULL, '收款日期', 'Membership', NULL, NULL ),
        ( 11,     'payment_instrument',          0, 0, 10, 'User and User Admin Only', 0, 0, NULL, 'Payment Method', 'Membership', NULL, NULL ),
-       ( 11,     'check_number',                0, 0, 11, 'User and User Admin Only', 0, 0, NULL, '支票号码', 'Membership', NULL, NULL ),
+       ( 11,     'contribution_check_number',                0, 0, 11, 'User and User Admin Only', 0, 0, NULL, '支票号码', 'Membership', NULL, NULL ),
        ( 11,     'contribution_status_id',      1, 1, 12, 'User and User Admin Only', 0, 0, NULL, '会籍状态', 'Membership', NULL, NULL ),
        ( 11,     'soft_credit',                 0, 0, 13, 'User and User Admin Only', 0, 0, NULL, '软信用', 'Membership', NULL, NULL ),
        ( 11,     'soft_credit_type',            0, 0, 14, 'User and User Admin Only', 0, 0, NULL, 'Soft Credit Type', 'Membership', NULL, NULL ),
@@ -6351,7 +6358,7 @@ INSERT INTO `civicrm_contact_type`
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 4.7                                                |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2016                                |
+-- | Copyright CiviCRM LLC (c) 2004-2017                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -10134,8 +10141,10 @@ INSERT INTO civicrm_msg_template
 
 {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by <a href="%1">visiting this web page</a>.{/ts}
 
+{if $updateSubscriptionBillingUrl}
 {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
 
+{/if}
 {else}
 {ts}Thanks for your recurring contribution sign-up.{/ts}
 
@@ -10146,8 +10155,10 @@ INSERT INTO civicrm_msg_template
 
 {ts 1=$cancelSubscriptionUrl}You can cancel the recurring contribution option by <a href="%1">visiting this web page</a>.{/ts}
 
+{if $updateSubscriptionBillingUrl}
 {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
 
+{/if}
 {ts 1=$updateSubscriptionUrl}You can update recurring contribution amount or change the number of installments for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
 {/if}
 
@@ -10217,11 +10228,13 @@ INSERT INTO civicrm_msg_template
          {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by <a href="%1">visiting this web page</a>.{/ts}
         </td>
        </tr>
-       <tr>
-        <td {$labelStyle}>
-         {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
-        </td>
-       </tr>
+       {if $updateSubscriptionBillingUrl}
+         <tr>
+          <td {$labelStyle}>
+           {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
+          </td>
+         </tr>
+       {/if}
      {else}
       <tr>
        <td>
@@ -10235,12 +10248,14 @@ INSERT INTO civicrm_msg_template
          {ts 1=$cancelSubscriptionUrl} You can cancel the recurring contribution option by <a href="%1">visiting this web page</a>.{/ts}
         </td>
       </tr>
+      {if $updateSubscriptionBillingUrl}
+        <tr>
+          <td {$labelStyle}>
+           {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
+          </td>
+        </tr>
+      {/if}
       <tr>
-        <td {$labelStyle}>
-         {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
-        </td>
-       </tr>
-       <tr>
         <td {$labelStyle}>
    {ts 1=$updateSubscriptionUrl}You can update recurring contribution amount or change the number of installments details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
         </td>
@@ -10311,8 +10326,10 @@ INSERT INTO civicrm_msg_template
 
 {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by <a href="%1">visiting this web page</a>.{/ts}
 
+{if $updateSubscriptionBillingUrl}
 {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
 
+{/if}
 {else}
 {ts}Thanks for your recurring contribution sign-up.{/ts}
 
@@ -10323,8 +10340,10 @@ INSERT INTO civicrm_msg_template
 
 {ts 1=$cancelSubscriptionUrl}You can cancel the recurring contribution option by <a href="%1">visiting this web page</a>.{/ts}
 
+{if $updateSubscriptionBillingUrl}
 {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
 
+{/if}
 {ts 1=$updateSubscriptionUrl}You can update recurring contribution amount or change the number of installments for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
 {/if}
 
@@ -10394,11 +10413,13 @@ INSERT INTO civicrm_msg_template
          {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by <a href="%1">visiting this web page</a>.{/ts}
         </td>
        </tr>
-       <tr>
-        <td {$labelStyle}>
-         {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
-        </td>
-       </tr>
+       {if $updateSubscriptionBillingUrl}
+         <tr>
+          <td {$labelStyle}>
+           {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
+          </td>
+         </tr>
+       {/if}
      {else}
       <tr>
        <td>
@@ -10412,12 +10433,14 @@ INSERT INTO civicrm_msg_template
          {ts 1=$cancelSubscriptionUrl} You can cancel the recurring contribution option by <a href="%1">visiting this web page</a>.{/ts}
         </td>
       </tr>
+      {if $updateSubscriptionBillingUrl}
+        <tr>
+          <td {$labelStyle}>
+           {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
+          </td>
+        </tr>
+      {/if}
       <tr>
-        <td {$labelStyle}>
-         {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
-        </td>
-       </tr>
-       <tr>
         <td {$labelStyle}>
    {ts 1=$updateSubscriptionUrl}You can update recurring contribution amount or change the number of installments details for this recurring contribution by <a href="%1">visiting this web page</a>.{/ts}
         </td>
@@ -18779,15 +18802,11 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ===========================================================
 {if !$useForMember && $membership_amount && $is_quick_config}
 {ts 1=$membership_name}%1 Membership{/ts}: {$membership_amount|crmMoney}
-{if $amount}
-{if ! $is_separate_payment }
+{if $amount && !$is_separate_payment }
 {ts}Contribution Amount{/ts}: {$amount|crmMoney}
-{else}
-{ts}Additional Contribution{/ts}: {$amount|crmMoney}
-{/if}
-{/if}
 -------------------------------------------
 {ts}Total{/ts}: {$amount+$membership_amount|crmMoney}
+{/if}
 {elseif !$useForMember && $lineItem and $priceSetID & !$is_quick_config}
 {foreach from=$lineItem item=value key=priceset}
 ---------------------------------------------------------
@@ -18867,8 +18886,10 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {if $is_recur}
 {if $contributeMode eq \'notify\' or $contributeMode eq \'directIPN\'}
 {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by visiting this web page: %1.{/ts}
+{if $updateSubscriptionBillingUrl}
 
 {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
+{/if}
 {/if}
 {/if}
 
@@ -19083,8 +19104,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {$membership_amount|crmMoney}
         </td>
        </tr>
-       {if $amount}
-        {if ! $is_separate_payment }
+       {if $amount && !$is_separate_payment }
          <tr>
           <td {$labelStyle}>
            {ts}Contribution Amount{/ts}
@@ -19093,25 +19113,15 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
            {$amount|crmMoney}
           </td>
          </tr>
-        {else}
          <tr>
-          <td {$labelStyle}>
-           {ts}Additional Contribution{/ts}
-          </td>
-          <td {$valueStyle}>
-           {$amount|crmMoney}
-          </td>
+           <td {$labelStyle}>
+           {ts}Total{/ts}
+            </td>
+            <td {$valueStyle}>
+            {$amount+$membership_amount|crmMoney}
+           </td>
          </tr>
-        {/if}
        {/if}
-       <tr>
-        <td {$labelStyle}>
-         {ts}Total{/ts}
-        </td>
-        <td {$valueStyle}>
-         {$amount+$membership_amount|crmMoney}
-        </td>
-       </tr>
 
       {elseif !$useForMember && $lineItem and $priceSetID and !$is_quick_config}
 
@@ -19314,11 +19324,13 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by <a href="%1">visiting this web page</a>.{/ts}
         </td>
        </tr>
-       <tr>
-        <td colspan="2" {$labelStyle}>
-         {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
-        </td>
-       </tr>
+       {if $updateSubscriptionBillingUrl}
+         <tr>
+          <td colspan="2" {$labelStyle}>
+           {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
+          </td>
+         </tr>
+       {/if}
       {/if}
      {/if}
 
@@ -19589,15 +19601,11 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ===========================================================
 {if !$useForMember && $membership_amount && $is_quick_config}
 {ts 1=$membership_name}%1 Membership{/ts}: {$membership_amount|crmMoney}
-{if $amount}
-{if ! $is_separate_payment }
+{if $amount && !$is_separate_payment }
 {ts}Contribution Amount{/ts}: {$amount|crmMoney}
-{else}
-{ts}Additional Contribution{/ts}: {$amount|crmMoney}
-{/if}
-{/if}
 -------------------------------------------
 {ts}Total{/ts}: {$amount+$membership_amount|crmMoney}
+{/if}
 {elseif !$useForMember && $lineItem and $priceSetID & !$is_quick_config}
 {foreach from=$lineItem item=value key=priceset}
 ---------------------------------------------------------
@@ -19677,8 +19685,10 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 {if $is_recur}
 {if $contributeMode eq \'notify\' or $contributeMode eq \'directIPN\'}
 {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by visiting this web page: %1.{/ts}
+{if $updateSubscriptionBillingUrl}
 
 {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
+{/if}
 {/if}
 {/if}
 
@@ -19893,8 +19903,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {$membership_amount|crmMoney}
         </td>
        </tr>
-       {if $amount}
-        {if ! $is_separate_payment }
+       {if $amount && !$is_separate_payment }
          <tr>
           <td {$labelStyle}>
            {ts}Contribution Amount{/ts}
@@ -19903,25 +19912,15 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
            {$amount|crmMoney}
           </td>
          </tr>
-        {else}
          <tr>
-          <td {$labelStyle}>
-           {ts}Additional Contribution{/ts}
-          </td>
-          <td {$valueStyle}>
-           {$amount|crmMoney}
-          </td>
+           <td {$labelStyle}>
+           {ts}Total{/ts}
+            </td>
+            <td {$valueStyle}>
+            {$amount+$membership_amount|crmMoney}
+           </td>
          </tr>
-        {/if}
        {/if}
-       <tr>
-        <td {$labelStyle}>
-         {ts}Total{/ts}
-        </td>
-        <td {$valueStyle}>
-         {$amount+$membership_amount|crmMoney}
-        </td>
-       </tr>
 
       {elseif !$useForMember && $lineItem and $priceSetID and !$is_quick_config}
 
@@ -20124,11 +20123,13 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
          {ts 1=$cancelSubscriptionUrl}This membership will be renewed automatically. You can cancel the auto-renewal option by <a href="%1">visiting this web page</a>.{/ts}
         </td>
        </tr>
-       <tr>
-        <td colspan="2" {$labelStyle}>
-         {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
-        </td>
-       </tr>
+       {if $updateSubscriptionBillingUrl}
+         <tr>
+          <td colspan="2" {$labelStyle}>
+           {ts 1=$updateSubscriptionBillingUrl}You can update billing details for this automatically renewed membership by <a href="%1">visiting this web page</a>.{/ts}
+          </td>
+         </tr>
+       {/if}
       {/if}
      {/if}
 
@@ -23036,7 +23037,7 @@ VALUES
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 4.7                                                |
 -- +--------------------------------------------------------------------+
--- | Copyright CiviCRM LLC (c) 2004-2016                                |
+-- | Copyright CiviCRM LLC (c) 2004-2017                                |
 -- +--------------------------------------------------------------------+
 -- | This file is a part of CiviCRM.                                    |
 -- |                                                                    |
@@ -23853,4 +23854,4 @@ INSERT INTO `civicrm_report_instance`
 VALUES
     (  @domainID, 'Survey Details', 'survey/detail', 'Detailed report for canvassing, phone-banking, walk lists or other surveys.', 'access CiviReport', 'a:39:{s:6:"fields";a:2:{s:9:"sort_name";s:1:"1";s:6:"result";s:1:"1";}s:22:"assignee_contact_id_op";s:2:"eq";s:25:"assignee_contact_id_value";s:0:"";s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:17:"street_number_min";s:0:"";s:17:"street_number_max";s:0:"";s:16:"street_number_op";s:3:"lte";s:19:"street_number_value";s:0:"";s:14:"street_name_op";s:3:"has";s:17:"street_name_value";s:0:"";s:15:"postal_code_min";s:0:"";s:15:"postal_code_max";s:0:"";s:14:"postal_code_op";s:3:"lte";s:17:"postal_code_value";s:0:"";s:7:"city_op";s:3:"has";s:10:"city_value";s:0:"";s:20:"state_province_id_op";s:2:"in";s:23:"state_province_id_value";a:0:{}s:13:"country_id_op";s:2:"in";s:16:"country_id_value";a:0:{}s:12:"survey_id_op";s:2:"in";s:15:"survey_id_value";a:0:{}s:12:"status_id_op";s:2:"eq";s:15:"status_id_value";s:1:"1";s:11:"custom_1_op";s:2:"in";s:14:"custom_1_value";a:0:{}s:11:"custom_2_op";s:2:"in";s:14:"custom_2_value";a:0:{}s:17:"custom_3_relative";s:1:"0";s:13:"custom_3_from";s:0:"";s:11:"custom_3_to";s:0:"";s:11:"description";s:75:"Detailed report for canvassing, phone-banking, walk lists or other surveys.";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:17:"access CiviReport";s:6:"groups";s:0:"";s:9:"domain_id";i:1;}');
 
-UPDATE civicrm_domain SET version = '4.7.13';
+UPDATE civicrm_domain SET version = '4.7.17';
