@@ -1,0 +1,13 @@
+name = CivIWWA theme settings
+description = Theme settings for CivIWWA.
+core = 7.x
+package = CivIWWA
+version = 7.x-1.0
+project = civiwwa_theme_settings
+dependencies[] = ctools
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = theme_bartik_settings
+project path = sites/all/modules/custom
+project status url = civiwwa_theme_settings

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the CivIWWA theme settings feature.
+ */
+
+include_once 'civiwwa_theme_settings.features.inc';
