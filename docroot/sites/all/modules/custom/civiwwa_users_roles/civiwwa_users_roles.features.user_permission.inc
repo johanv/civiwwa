@@ -140,9 +140,7 @@ function civiwwa_users_roles_user_default_permissions() {
   // Exported permission: 'administer nodes'.
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
-    'roles' => array(
-      'CivIWWA power user' => 'CivIWWA power user',
-    ),
+    'roles' => array(),
     'module' => 'node',
   );
 
@@ -162,6 +160,15 @@ function civiwwa_users_roles_user_default_permissions() {
       'anonymous user' => 'anonymous user',
     ),
     'module' => 'civicrm',
+  );
+
+  // Exported permission: 'create article content'.
+  $permissions['create article content'] = array(
+    'name' => 'create article content',
+    'roles' => array(
+      'CivIWWA power user' => 'CivIWWA power user',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'delete activities'.
@@ -228,6 +235,15 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'civicrm',
   );
 
+  // Exported permission: 'edit any article content'.
+  $permissions['edit any article content'] = array(
+    'name' => 'edit any article content',
+    'roles' => array(
+      'CivIWWA power user' => 'CivIWWA power user',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit contributions'.
   $permissions['edit contributions'] = array(
     'name' => 'edit contributions',
@@ -285,6 +301,15 @@ function civiwwa_users_roles_user_default_permissions() {
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
+  );
+
+  // Exported permission: 'edit own article content'.
+  $permissions['edit own article content'] = array(
+    'name' => 'edit own article content',
+    'roles' => array(
+      'CivIWWA power user' => 'CivIWWA power user',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'import contacts'.
