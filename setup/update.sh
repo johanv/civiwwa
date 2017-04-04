@@ -38,8 +38,8 @@ $DRUSH -u 1 cvapi Extension.upgrade
 $DRUSH -u 1 cvapi ApiAccess.reconfigure
 
 # Enable new drupal modules?
-$DRUSH dis civiwwa_deploy
-$DRUSH en civiwwa_deploy
+$DRUSH dis -y civiwwa_deploy
+$DRUSH en -y civiwwa_deploy
 
 $DRUSH vset maintenance_mode 0
 $DRUSH cc all
