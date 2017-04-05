@@ -414,6 +414,15 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'civicrm',
   );
 
+  // Exported permission: 'use text format markdown'.
+  $permissions['use text format markdown'] = array(
+    'name' => 'use text format markdown',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'filter',
+  );
+
   // Exported permission: 'view all activities'.
   $permissions['view all activities'] = array(
     'name' => 'view all activities',
