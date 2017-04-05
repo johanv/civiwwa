@@ -3,7 +3,7 @@
  +--------------------------------------------------------------------+
  | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2016                                |
+ | Copyright CiviCRM LLC (c) 2004-2017                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2016
+ * @copyright CiviCRM LLC (c) 2004-2017
  */
 class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
   protected $_addressField = FALSE;
@@ -335,6 +335,12 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Utils_Type::T_DATE,
           ),
+          'status_id' => array(
+            'title' => ts('Financial Transaction Status'),
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Contribute_PseudoConstant::contributionStatus(),
+            'default' => array(1),
+          ),
         ),
         'order_bys' => array(
           'payment_instrument_id' => array('title' => ts('Payment Method')),
@@ -555,7 +561,7 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
 
     $this->groupBy();
 
-    $tempQuery = "CREATE TEMPORARY TABLE {$tempTableName} CHARACTER SET utf8 COLLATE utf8_unicode_ci AS
+    $tempQuery = "CREATE TEMPORARY TABLE {$tempTableName} {$this->_databaseAttributes} AS
                   {$select} {$this->_from} {$this->_where} {$this->_groupBy} ";
     CRM_Core_DAO::executeQuery($tempQuery);
 

@@ -13,5 +13,5 @@
 /docroot/sites/all/modules/civicrm/l10n
 /docroot/sites/all/modules/custom/civiwwa_migrate/data_sources
 /dumps
-/.idea/workspace.xml
+/.idea/*
 /setup/l10n
