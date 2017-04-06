@@ -3,6 +3,7 @@ description = Enables required modules and extensions.
 core = 7.x
 package = CivIWWA
 version = 7.x-1.0
+dependencies[] = cas_server
 dependencies[] = civiwwa_content
 dependencies[] = civiwwa_migrate
 dependencies[] = civiwwa_theme_settings
