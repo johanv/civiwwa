@@ -1,5 +1,7 @@
 <?php
 /**
  * @file
- * Drupal needs this blank file.
+ * Code for the CiviWWA deployment feature.
  */
+
+include_once 'civiwwa_deploy.features.inc';
