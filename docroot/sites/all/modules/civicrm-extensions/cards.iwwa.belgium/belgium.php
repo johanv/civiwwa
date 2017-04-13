@@ -162,12 +162,18 @@ function belgium_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 function belgium_civicrm_post($op, $objectName, $objectId, &$objectRef) {
   if ($objectName == 'Address' && ($op == 'edit' || $op == 'create')) {
     $worker = new CRM_Belgium_Worker();
-    if (!empty($objectRef['postal_code']) && empty($objectRef['street_province_id'])) {
+    $stateProvinceId = NULL;
+    // The 'null' as string is a strange CiviCRM thing in forms. It is a bug
+    // by design or something.
+    if (!(empty($objectRef->street_province_id) || $objectRef->street_province_id == 'null')) {
+      $stateProvinceId = $objectRef->state_province_id;
+    }
+    else if (!(empty($objectRef->postal_code) || $objectRef->postal_code == 'null')) {
       // If state_province_id is not explicitly given in the call, we will
       // do an educated guess.
-      $worker->guessProvince($objectId);
+      $stateProvinceId = $worker->guessProvince($objectId, $objectRef->postal_code);
     }
-    $worker->updatePreferredLanguage($objectId);
+    $worker->updatePreferredLanguage($objectId, $stateProvinceId);
   }
 }
 
