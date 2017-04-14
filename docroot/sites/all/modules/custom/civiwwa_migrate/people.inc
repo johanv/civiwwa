@@ -25,20 +25,25 @@ class peopleMigration extends Civimigration {
     $this->description = t('Import contacts');
 
     $columns = [
+      ['row_number', t('Row Number')],
+      ['registration_date', t('Registration Date')],
       ['last_name', t('Last Name')],
       ['first_name', t('First Name')],
-      ['street_address', t('Street Address')],
-      ['postal_code', t('Postal Code')],
-      ['preferred_language', t('Preferred Language')],
-      ['city', t('City')],
-      ['phone', t('Phone')],
       ['email', t('Email')],
+      ['state_province', t('State/Province')],
+      ['postal_code', t('Postal Code')],
+      ['city', t('City')],
+      ['country', t('Country')],
       ['birth_date', t('Birth Date')],
+      ['gender', t('Gender')],
+      ['color', t('Color')],
       ['club', t('Club')],
     ];
 
+    // I'm not sure what will happen if we re-use the same migration on a
+    // different Excel file. Fingers crossed.
     $this->source = new MigrateSourceCSV(
-      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/iedereen.csv',
+      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/import.csv',
       $columns);
 
     // Mapping source and destination.
@@ -71,6 +76,10 @@ class peopleMigration extends Civimigration {
     if (!parent::prepareRow($row)) {
       return FALSE;
     }
+    if ($row->first_name == 'Voornaam') {
+      // Let's assume this is the header row.
+      return FALSE;
+    }
     if ($row->preferred_language == 'F') {
       $row->preferred_language = 'fr_FR';
     }
@@ -94,10 +103,17 @@ class peopleMigration extends Civimigration {
     if (empty($row->postal_code)) {
       return;
     }
+
+    // Delete existing address first.
+    civicrm_api3('Address', 'get', [
+      'contact_id' => $entity['id'],
+      'api.Address.delete' => ['id' => '$value.id'],
+    ]);
     civicrm_api3('Address', 'create', [
       'contact_id' => $entity['id'],
       'street_address' => $row->street_address,
       'postal_code' => $row->postal_code,
+      'state_province_id' => CRM_Belgium_Logic::guessProvince($row->postal_code),
       'city' => $row->city,
       'location_type_id' => 1,
     ]);

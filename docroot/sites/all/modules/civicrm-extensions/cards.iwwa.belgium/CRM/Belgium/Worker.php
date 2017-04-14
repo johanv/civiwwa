@@ -21,6 +21,7 @@
  * Class CRM_Belgium_Worker - Some logic.
  */
 class CRM_Belgium_Worker {
+
   /**
    * Updates state_province_id of a Belgian address based on a postal code.
    *
@@ -31,61 +32,9 @@ class CRM_Belgium_Worker {
    * Postal code could be inferred from $addressId, but because we know it
    * in advance, we can do all logic in one chained call.
    */
-  public function guessProvince($addressId, $postalCode) {
+  public function updateProvince($addressId, $postalCode) {
     is_numeric($addressId) || die('$addressId should be numerical.');
-    is_numeric($postalCode) || die('$postalCode should be numerical.');
-    if ($postalCode < 1300) {
-      // Brussels Hoofdstedelijk Gewest
-      $stateProvinceId = 5217;
-    }
-    else if ($postalCode < 1500) {
-      // Brabant Wallon
-      $stateProvinceId = 1786;
-    }
-    else if ($postalCode < 2000) {
-      // Vlaams Brabant, part 1
-      $stateProvinceId = 1793;
-    }
-    else if ($postalCode < 3000) {
-      // Antwerpen
-      $stateProvinceId = 1785;
-    }
-    else if ($postalCode < 3500) {
-      // Vlaams Brabant, part 2
-      $stateProvinceId = 1973;
-    }
-    else if ($postalCode < 4000) {
-      // Limburg
-      $stateProvinceId = 1789;
-    }
-    else if ($postalCode < 5000) {
-      // Liège
-      $stateProvinceId = 1788;
-    }
-    else if ($postalCode < 6000) {
-      // Namur
-      $stateProvinceId = 1791;
-    }
-    else if ($postalCode < 6600) {
-      // Hainaut, part 1
-      $stateProvinceId = 1787;
-    }
-    else if ($postalCode < 7000) {
-      // Luxembourg
-      $stateProvinceId = 1790;
-    }
-    else if ($postalCode < 8000) {
-      // Hainaut, part 2
-      $stateProvinceId = 1787;
-    }
-    else if ($postalCode < 9000) {
-      // West-Vlaanderen
-      $stateProvinceId = 1794;
-    }
-    else {
-      // Oost-Vlaanderen
-      $stateProvinceId = 1792;
-    }
+    $stateProvinceId = CRM_Belgium_Logic::guessProvince($postalCode);
     $result = civicrm_api3('Address', 'get', [
       'id' => $addressId,
       // Belgium

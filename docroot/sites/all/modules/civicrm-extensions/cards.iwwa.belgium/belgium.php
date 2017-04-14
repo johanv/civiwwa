@@ -171,7 +171,7 @@ function belgium_civicrm_post($op, $objectName, $objectId, &$objectRef) {
     else if (!(empty($objectRef->postal_code) || $objectRef->postal_code == 'null')) {
       // If state_province_id is not explicitly given in the call, we will
       // do an educated guess.
-      $stateProvinceId = $worker->guessProvince($objectId, $objectRef->postal_code);
+      $stateProvinceId = $worker->updateProvince($objectId, $objectRef->postal_code);
     }
     $worker->updatePreferredLanguage($objectId, $stateProvinceId);
   }
