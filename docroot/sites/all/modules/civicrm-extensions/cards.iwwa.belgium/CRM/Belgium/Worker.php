@@ -126,7 +126,7 @@ class CRM_Belgium_Worker {
     }
     if (!empty($lang)) {
       // Only change preferred language if it isn't already set.
-      civicrm_api3('Address.get', [
+      civicrm_api3('Address', 'get', [
         'id' => $addressId,
         'api.Contact.get' => [
           'id' => '$value.contact_id',
