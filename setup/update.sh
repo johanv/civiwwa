@@ -26,6 +26,7 @@ git pull
 
 $DRUSH cc all
 $DRUSH vset maintenace_mode 1
+$DRUSH migrate-register
 
 $DRUSH cvupdb
 $DRUSH cvapi Extension.refresh
