@@ -81,3 +81,22 @@ function civiwwa_deploy_update_7103(&$sandbox) {
   civicrm_initialize();
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.belgium']);
 }
+
+/**
+ * Migrate all participants (#35).
+ *
+ * @param $sandbox
+ */
+function civiwwa_deploy_update_7104(&$sandbox) {
+  civicrm_initialize();
+
+  // Undelete old participants.
+  $sql = "UPDATE civicrm_contact c JOIN civicrm_participant p ON c.id=p.contact_id SET c.is_deleted=0 WHERE c.is_deleted=1";
+  CRM_Core_DAO::executeQuery($sql)->free();
+
+  $machineNames = ['People', 'Clubs', 'Memberships', 'Participants'];
+  foreach ($machineNames as $name) {
+    $migration = Migration::getInstance($name);
+    $migration->processImport(['force' => 1, 'update' => 1]);
+  }
+}
