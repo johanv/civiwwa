@@ -17,29 +17,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-abstract class participantsMigration extends CiviMigration {
+class participantsMigration extends CiviMigration {
    protected $entity = 'participant';
-   protected $debug = 1;
 
-   public abstract function getCiviEventId();
-   public abstract function getSourceFile();
+   public function getSourceFile() {
+     return 'import.csv';
+   }
 
    public function __construct($arguments) {
     parent::__construct($arguments);
     civicrm_initialize();
-    $e = civicrm_api3('Event', 'getsingle', ['id' => $this->getCiviEventId()]);
-    $this->description = t('Import participants ' . $e['title']);
+    $this->description = t('Import participants.');
 
     $columns = [
-      // I suspect this to be a duplicate from 'preferred language'.
-      ['n', t('n')],
+      ['row_number', t('Row Number')],
+      ['registration_date', t('Registration Date')],
       ['last_name', t('Last Name')],
       ['first_name', t('First Name')],
-      ['street_address', t('Street Address')],
+      ['email', t('Email')],
+      ['state_province', t('State/Province')],
       ['postal_code', t('Postal Code')],
       ['city', t('City')],
-      ['preferred_language', t('Preferred Language')],
-      ['full_name', t('Full Name')],
+      ['country', t('Country')],
+      ['birth_date', t('Birth Date')],
+      ['gender', t('Gender')],
+      ['color', t('Color')],
+      ['club', t('Club')],
+      ['event_id', t('Event ID')],
     ];
 
     $this->source = new MigrateSourceCSV(
@@ -59,7 +63,7 @@ abstract class participantsMigration extends CiviMigration {
 
     $this->addFieldMapping('contact_id', 'constructed_key')->sourceMigration('people');
     // Event ID
-    $this->addFieldMapping('event_id')->defaultValue($e['id']);
+    $this->addFieldMapping('event_id', 'event_id');
     // Participated
     $this->addFieldMapping('participant_status_id')->defaultValue('2');
     // Participant

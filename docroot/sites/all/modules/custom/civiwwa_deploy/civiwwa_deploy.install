@@ -71,3 +71,13 @@ function civiwwa_deploy_update_7102(&$sandbox) {
     $migration->processImport(['force' => 1]);
   }
 }
+
+/**
+ * Enable cards.iwwa.belgium.
+ *
+ * @param $sandbox
+ */
+function civiwwa_deploy_update_7103(&$sandbox) {
+  civicrm_initialize();
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.belgium']);
+}

@@ -48,4 +48,5 @@ then
 fi
 
 $DRUSH uli --uri=http://localhost
+$DRUSH cc all
 popd
