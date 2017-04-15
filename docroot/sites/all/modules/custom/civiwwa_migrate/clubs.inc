@@ -25,27 +25,30 @@
  */
 class clubsMigration extends Civimigration {
   protected $entity = 'contact';
-  protected $debug = 1;
 
   public function __construct(array $arguments) {
     parent::__construct($arguments);
     $this->description = t('Import clubs');
 
     $columns = [
+      ['row_number', t('Row Number')],
+      ['registration_date', t('Registration Date')],
       ['last_name', t('Last Name')],
       ['first_name', t('First Name')],
-      ['street_address', t('Street Address')],
-      ['postal_code', t('Postal Code')],
-      ['preferred_language', t('Preferred Language')],
-      ['city', t('City')],
-      ['phone', t('Phone')],
       ['email', t('Email')],
+      ['state_province', t('State/Province')],
+      ['postal_code', t('Postal Code')],
+      ['city', t('City')],
+      ['country', t('Country')],
       ['birth_date', t('Birth Date')],
+      ['gender', t('Gender')],
+      ['color', t('Color')],
       ['club', t('Club')],
+      ['event_id', t('Event ID')],
     ];
 
     $this->source = new MigrateSourceCSV(
-      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/iedereen.csv',
+      DRUPAL_ROOT . '/' . drupal_get_path('module', 'civiwwa_migrate') . '/data_sources/import.csv',
       $columns);
 
     // Mapping source and destination.
