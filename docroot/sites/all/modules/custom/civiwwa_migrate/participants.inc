@@ -56,6 +56,7 @@ class participantsMigration extends CiviMigration {
       [
         'last_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
         'first_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
+        'event_id' => [ 'type' => 'int', 'not null' => TRUE ],
       ]
       // Corresponding destination keys
       , MigrateDestinationCivicrmApi::getKeySchema()
