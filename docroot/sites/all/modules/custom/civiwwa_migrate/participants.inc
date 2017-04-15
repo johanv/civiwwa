@@ -65,6 +65,8 @@ class participantsMigration extends CiviMigration {
     $this->addFieldMapping('contact_id', 'constructed_key')->sourceMigration('people');
     // Event ID
     $this->addFieldMapping('event_id', 'event_id');
+    // Registration date
+    $this->addFieldMapping('registration_date', 'registration_date');
     // Participated
     $this->addFieldMapping('participant_status_id')->defaultValue('2');
     // Participant
