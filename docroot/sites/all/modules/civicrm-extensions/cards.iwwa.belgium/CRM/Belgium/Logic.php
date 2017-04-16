@@ -25,6 +25,8 @@ class CRM_Belgium_Logic {
    * Returns the state_province_id that probably corresponds with the postal code.
    * @param int $postalCode
    * @return int state_province_id
+   *
+   * TODO: Use constants instead of magic numbers for provinces.
    */
   public static function guessProvince($postalCode) {
     is_numeric($postalCode) || die('$postalCode should be numerical.');
