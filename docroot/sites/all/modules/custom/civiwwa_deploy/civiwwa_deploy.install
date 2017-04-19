@@ -41,38 +41,6 @@ function civiwwa_deploy_update_7101(&$sandbox) {
 }
 
 /**
- * Redo participant migrations after messing with contact mapping tables, see #22.
- *
- * @param $sandbox
- */
-function civiwwa_deploy_update_7102(&$sandbox) {
-  // Rollback effected migrations.
-  $machineNames = ['Memberships', 'Winksele2016', 'Zandhoven2015', 'Diest2015', 'Zandhoven2014', 'Edegem2013'];
-  foreach ($machineNames as $name) {
-    $migration = Migration::getInstance($name);
-    $migration->processRollback();
-  }
-
-  // Mapping table hack.
-  $sql = "UPDATE drupal.migrate_map_people mp
-    INNER JOIN civi.civicrm_contact c ON 
-    mp.sourceid1 = c.last_name COLLATE utf8_unicode_ci 
-    AND mp.sourceid2 = c.first_name COLLATE utf8_unicode_ci 
-    AND c.is_deleted = 0
-    SET mp.destid1 = c.id";
-
-  CRM_Core_DAO::executeQuery($sql)->free();
-
-  // Remigrate participants. Don't remigrate memberships, they should already
-  // be ok.
-  $machineNames = ['Winksele2016', 'Zandhoven2015', 'Diest2015', 'Zandhoven2014', 'Edegem2013'];
-  foreach (array_reverse($machineNames) as $name) {
-    $migration = Migration::getInstance($name);
-    $migration->processImport(['force' => 1]);
-  }
-}
-
-/**
  * Enable cards.iwwa.belgium.
  *
  * @param $sandbox
@@ -80,25 +48,6 @@ function civiwwa_deploy_update_7102(&$sandbox) {
 function civiwwa_deploy_update_7103(&$sandbox) {
   civicrm_initialize();
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.belgium']);
-}
-
-/**
- * Migrate all participants (#35).
- *
- * @param $sandbox
- */
-function civiwwa_deploy_update_7104(&$sandbox) {
-  civicrm_initialize();
-
-  // Undelete old participants.
-  $sql = "UPDATE civicrm_contact c JOIN civicrm_participant p ON c.id=p.contact_id SET c.is_deleted=0 WHERE c.is_deleted=1";
-  CRM_Core_DAO::executeQuery($sql)->free();
-
-  $machineNames = ['People', 'Clubs', 'Memberships', 'Participants'];
-  foreach ($machineNames as $name) {
-    $migration = Migration::getInstance($name);
-    $migration->processImport(['force' => 1, 'update' => 1]);
-  }
 }
 
 /**
