@@ -1,0 +1,32 @@
+{
+  "aansluiting": {
+    "domain_id": "1",
+    "name": "aansluiting",
+    "description": "Personen aangesloten bij IWWA vzw.",
+    "member_of_contact_id": "1",
+    "financial_type_id": "2",
+    "contribution_type_id": "2",
+    "minimum_fee": "0.00",
+    "duration_unit": "lifetime",
+    "duration_interval": "1",
+    "period_type": "rolling",
+    "visibility": "Admin",
+    "weight": "1",
+    "is_active": "1"
+  },
+  "kernlid": {
+    "domain_id": "1",
+    "name": "kernlid",
+    "description": "Kernleden aangesloten bij IWWA vzw.",
+    "member_of_contact_id": "1",
+    "financial_type_id": "2",
+    "contribution_type_id": "2",
+    "minimum_fee": "0.00",
+    "duration_unit": "lifetime",
+    "duration_interval": "1",
+    "period_type": "rolling",
+    "visibility": "Admin",
+    "weight": "1",
+    "is_active": "1"
+  }
+}
