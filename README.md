@@ -1,7 +1,8 @@
 # CivIWWA
 
 Just another CiviCRM instance.
-Nothing to see here, move along :-)
+
+I'll post some documentation later on.
 
 # How to run locally
 
