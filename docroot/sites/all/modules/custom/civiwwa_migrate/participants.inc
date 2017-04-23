@@ -102,4 +102,12 @@ class participantsMigration extends CiviMigration {
     $row->constructed_key = [[$row->last_name, $row->first_name]];
     return TRUE;
   }
+
+  public function prepare($entity, stdClass $row) {
+    // prevent contact_id from existing event from being overwritten.
+    if (!empty($entity->id)) {
+      $existingParticipant = civicrm_api3('Participant', 'getsingle', ['id' => $entity->id]);
+      $entity->contact_id = $existingParticipant['contact_id'];
+    }
+  }
 }
