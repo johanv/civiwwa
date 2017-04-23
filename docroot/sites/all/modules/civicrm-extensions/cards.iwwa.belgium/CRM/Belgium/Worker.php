@@ -18,10 +18,9 @@
  */
 
 /**
- * Class CRM_Belgium_Worker - Some logic.
+ * Class CRM_Belgium_Worker - This class performs the actual work.
  */
 class CRM_Belgium_Worker {
-
   /**
    * Updates state_province_id of a Belgian address based on a postal code.
    *

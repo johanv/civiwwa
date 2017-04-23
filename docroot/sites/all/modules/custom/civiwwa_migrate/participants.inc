@@ -18,13 +18,13 @@
 */
 
 class participantsMigration extends CiviMigration {
-   protected $entity = 'participant';
+  protected $entity = 'participant';
 
-   public function getSourceFile() {
-     return 'import.csv';
-   }
+  public function getSourceFile() {
+    return 'import.csv';
+  }
 
-   public function __construct($arguments) {
+  public function __construct($arguments) {
     parent::__construct($arguments);
     civicrm_initialize();
     $this->description = t('Import participants.');
@@ -54,23 +54,34 @@ class participantsMigration extends CiviMigration {
     $this->map = new MigrateSQLMap($this->machineName,
       // Source keys (unique identification of participant)
       [
-        'last_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
-        'first_name' => [ 'type' => 'varchar', 'length' => 255, 'not null' => FALSE ],
-        'event_id' => [ 'type' => 'int', 'not null' => TRUE ],
+        'last_name' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE
+        ],
+        'first_name' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE
+        ],
+        'event_id' => ['type' => 'int', 'not null' => TRUE],
       ]
       // Corresponding destination keys
       , MigrateDestinationCivicrmApi::getKeySchema()
     );
 
-    $this->addFieldMapping('contact_id', 'constructed_key')->sourceMigration('people');
+    $this->addFieldMapping('contact_id', 'constructed_key')
+      ->sourceMigration('people');
     // Event ID
     $this->addFieldMapping('event_id', 'event_id');
     // Registration date
-    $this->addFieldMapping('registration_date', 'registration_date');
+    $this->addFieldMapping('register_date', 'registration_date');
     // Participated
     $this->addFieldMapping('participant_status_id')->defaultValue('2');
     // Participant
     $this->addFieldMapping('participant_role_id')->defaultValue('1');
+    // Source
+    $this->addFieldMapping('source')->defaultValue('Import from score board.');
   }
 
   public function prepareRow($row) {
@@ -85,7 +96,18 @@ class participantsMigration extends CiviMigration {
       array_shift($words);
       $row->last_name = implode(' ', $words);
     }
+    if (!empty($row->registration_date)) {
+      $row->registration_date = date('Y-m-d', strtotime($row->registration_date));
+    }
     $row->constructed_key = [[$row->last_name, $row->first_name]];
     return TRUE;
+  }
+
+  public function prepare($entity, stdClass $row) {
+    // prevent contact_id from existing event from being overwritten.
+    if (!empty($entity->id)) {
+      $existingParticipant = civicrm_api3('Participant', 'getsingle', ['id' => $entity->id]);
+      $entity->contact_id = $existingParticipant['contact_id'];
+    }
   }
 }
