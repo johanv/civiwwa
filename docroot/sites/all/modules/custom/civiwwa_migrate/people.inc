@@ -87,7 +87,8 @@ class peopleMigration extends Civimigration {
       $row->preferred_language = 'nl_NL';
     }
     if (!empty($row->birth_date)) {
-      $row->birth_date = date('Y-m-d', strtotime($row->birth_date));
+      $myDateTime = DateTime::createFromFormat('d/m/Y', $row->birth_date);
+      $row->birth_date = $myDateTime->format('Y-m-d');
     }
     return TRUE;
   }

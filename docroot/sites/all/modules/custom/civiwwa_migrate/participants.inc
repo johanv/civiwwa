@@ -96,18 +96,31 @@ class participantsMigration extends CiviMigration {
       array_shift($words);
       $row->last_name = implode(' ', $words);
     }
+    if (!empty($row->birth_date)) {
+      $myDateTime = DateTime::createFromFormat('d/m/Y', $row->birth_date);
+      if ($myDateTime) $row->birth_date = $myDateTime->format('Y-m-d');
+    }
     if (!empty($row->registration_date)) {
-      $row->registration_date = date('Y-m-d', strtotime($row->registration_date));
+      $myDateTime = DateTime::createFromFormat('d/m/Y', $row->registration_date);
+      if ($myDateTime) $row->registration_date = $myDateTime->format('Y-m-d');
     }
     $row->constructed_key = [[$row->last_name, $row->first_name]];
     return TRUE;
   }
 
-  public function prepare($entity, stdClass $row) {
+  public function prepare(&$entity, &$row) {
     // prevent contact_id from existing event from being overwritten.
     if (!empty($entity->id)) {
       $existingParticipant = civicrm_api3('Participant', 'getsingle', ['id' => $entity->id]);
       $entity->contact_id = $existingParticipant['contact_id'];
     }
+  }
+
+  public function complete($entity, stdClass $row) {
+    // update contacts birth date, to fix #47.
+    civicrm_api3('Contact', 'create', [
+      'id' => $entity['contact_id'],
+      'birth_date' => $row->birth_date,
+    ]);
   }
 }
