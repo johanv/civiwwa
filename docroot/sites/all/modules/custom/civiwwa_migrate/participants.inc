@@ -115,12 +115,4 @@ class participantsMigration extends CiviMigration {
       $entity->contact_id = $existingParticipant['contact_id'];
     }
   }
-
-  public function complete($entity, stdClass $row) {
-    // update contacts birth date, to fix #47.
-    civicrm_api3('Contact', 'create', [
-      'id' => $entity['contact_id'],
-      'birth_date' => $row->birth_date,
-    ]);
-  }
 }
