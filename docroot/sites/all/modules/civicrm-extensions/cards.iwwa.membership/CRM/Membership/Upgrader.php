@@ -32,15 +32,5 @@ class CRM_Membership_Upgrader extends CRM_Membership_Upgrader_Base {
     ]);
     return (!$configResult['is_error']);
   }
-
-  /**
-   * Create memberships for existing participants.
-   *
-   * @return bool
-   */
-  public function upgrade_4700() {
-    $result = civicrm_api3('IwwaMembership', 'createbasicmemberships');
-    return (!$result['is_error']);
-  }
 }
 

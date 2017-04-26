@@ -16,6 +16,7 @@
     </urls>
     <releaseDate>2017-04-23</releaseDate>
     <version>1.0</version>
+    <develStage>alpha</develStage>
     <compatibility>
         <ver>4.7</ver>
     </compatibility>
@@ -24,7 +25,6 @@
         <namespace>CRM/IwwaMembership</namespace>
     </civix>
     <requires>
-        <ext>be.chiro.civi.idcache</ext>
         <ext>cards.iwwa.base</ext>
         <ext>org.civicoop.configitems</ext>
     </requires>

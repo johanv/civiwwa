@@ -1,6 +1,6 @@
 <?php
 /*
-  cards.iwwa.iwwamembership CivIWWA membership configuration.
+  civiwwa.iwwamembershimembership CivIWWA membership configuration.
   Copyright (C) 2017  Johan Vervloet
 
   This program is free software: you can redistribute it and/or modify
