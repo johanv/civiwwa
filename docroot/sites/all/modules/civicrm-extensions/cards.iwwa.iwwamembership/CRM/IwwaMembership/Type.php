@@ -1,6 +1,6 @@
 <?php
 /*
-  civiwwa.membershimembership CivIWWA membership configuration.
+  cards.iwwa.iwwamembership CivIWWA membership configuration.
   Copyright (C) 2017  Johan Vervloet
 
   This program is free software: you can redistribute it and/or modify
@@ -17,20 +17,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 /**
- * Collection of upgrade steps.
+ * Class CRM_IwwaMembership_Type
  */
-class CRM_Membership_Upgrader extends CRM_Membership_Upgrader_Base {
-  /**
-   * Apply configuration when extension is enabled.
-   */
-  public function enable() {
-    $configResult = civicrm_api3('Civiconfig', 'load_json', [
-      // there should be a better way to do this.
-      'path' => realpath(__DIR__ . '/../../') . '/resources/'
-    ]);
-    return (!$configResult['is_error']);
+class CRM_IwwaMembership_Type {
+  public static function BASIC_MEMBER() {
+    return CRM_IdCache_Cache_Generic::getId('MembershipType', 'aansluiting');
   }
 }
-
