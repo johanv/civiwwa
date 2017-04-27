@@ -17,19 +17,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-/**
- * Collection of upgrade steps.
- */
-class CRM_IwwaMembership_Upgrader extends CRM_IwwaMembership_Upgrader_Base {
-  /**
-   * Apply configuration when extension is enabled.
-   */
-  public function enable() {
-    $configResult = civicrm_api3('Civiconfig', 'load_json', [
-      // there should be a better way to do this.
-      'path' => realpath(__DIR__ . '/../../') . '/resources/'
-    ]);
-    return (!$configResult['is_error']);
-  }
-}
+return array (
+  0 =>
+    array (
+      'name' => 'Create memberships for participants',
+      'entity' => 'Job',
+      'params' =>
+        array (
+          'version' => 3,
+          'name' => 'Create memberships for participants',
+          'description' => "Create memberships for participants that don't have
+            a membership yet. The membership starts at the earliest event
+            registration.",
+          'api_entity' => 'IwwaMembership',
+          'api_action' => 'Createbasicmemberships',
+          'run_frequency' => 'Daily',
+          'is_active' => 1,
+        ),
+    ),
+);

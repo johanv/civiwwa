@@ -17,19 +17,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 /**
- * Collection of upgrade steps.
+ * Class CRM_IwwaMembership_Type
  */
-class CRM_IwwaMembership_Upgrader extends CRM_IwwaMembership_Upgrader_Base {
-  /**
-   * Apply configuration when extension is enabled.
-   */
-  public function enable() {
-    $configResult = civicrm_api3('Civiconfig', 'load_json', [
-      // there should be a better way to do this.
-      'path' => realpath(__DIR__ . '/../../') . '/resources/'
-    ]);
-    return (!$configResult['is_error']);
+class CRM_IwwaMembership_Type {
+  public static function BASIC_MEMBER() {
+    return CRM_IdCache_Cache_Generic::getId('MembershipType', 'aansluiting');
   }
 }
