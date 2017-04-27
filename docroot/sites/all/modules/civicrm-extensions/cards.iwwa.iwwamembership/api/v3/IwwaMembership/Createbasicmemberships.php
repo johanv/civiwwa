@@ -57,6 +57,7 @@ function civicrm_api3_iwwa_membership_Createbasicmemberships($params) {
       'contact_id' => $dao->id,
       'membership_type_id' => CRM_IwwaMembership_Type::BASIC_MEMBER(),
       'start_date' => $dao->register_date,
+      'join_date' => $dao->register_date,
     ]);
     ++$count;
   }
