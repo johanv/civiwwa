@@ -297,7 +297,6 @@ function civiwwa_users_roles_user_default_permissions() {
     'name' => 'edit my contact',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
-      'CivIWWA read only user' => 'CivIWWA read only user',
       'Website API user' => 'Website API user',
     ),
     'module' => 'civicrm',
