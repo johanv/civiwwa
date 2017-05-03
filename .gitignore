@@ -10,7 +10,6 @@
 /docroot/sites/*/private
 /docroot/sites/default/*.settings.php
 /docroot/sites/all/modules/civicrm-extensions/cache
-/docroot/sites/all/modules/civicrm/l10n
 /docroot/sites/all/modules/custom/civiwwa_migrate/data_sources
 /dumps
 /.idea/*
