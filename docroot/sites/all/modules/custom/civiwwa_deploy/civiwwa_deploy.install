@@ -98,3 +98,8 @@ function civiwwa_deploy_update_7107(&$sandbox) {
   civicrm_api3('Extension', 'uninstall', ['key' => 'cards.iwwa.membership']);
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.iwwamembership']);
 }
+
+function civiwwa_deploy_update_7108(&$sandbox) {
+  civicrm_initialize();
+  civicrm_api3('Setting', 'create', ['enable_components' => ['CiviEvent', 'CiviMember']]);
+}
