@@ -30,17 +30,6 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'civicrm',
   );
 
-  // Exported permission: 'access CiviContribute'.
-  $permissions['access CiviContribute'] = array(
-    'name' => 'access CiviContribute',
-    'roles' => array(
-      'CivIWWA power user' => 'CivIWWA power user',
-      'CivIWWA read only user' => 'CivIWWA read only user',
-      'Website API user' => 'Website API user',
-    ),
-    'module' => 'civicrm',
-  );
-
   // Exported permission: 'access CiviEvent'.
   $permissions['access CiviEvent'] = array(
     'name' => 'access CiviEvent',
@@ -189,15 +178,6 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'civicrm',
   );
 
-  // Exported permission: 'delete in CiviContribute'.
-  $permissions['delete in CiviContribute'] = array(
-    'name' => 'delete in CiviContribute',
-    'roles' => array(
-      'CivIWWA power user' => 'CivIWWA power user',
-    ),
-    'module' => 'civicrm',
-  );
-
   // Exported permission: 'delete in CiviEvent'.
   $permissions['delete in CiviEvent'] = array(
     'name' => 'delete in CiviEvent',
@@ -242,16 +222,6 @@ function civiwwa_users_roles_user_default_permissions() {
       'CivIWWA power user' => 'CivIWWA power user',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'edit contributions'.
-  $permissions['edit contributions'] = array(
-    'name' => 'edit contributions',
-    'roles' => array(
-      'CivIWWA power user' => 'CivIWWA power user',
-      'Website API user' => 'Website API user',
-    ),
-    'module' => 'civicrm',
   );
 
   // Exported permission: 'edit event participants'.
@@ -314,15 +284,6 @@ function civiwwa_users_roles_user_default_permissions() {
   // Exported permission: 'import contacts'.
   $permissions['import contacts'] = array(
     'name' => 'import contacts',
-    'roles' => array(
-      'CivIWWA power user' => 'CivIWWA power user',
-    ),
-    'module' => 'civicrm',
-  );
-
-  // Exported permission: 'make online contributions'.
-  $permissions['make online contributions'] = array(
-    'name' => 'make online contributions',
     'roles' => array(
       'CivIWWA power user' => 'CivIWWA power user',
     ),
