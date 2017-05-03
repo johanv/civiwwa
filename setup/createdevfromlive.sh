@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MYSQLPARAMS="-u root -pblablablaroot -h 172.26.0.2"
+MYSQLPARAMS="-u root -pblablablaroot -h db"
 
 mysql $MYSQLPARAMS << EOF
 DROP DATABASE IF EXISTS drupal;
