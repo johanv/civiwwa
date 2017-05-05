@@ -110,7 +110,6 @@ class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_S
       ts('Email') => 'email',
       ts('Phone') => 'phone',
       ts('Birth date') => 'birth_date',
-      ts('Contact Id') => 'contact_id',
     );
     return $columns;
   }
