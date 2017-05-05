@@ -162,3 +162,12 @@ function base_civicrm_navigationMenu(&$menu) {
   ));
   _base_civix_navigationMenu($menu);
 } // */
+
+function validate_ints(array $a) {
+  foreach ($a as $value) {
+    if (!is_numeric($value)) {
+      die('Validation error.');
+    }
+  }
+  return $a;
+}

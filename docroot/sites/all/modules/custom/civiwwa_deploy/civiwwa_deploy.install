@@ -99,6 +99,11 @@ function civiwwa_deploy_update_7107(&$sandbox) {
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.iwwamembership']);
 }
 
+/**
+ * Disable unused CiviCRM components (#53).
+ *
+ * @param $sandbox
+ */
 function civiwwa_deploy_update_7108(&$sandbox) {
   civicrm_initialize();
   civicrm_api3('Setting', 'create', ['enable_components' => ['CiviEvent', 'CiviMember']]);
