@@ -100,16 +100,17 @@ class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_S
   function &columns() {
     // return by reference
     $columns = array(
-      ts('Last name') => 'last_name',
-      ts('First name') => 'first_name',
-      ts('External identifier') => 'external_identifier',
+      ts('Sort Name') => 'sort_name',
+      ts('Birth Date') => 'birth_date',
+      ts('Email') => 'email',
+      ts('Phone') => 'phone',
       ts('Address') => 'street_address',
       ts('Postal') => 'postal_code',
       ts('City') => 'city',
       ts('Country') => 'country',
-      ts('Email') => 'email',
-      ts('Phone') => 'phone',
-      ts('Birth date') => 'birth_date',
+      ts('Last Name') => 'last_name',
+      ts('First Name') => 'first_name',
+      ts('External Identifier') => 'external_identifier',
     );
     return $columns;
   }
@@ -137,6 +138,7 @@ class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_S
    */
   function select() {
     $select = "distinct contact_a.id as contact_id, "
+      . "contact_a.sort_name, "
       . "contact_a.last_name, "
       . "contact_a.first_name, "
       . "contact_a.external_identifier, "
