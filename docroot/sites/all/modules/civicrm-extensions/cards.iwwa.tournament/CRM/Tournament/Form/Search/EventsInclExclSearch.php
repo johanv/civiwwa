@@ -22,6 +22,8 @@
 
 /**
  * A custom contact search
+ *
+ * TODO: Cleanup ugly copied code from old search.
  */
 class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   private $_events;
@@ -125,7 +127,8 @@ class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_S
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $justIDs = FALSE) {
     // delegate to $this->sql(), $this->select(), $this->from(), $this->where(), etc.
-    return $this->sql($this->select(), $offset, $rowcount, $sort, $includeContactIDs, NULL);
+    $sql = $this->sql($this->select(), $offset, $rowcount, $sort, $includeContactIDs, NULL);
+    return $sql;
   }
 
   /**
@@ -193,7 +196,7 @@ class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_S
         select contact_id
         from civicrm_participant p
         join civicrm_event e on p.event_id = e.id
-        where e.event_type_id in ($ids_niet)
+        where e.id in ($ids_niet)
         and p.status_id = 2 and p.role_id = 1
         ) pNiet on p1.contact_id = pNiet.contact_id
         ";
@@ -226,21 +229,21 @@ class CRM_Tournament_Form_Search_EventsInclExclSearch extends CRM_Contact_Form_S
 
     // Het where stuk voor 'evenementen wel':
     $event_ids = CRM_Utils_Array::value('cursus_wel', $this->_formValues);
-    if (!empty($events)) {
+    if (!empty($event_ids)) {
       $aanw_op = CRM_Utils_Array::value('aanw_op', $this->_formValues);
 
       // It's magic :-)
       if ($aanw_op == 'AND') {
         $i = 1;
         foreach ($event_ids as $event_id) {
-          $clauses[] = "e${i}.event_type_id = %${i}";
+          $clauses[] = "e${i}.id = %${i}";
           $params[$i] = array($event_id, 'Integer');
           ++$i;
         }
       }
       else {
         $wel_ids = implode(', ', validate_ints($event_ids));
-        $clauses[] = "e1.event_type_id IN ($wel_ids)";
+        $clauses[] = "e1.id IN ($wel_ids)";
       }
     }
     $where = implode(' AND ', $clauses);
