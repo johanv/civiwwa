@@ -32,4 +32,17 @@ class CRM_IwwaMembership_Upgrader extends CRM_IwwaMembership_Upgrader_Base {
     ]);
     return (!$configResult['is_error']);
   }
+
+  /**
+   * Apply CiviConfig upgrades.
+   *
+   * @return bool
+   */
+  public function upgrade_4701() {
+    $configResult = civicrm_api3('Civiconfig', 'load_json', [
+      // there should be a better way to do this.
+      'path' => realpath(__DIR__ . '/../../') . '/resources/'
+    ]);
+    return (!$configResult['is_error']);
+  }
 }
