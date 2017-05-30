@@ -169,6 +169,15 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'civicrm',
   );
 
+  // Exported permission: 'delete any article content'.
+  $permissions['delete any article content'] = array(
+    'name' => 'delete any article content',
+    'roles' => array(
+      'CivIWWA power user' => 'CivIWWA power user',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete contacts'.
   $permissions['delete contacts'] = array(
     'name' => 'delete contacts',
@@ -194,6 +203,15 @@ function civiwwa_users_roles_user_default_permissions() {
       'CivIWWA power user' => 'CivIWWA power user',
     ),
     'module' => 'civicrm',
+  );
+
+  // Exported permission: 'delete own article content'.
+  $permissions['delete own article content'] = array(
+    'name' => 'delete own article content',
+    'roles' => array(
+      'CivIWWA power user' => 'CivIWWA power user',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'edit all contacts'.
