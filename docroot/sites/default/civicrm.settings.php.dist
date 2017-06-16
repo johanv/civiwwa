@@ -70,7 +70,7 @@ if (!defined('CIVICRM_UF')) {
  *      define( 'CIVICRM_UF_DSN', 'mysql://cms_db_username:cms_db_password@db_server/cms_database?new_link=true');
  */
 if (!defined('CIVICRM_UF_DSN') && CIVICRM_UF !== 'UnitTests') {
-  define( 'CIVICRM_UF_DSN'           , 'mysql://root:blablablaroot@localhost/drupal?new_link=true');
+  define( 'CIVICRM_UF_DSN'           , 'mysql://root:blablablaroot@db/drupal?new_link=true');
 }
 
 /**
@@ -98,7 +98,7 @@ if (!defined('CIVICRM_DSN')) {
     define('CIVICRM_DSN', $GLOBALS['_CV']['TEST_DB_DSN']);
   }
   else {
-    define('CIVICRM_DSN', 'mysql://root:blablablaroot@localhost/civi?new_link=true');
+    define('CIVICRM_DSN', 'mysql://root:blablablaroot@db/civi?new_link=true');
   }
 }
 
