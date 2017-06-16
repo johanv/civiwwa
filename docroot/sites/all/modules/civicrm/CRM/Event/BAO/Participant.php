@@ -750,7 +750,7 @@ GROUP BY  participant.event_id
       $eventFields = CRM_Event_DAO_Event::export();
       $noteField = array(
         'participant_note' => array(
-          'title' => 'Participant Note',
+          'title' => ts('Participant Note'),
           'name' => 'participant_note',
           'type' => CRM_Utils_Type::T_STRING,
         ),
@@ -758,7 +758,7 @@ GROUP BY  participant.event_id
 
       $participantStatus = array(
         'participant_status' => array(
-          'title' => 'Participant Status (label)',
+          'title' => ts('Participant Status (label)'),
           'name' => 'participant_status',
           'type' => CRM_Utils_Type::T_STRING,
         ),
@@ -766,7 +766,7 @@ GROUP BY  participant.event_id
 
       $participantRole = array(
         'participant_role' => array(
-          'title' => 'Participant Role (label)',
+          'title' => ts('Participant Role (label)'),
           'name' => 'participant_role',
           'type' => CRM_Utils_Type::T_STRING,
         ),
@@ -1210,11 +1210,19 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
     $cascadeAdditionalIds = self::getValidAdditionalIds($participantID, $oldStatusID, $newStatusID);
 
     if (!empty($cascadeAdditionalIds)) {
-      $cascadeAdditionalIds = implode(',', $cascadeAdditionalIds);
-      $query = "UPDATE civicrm_participant cp SET cp.status_id = %1 WHERE  cp.id IN ({$cascadeAdditionalIds})";
-      $params = array(1 => array($newStatusID, 'Integer'));
-      $dao = CRM_Core_DAO::executeQuery($query, $params);
-      return TRUE;
+      try {
+        foreach ($cascadeAdditionalIds as $id) {
+          $participantParams = array(
+            'id' => $id,
+            'status_id' => $newStatusID,
+          );
+          civicrm_api3('Participant', 'create', $participantParams);
+        }
+        return TRUE;
+      }
+      catch (CiviCRM_API3_Exception $e) {
+        throw new CRM_Core_Exception('Failed to update additional participant status in database');
+      }
     }
     return FALSE;
   }
@@ -1839,9 +1847,8 @@ WHERE    civicrm_participant.contact_id = {$contactID} AND
     $checkDiscount = CRM_Core_BAO_Discount::findSet($eventID, 'civicrm_event');
     if (!empty($checkDiscount)) {
       $mainAmount = self::getUnDiscountedAmountForEventPriceSetFieldValue($eventID, $discountedPriceFieldOptionID, $feeLevel);
-      $relationTypeId = key(CRM_Core_PseudoConstant::accountOptionValues('account_relationship', NULL, " AND v.name LIKE 'Discounts Account is' "));
-      $transactionParams['from_financial_account_id'] = CRM_Contribute_PseudoConstant::financialAccountType(
-        $financialTypeID, $relationTypeId);
+      $transactionParams['from_financial_account_id'] = CRM_Contribute_PseudoConstant::getRelationalFinancialAccount(
+        $financialTypeID, 'Discounts Account is');
       if (!empty($transactionParams['trxnParams']['from_financial_account_id'])) {
         $transactionParams['trxnParams']['total_amount'] = $mainAmount - $total_amount;
         $transactionParams['trxnParams']['payment_processor_id'] = NULL;
@@ -1906,7 +1913,12 @@ WHERE    civicrm_participant.contact_id = {$contactID} AND
         // if found in submitted items, do not use it for new item creations
         if (in_array($previousLineItem['price_field_value_id'], $submittedFieldValueIds)) {
           // if submitted line items are existing don't fire INSERT query
-          unset($insertLines[$previousLineItem['price_field_value_id']]);
+          if ($previousLineItem['line_total'] != 0) {
+            unset($insertLines[$previousLineItem['price_field_value_id']]);
+          }
+          else {
+            $insertLines[$previousLineItem['price_field_value_id']]['skip'] = TRUE;
+          }
           // for updating the line items i.e. use-case - once deselect-option selecting again
           if (($previousLineItem['line_total'] != $submittedLineItems[$previousLineItem['price_field_value_id']]['line_total']) ||
             ($submittedLineItems[$previousLineItem['price_field_value_id']]['line_total'] == 0 && $submittedLineItems[$previousLineItem['price_field_value_id']]['qty'] == 1) ||
@@ -2026,10 +2038,12 @@ WHERE (li.entity_table = 'civicrm_participant' AND li.entity_id = {$participantI
     // insert new line items
     if (!empty($insertLines)) {
       foreach ($insertLines as $valueId => $lineParams) {
-        $lineParams['entity_table'] = 'civicrm_participant';
-        $lineParams['entity_id'] = $participantId;
-        $lineParams['contribution_id'] = $contributionId;
-        $lineObj = CRM_Price_BAO_LineItem::create($lineParams);
+        if (!array_key_exists('skip', $lineParams)) {
+          $lineParams['entity_table'] = 'civicrm_participant';
+          $lineParams['entity_id'] = $participantId;
+          $lineParams['contribution_id'] = $contributionId;
+          $lineObj = CRM_Price_BAO_LineItem::create($lineParams);
+        }
       }
     }
 
@@ -2166,8 +2180,7 @@ WHERE (entity_table = 'civicrm_participant' AND entity_id = {$participantId} AND
         CRM_Core_DAO::$_nullArray,
         CRM_Core_DAO::$_nullArray
       );
-      $relationTypeId = key(CRM_Core_PseudoConstant::accountOptionValues('account_relationship', NULL, " AND v.name LIKE 'Accounts Receivable Account is' "));
-      $toFinancialAccount = CRM_Contribute_PseudoConstant::financialAccountType($updatedContribution->financial_type_id, $relationTypeId);
+      $toFinancialAccount = CRM_Contribute_PseudoConstant::getRelationalFinancialAccount($updatedContribution->financial_type_id, 'Accounts Receivable Account is');
       $adjustedTrxnValues = array(
         'from_financial_account_id' => NULL,
         'to_financial_account_id' => $toFinancialAccount,
@@ -2204,16 +2217,10 @@ WHERE (entity_table = 'civicrm_participant' AND entity_id = {$participantId} AND
     $activityParams = array(
       'source_contact_id' => $targetCid,
       'source_record_id' => $srcRecId,
-      'activity_type_id' => CRM_Core_OptionGroup::getValue('activity_type',
-        $activityType,
-        'name'
-      ),
+      'activity_type_id' => CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'activity_type_id', $activityType),
       'subject' => $subject,
       'activity_date_time' => $date,
-      'status_id' => CRM_Core_OptionGroup::getValue('activity_status',
-        'Completed',
-        'name'
-      ),
+      'status_id' => CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'activity_status_id', 'Completed'),
       'skipRecentView' => TRUE,
     );
 
@@ -2224,6 +2231,7 @@ WHERE (entity_table = 'civicrm_participant' AND entity_id = {$participantId} AND
       $activityParams['source_contact_id'] = $id;
       $activityParams['target_contact_id'][] = $targetCid;
     }
+    // @todo use api & also look at duplication of similar methods.
     CRM_Activity_BAO_Activity::create($activityParams);
   }
 

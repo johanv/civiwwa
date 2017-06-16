@@ -158,9 +158,10 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
     //fix for CRM-2752
     // get the option value for custom data type
-    $this->_roleCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantRole', 'name');
-    $this->_eventNameCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantEventName', 'name');
-    $this->_eventTypeCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantEventType', 'name');
+    $customDataType = CRM_Core_OptionGroup::values('custom_data_type', FALSE, FALSE, FALSE, NULL, 'name');
+    $this->_roleCustomDataTypeID = array_search('ParticipantRole', $customDataType);
+    $this->_eventNameCustomDataTypeID = array_search('ParticipantEventName', $customDataType);
+    $this->_eventTypeCustomDataTypeID = array_search('ParticipantEventType', $customDataType);
 
     // build custom data getFields array
     $customFieldsRole = CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, $this->_roleCustomDataTypeID);
@@ -269,9 +270,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
   /**
    * Process the form after the input has been submitted and validated.
-   *
-   *
-   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -286,12 +284,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
         );
 
         $value['id'] = $key;
-        if (!empty($value['participant_register_date'])) {
-          $value['register_date'] = CRM_Utils_Date::processDate($value['participant_register_date'], $value['participant_register_date_time']);
-        }
 
         if (!empty($value['participant_role'])) {
-          $participantRoles = CRM_Event_PseudoConstant::participantRole();
           if (is_array($value['participant_role'])) {
             $value['role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($value['participant_role']));
           }
@@ -318,14 +312,9 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
           }
         }
 
-        if (!empty($value['participant_source'])) {
-          $value['source'] = $value['participant_source'];
-        }
-        unset($value['participant_register_date']);
         unset($value['participant_status']);
-        unset($value['participant_source']);
 
-        CRM_Event_BAO_Participant::create($value);
+        civicrm_api3('Participant', 'create', $value);
 
         //need to trigger mails when we change status
         if ($statusChange) {

@@ -40,10 +40,12 @@ function _civicrm_api3_iwwa_membership_Createbasicmemberships_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_iwwa_membership_Createbasicmemberships($params) {
-  // TODO: cleanup. This doesn't look right.
-  $sql = "SELECT c.id, MIN(p.register_date) AS register_date, MAX(m.id) AS membership_id
+  // Freddy decided that the start date of the 'basic' membership is the
+  // date of the first event the contact attended.
+  $sql = "SELECT c.id, MIN(e.start_date) AS start_date, MAX(m.id) AS membership_id
     FROM civicrm_contact c 
     JOIN civicrm_participant p ON c.id = p.contact_id
+    JOIN civicrm_event e ON e.id = p.event_id AND e.start_date < now()
     LEFT OUTER JOIN civicrm_membership m ON c.id = m.contact_id AND m.membership_type_id = %1
     WHERE c.is_deleted = 0
     GROUP BY c.id
@@ -56,8 +58,8 @@ function civicrm_api3_iwwa_membership_Createbasicmemberships($params) {
     civicrm_api3('Membership', 'create', [
       'contact_id' => $dao->id,
       'membership_type_id' => CRM_IwwaMembership_Type::BASIC_MEMBER(),
-      'start_date' => $dao->register_date,
-      'join_date' => $dao->register_date,
+      'start_date' => $dao->start_date,
+      'join_date' => $dao->start_date,
     ]);
     ++$count;
   }
