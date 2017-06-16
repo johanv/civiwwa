@@ -22,6 +22,8 @@
  */
 class CRM_IwwaMembership_Type {
   public static function BASIC_MEMBER() {
-    return CRM_IdCache_Cache_Generic::getId('MembershipType', 'aansluiting');
+    // The original membership type 'basic member' is disabled. The membership
+    // with name 'lid' replaces it.
+    return CRM_IdCache_Cache_Generic::getId('MembershipType', 'lid');
   }
 }
