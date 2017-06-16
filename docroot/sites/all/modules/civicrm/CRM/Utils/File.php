@@ -140,7 +140,7 @@ class CRM_Utils_File {
    */
   public static function cleanDir($target, $rmdir = TRUE, $verbose = TRUE) {
     static $exceptions = array('.', '..');
-    if ($target == '' || $target == '/') {
+    if ($target == '' || $target == '/' || !$target) {
       throw new Exception("Overly broad deletion");
     }
 
@@ -293,16 +293,19 @@ class CRM_Utils_File {
    *   The directory where the file should be saved.
    * @param string $contents
    *   Optional: the contents of the file.
+   * @param string $fileName
    *
    * @return string
    *   The filename saved, or FALSE on failure.
    */
-  public static function createFakeFile($dir, $contents = 'delete me') {
+  public static function createFakeFile($dir, $contents = 'delete me', $fileName = NULL) {
     $dir = self::addTrailingSlash($dir);
-    $file = 'delete-this-' . CRM_Utils_String::createRandom(10, CRM_Utils_String::ALPHANUMERIC);
-    $success = file_put_contents($dir . $file, $contents);
+    if (!$fileName) {
+      $fileName = 'delete-this-' . CRM_Utils_String::createRandom(10, CRM_Utils_String::ALPHANUMERIC);
+    }
+    $success = file_put_contents($dir . $fileName, $contents);
 
-    return ($success === FALSE) ? FALSE : $file;
+    return ($success === FALSE) ? FALSE : $fileName;
   }
 
   /**
@@ -310,11 +313,29 @@ class CRM_Utils_File {
    *   Use NULL to load the default/active connection from CRM_Core_DAO.
    *   Otherwise, give a full DSN string.
    * @param string $fileName
-   * @param null $prefix
-   * @param bool $isQueryString
+   * @param string $prefix
    * @param bool $dieOnErrors
    */
-  public static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
+  public static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $dieOnErrors = TRUE) {
+    if (FALSE === file_get_contents($fileName)) {
+      // Our file cannot be found.
+      // Using 'die' here breaks this on extension upgrade.
+      throw new CRM_Exception('Could not find the SQL file.');
+    }
+
+    self::runSqlQuery($dsn, file_get_contents($fileName), $prefix, $dieOnErrors);
+  }
+
+  /**
+   *
+   * @param string|NULL $dsn
+   * @param string $queryString
+   * @param string $prefix
+   * @param bool $dieOnErrors
+   */
+  public static function runSqlQuery($dsn, $queryString, $prefix = NULL, $dieOnErrors = TRUE) {
+    $string = $prefix . $queryString;
+
     if ($dsn === NULL) {
       $db = CRM_Core_DAO::getConnection();
     }
@@ -332,14 +353,6 @@ class CRM_Utils_File {
     $db->query('SET NAMES utf8');
     $transactionId = CRM_Utils_Type::escape(CRM_Utils_Request::id(), 'String');
     $db->query('SET @uniqueID = ' . "'$transactionId'");
-
-    if (!$isQueryString) {
-      $string = $prefix . file_get_contents($fileName);
-    }
-    else {
-      // use filename as query string
-      $string = $prefix . $fileName;
-    }
 
     // get rid of comments starting with # and --
 
@@ -362,6 +375,7 @@ class CRM_Utils_File {
       }
     }
   }
+
   /**
    *
    * Strips comment from a possibly multiline SQL string
@@ -459,6 +473,21 @@ class CRM_Utils_File {
     else {
       return CRM_Utils_String::munge("{$basename}_{$uniqID}", '_', 240) . "." . CRM_Utils_Array::value('extension', $info);
     }
+  }
+
+  /**
+   * Copies a file
+   *
+   * @param $filePath
+   * @return mixed
+   */
+  public static function duplicate($filePath) {
+    $oldName = pathinfo($filePath, PATHINFO_FILENAME);
+    $uniqID = md5(uniqid(rand(), TRUE));
+    $newName = preg_replace('/(_[\w]{32})$/', '', $oldName) . '_' . $uniqID;
+    $newPath = str_replace($oldName, $newName, $filePath);
+    copy($filePath, $newPath);
+    return $newPath;
   }
 
   /**
