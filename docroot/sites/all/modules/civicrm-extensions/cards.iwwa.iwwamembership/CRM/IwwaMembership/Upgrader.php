@@ -38,7 +38,7 @@ class CRM_IwwaMembership_Upgrader extends CRM_IwwaMembership_Upgrader_Base {
    *
    * @return bool
    */
-  public function upgrade_4701() {
+  public function upgrade_4702() {
     $configResult = civicrm_api3('Civiconfig', 'load_json', [
       // there should be a better way to do this.
       'path' => realpath(__DIR__ . '/../../') . '/resources/'

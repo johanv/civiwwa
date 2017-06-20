@@ -493,7 +493,7 @@ function theme_fboauth_action__connect($variables) {
   $link['attributes']['class'][] = 'facebook-action-connect';
   $link['attributes']['rel'] = 'nofollow';
   $attributes = isset($link['attributes']) ? drupal_attributes($link['attributes']) : '';
-  $title = isset($link['title']) ? check_plain($link['title']) : '';
+  $title = isset($link['title']) ? check_plain($link['title']) : t('Sign in with Facebook');
   $src = ($GLOBALS['is_https'] ? 'https' : 'http') . '://www.facebook.com/images/fbconnect/login-buttons/connect_light_medium_short.gif';
   return '<a ' . $attributes . ' href="' . $url . '"><img src="' . $src . '" alt="' . $title . '" /></a>';
 }

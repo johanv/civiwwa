@@ -1,0 +1,9 @@
+{
+  "Sympathisant": {
+    "name": "Sympathisant",
+    "description": "Sympathisant IWWA",
+    "is_reserved": 1,
+    "is_tagset": 0,
+    "used_for": "civicrm_contact"
+  }
+}
