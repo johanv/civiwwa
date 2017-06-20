@@ -26,6 +26,7 @@
     <requires>
         <ext>be.chiro.civi.idcache</ext>
         <ext>cards.iwwa.base</ext>
+        <ext>cards.iwwa.tournament</ext>
         <ext>org.civicoop.configitems</ext>
     </requires>
 </extension>

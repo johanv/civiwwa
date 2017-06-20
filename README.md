@@ -6,22 +6,45 @@ I'll post some documentation later on.
 
 # How to run locally
 
-You can run this using docker-compose. But first you have to rename
-`docroot/sites/default/settings/example.my.settings.php` and
-`docroot/sites/default/settings/example.my.civicrm.settings.php` to
-`docroot/sites/default/settings/my.settings.php` and
-`docroot/sites/default/settings/my.civicrm.settings.php` respectively, and
-adapt them to your needs.
+Remove the `.dist` from the files in `docroot/sites/default`.
+```
+cd docroot/sites/default
+for file in *.dist
+do
+  cp $file `basename $file .dist`
+done
+```
 
-Put the csv files needed for initial migration in 
-`docroot/sites/all/modules/custom/civiwwa_migrate/data_sources`. And then:
-
-(If you have a local web server running on port 80, stop it first.)
+Put the csv files needed for migrations in 
+`docroot/sites/all/modules/custom/civiwwa_migrate/data_sources`.
+If you have a local web server running on port 80, stop it first.
+And then
 
 ```
 sudo docker-compose up -d
+```
+
+## Initial setup
+
+I used to have this script for initial setup, but it probably
+won't work anymore:
+
+```
 sudo docker-compose exec buildkit /opt/setup/build.sh
 ```
+
+## Copy from live (need ssh access to server)
+
+```
+sudo docker-compose exec buildkit /opt/setup/createdevformlive.sh
+```
+
+You will get errors because the script tries to write backups
+where it shouldn't, and because it tries to git pull without
+`.git` being available from inside the container. But don't
+worry about these.
+
+## Connect to your instance
 
 You can now connect on http://localhost/
 

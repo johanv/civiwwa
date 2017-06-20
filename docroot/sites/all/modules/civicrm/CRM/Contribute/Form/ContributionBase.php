@@ -188,6 +188,30 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   public $_isBillingAddressRequiredForPayLater;
 
   /**
+   * Flag if email field exists in embedded profile
+   *
+   * @var bool
+   */
+  public $_emailExists = FALSE;
+
+  /**
+   * Is this a backoffice form
+   * (this will affect whether paypal express code is displayed)
+   * @var bool
+   */
+  public $isBackOffice = FALSE;
+
+  /**
+   * Payment instrument if for the transaction.
+   *
+   * This will generally be drawn from the payment processor and is ignored for
+   * front end forms.
+   *
+   * @var int
+   */
+  public $paymentInstrumentID;
+
+  /**
    * Set variables up before form is built.
    *
    * @throws \CRM_Contribute_Exception_InactiveContributionPageException
@@ -205,7 +229,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
 
     // this was used prior to the cleverer this_>getContactID - unsure now
-    $this->_userID = CRM_Core_Session::singleton()->get('userID');
+    $this->_userID = CRM_Core_Session::singleton()->getLoggedInContactID();
 
     $this->_contactID = $this->_membershipContactID = $this->getContactID();
     $this->_mid = NULL;
@@ -622,10 +646,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       );
 
       if ($fields) {
-        // unset any email-* fields since we already collect it, CRM-2888
-        foreach (array_keys($fields) as $fieldName) {
-          if (substr($fieldName, 0, 6) == 'email-' && !in_array($profileContactType, array('honor', 'onbehalf'))) {
-            unset($fields[$fieldName]);
+        // determine if email exists in profile so we know if we need to manually insert CRM-2888, CRM-15067
+        foreach ($fields as $key => $field) {
+          if (substr($key, 0, 6) == 'email-' &&
+              !in_array($profileContactType, array('honor', 'onbehalf'))
+          ) {
+            $this->_emailExists = TRUE;
           }
         }
 
@@ -817,11 +843,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         if (empty($member['is_active'])) {
           $msg = ts('Mixed profile not allowed for on behalf of registration/sign up.');
           $onBehalfProfile = CRM_Core_BAO_UFGroup::profileGroups($form->_values['onbehalf_profile_id']);
-          foreach (array(
+          foreach (
+            array(
               'Individual',
               'Organization',
               'Household',
-            ) as $contactType) {
+            ) as $contactType
+          ) {
             if (in_array($contactType, $onBehalfProfile) &&
               (in_array('Membership', $onBehalfProfile) ||
                 in_array('Contribution', $onBehalfProfile)
@@ -1194,6 +1222,15 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $takeUserSubmittedAutoRenew = (!empty($_POST) || $this->isSubmitted()) ? TRUE : FALSE;
       $this->assign('takeUserSubmittedAutoRenew', $takeUserSubmittedAutoRenew);
 
+      // Assign autorenew option (0:hide,1:optional,2:required) so we can use it in confirmation etc.
+      $autoRenewOption = CRM_Price_BAO_PriceSet::checkAutoRenewForPriceSet($this->_priceSetId);
+      if (isset($membershipTypeValues[$selectedMembershipTypeID]['auto_renew'])) {
+        $this->assign('autoRenewOption', $membershipTypeValues[$selectedMembershipTypeID]['auto_renew']);
+      }
+      else {
+        $this->assign('autoRenewOption', $autoRenewOption);
+      }
+
       if ($isContributionMainPage) {
         if (!$membershipPriceset) {
           if (!$this->_membershipBlock['is_required']) {
@@ -1213,13 +1250,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
           $this->addRule('selectMembership', ts('Please select one of the memberships.'), 'required');
         }
-        else {
-          $autoRenewOption = CRM_Price_BAO_PriceSet::checkAutoRenewForPriceSet($this->_priceSetId);
-          $this->assign('autoRenewOption', $autoRenewOption);
-        }
 
         if ((!$this->_values['is_pay_later'] || is_array($this->_paymentProcessors)) && ($allowAutoRenewMembership || $autoRenewOption)) {
-          $this->addElement('checkbox', 'auto_renew', ts('Please renew my membership automatically.'));
+          if ($autoRenewOption == 2) {
+            $this->addElement('hidden', 'auto_renew', ts('Please renew my membership automatically.'));
+          }
+          else {
+            $this->addElement('checkbox', 'auto_renew', ts('Please renew my membership automatically.'));
+          }
         }
 
       }

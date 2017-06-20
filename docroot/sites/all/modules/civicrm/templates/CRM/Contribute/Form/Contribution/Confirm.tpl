@@ -70,7 +70,7 @@
                     <strong> -------------------------------------------</strong><br />
                     {ts}Total{/ts}: <strong>{$amount+$minimum_fee|crmMoney}</strong><br />
                 {elseif $amount }
-                    {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}</strong>
+                    {ts}Amount{/ts}: <strong>{$amount|crmMoney} {if $amount_level } &ndash; {$amount_level} {/if}</strong>
                 {else}
                     {$membership_name} {ts}Membership{/ts}: <strong>{$minimum_fee|crmMoney}</strong>
                 {/if}
@@ -79,7 +79,7 @@
                      {ts}Total Tax Amount{/ts}: <strong>{$totalTaxAmount|crmMoney} </strong><br />
                 {/if}
 		{if $amount}
-                    {if $installments}{ts}Installment Amount{/ts}{else}{ts}Total Amount{/ts}{/if} : <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}</strong>
+                    {if $installments}{ts}Installment Amount{/ts}{else}{ts}Total Amount{/ts}{/if}: <strong>{$amount|crmMoney}{if $amount_level } &ndash; {$amount_level}{/if}</strong>
                 {else}
                     {$membership_name} {ts}Membership{/ts}: <strong>{$minimum_fee|crmMoney}</strong>
                 {/if}
@@ -90,7 +90,13 @@
                 {if !empty($auto_renew)} {* Auto-renew membership confirmation *}
 {crmRegion name="contribution-confirm-recur-membership"}
                     <br />
-                    <strong>{ts 1=$frequency_interval 2=$frequency_unit}I want this membership to be renewed automatically every %1 %2(s).{/ts}</strong></p>
+                    <strong>
+                        {if $autoRenewOption == 1}
+                          {ts 1=$frequency_interval 2=$frequency_unit}I want this membership to be renewed automatically every %1 %2(s).{/ts}
+                        {elseif $autoRenewOption == 2}
+                          {ts 1=$frequency_interval 2=$frequency_unit}This membership will be renewed automatically every %1 %2(s).{/ts}
+                        {/if}
+                    </strong></p>
                     <div class="description crm-auto-renew-cancel-info">({ts}Your initial membership fee will be processed once you complete the confirmation step. You will be able to cancel the auto-renewal option by visiting the web page link that will be included in your receipt.{/ts})</div>
 {/crmRegion}
                 {else}

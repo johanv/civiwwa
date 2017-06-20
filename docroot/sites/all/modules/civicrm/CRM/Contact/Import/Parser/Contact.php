@@ -506,7 +506,7 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
         )))
     ) {
 
-      if ($internalCid = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $params['external_identifier'], 'id', 'external_identifier')) {
+      if ($internalCid = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $params['external_identifier'], 'id', 'external_identifier', TRUE)) {
         if ($internalCid != CRM_Utils_Array::value('id', $params)) {
           $errorMessage = ts('External ID already exists in Database.');
           array_unshift($values, $errorMessage);
@@ -1677,7 +1677,7 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
     //@todo direct call to API function not supported.
     // setting required check to false, CRM-2839
     // plus we do our own required check in import
-    $error = _civicrm_api3_deprecated_contact_check_params($formatted, $dupeCheck, TRUE, FALSE, $dedupeRuleGroupID);
+    $error = _civicrm_api3_deprecated_contact_check_params($formatted, $dupeCheck, $dedupeRuleGroupID);
 
     if ((is_null($error)) && (civicrm_error(_civicrm_api3_deprecated_validate_formatted_contact($formatted)))) {
       $error = _civicrm_api3_deprecated_validate_formatted_contact($formatted);

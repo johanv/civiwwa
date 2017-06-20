@@ -97,6 +97,13 @@ class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
             'no_display' => TRUE,
           ),
         ),
+        'order_bys' => array(
+          'sort_name' => array(
+            'title' => ts('Contact Name'),
+            'default_weight' => '1',
+            'dbAlias' => 'civicrm_contact_sort_name',
+          ),
+        ),
         'grouping' => 'contact-fields',
       ),
       'civicrm_email' => array(
@@ -188,13 +195,20 @@ class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
             'operatorType' => CRM_Report_Form::OP_DATE,
           ),
         ),
+        'order_bys' => array(
+          'id' => array(
+            'title' => ts('Case ID'),
+            'default_weight' => '2',
+            'dbAlias' => 'civicrm_case_id',
+          ),
+        ),
       ),
     );
 
     $this->_groupFilter = TRUE;
     $this->_tagFilter = TRUE;
 
-    $open_case_val = CRM_Core_OptionGroup::getValue('activity_type', 'Open Case', 'name');
+    $open_case_val = CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'activity_type_id', 'Open Case');
     $crmDAO = &CRM_Core_DAO::executeQuery("SELECT cg.table_name, cg.extends AS ext, cf.label, cf.column_name FROM civicrm_custom_group cg INNER JOIN civicrm_custom_field cf ON cg.id = cf.custom_group_id
 where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_column_value='$open_case_val') AND cg.is_active=1 AND cf.is_active=1 ORDER BY cg.table_name");
     $curTable = '';
@@ -369,10 +383,6 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
   public function groupBy() {
     $groupBy = array("{$this->_aliases['civicrm_contact']}.id", "{$this->_aliases['civicrm_case']}.id");
     $this->_groupBy = CRM_Contact_BAO_Query::getGroupByFromSelectColumns($this->_selectClauses, $groupBy);
-  }
-
-  public function orderBy() {
-    $this->_orderBy = "ORDER BY {$this->_aliases['civicrm_contact']}.sort_name, {$this->_aliases['civicrm_contact']}.id, {$this->_aliases['civicrm_case']}.id";
   }
 
   public function postProcess() {

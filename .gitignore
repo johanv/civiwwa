@@ -3,7 +3,7 @@
 *.orig
 
 # Ignore configuration files that may contain sensitive information.
-/docroot/sites/default
+/docroot/sites/default/*settings.php
 
 # Ignore paths that contain user-generated content.
 /docroot/sites/*/files

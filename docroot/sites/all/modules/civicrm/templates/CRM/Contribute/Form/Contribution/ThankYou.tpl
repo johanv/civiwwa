@@ -62,7 +62,7 @@
           {/if}
         </div>
       {/if}
-    {elseif $contributeMode EQ 'notify' OR ($contributeMode EQ 'direct' && $is_recur) }
+    {elseif $isPendingOutcome}
       <div>{ts 1=$paymentProcessor.name}Your contribution has been submitted to %1 for processing. Please print this page for your records.{/ts}</div>
         {if $is_email_receipt}
       <div>
@@ -118,7 +118,7 @@
             {if $totalTaxAmount}
               {ts}Tax Amount{/ts}: <strong>{$totalTaxAmount|crmMoney}</strong><br />
             {/if}
-            {if $installments}{ts}Installment Amount{/ts}{else}{ts}Amount{/ts}{/if} : <strong>{$amount|crmMoney} {if $amount_level } - {$amount_level} {/if}</strong>
+            {if $installments}{ts}Installment Amount{/ts}{else}{ts}Amount{/ts}{/if}: <strong>{$amount|crmMoney}{if $amount_level } &ndash; {$amount_level}{/if}</strong>
           {/if}
         {/if}
         {if $receive_date}
