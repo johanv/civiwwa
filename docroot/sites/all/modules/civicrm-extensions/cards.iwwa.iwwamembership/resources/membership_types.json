@@ -73,5 +73,20 @@
     "visibility": "Admin",
     "weight": "1",
     "is_active": "1"
+  },
+  "vip": {
+    "domain_id": "1",
+    "name": "vip",
+    "description": "VIP-leden",
+    "member_of_contact_id": "1",
+    "financial_type_id": "2",
+    "contribution_type_id": "2",
+    "minimum_fee": "0.00",
+    "duration_unit": "lifetime",
+    "duration_interval": "1",
+    "period_type": "rolling",
+    "visibility": "Admin",
+    "weight": "1",
+    "is_active": "1"
   }
 }
