@@ -35,7 +35,7 @@ class CRM_Base_Upgrader extends CRM_Base_Upgrader_Base {
   /**
    * Disable unused event types.
    */
-  public function upgrade_4700() {
+  public function upgrade_4701() {
     $configResult = civicrm_api3('Civiconfig', 'load_json', [
       // there should be a better way to do this.
       'path' => realpath(__DIR__ . '/../../') . '/resources/'
