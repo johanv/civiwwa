@@ -577,8 +577,8 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (1627, 1010, "T", "Tucuman"),
 (1628, 1014, "1", "Burgenland"),
 (1629, 1014, "2", "Kärnten"),
-(1630, 1014, "3", "Niederosterreich"),
-(1631, 1014, "4", "Oberosterreich"),
+(1630, 1014, "3", "Niederösterreich"),
+(1631, 1014, "4", "Oberösterreich"),
 (1632, 1014, "5", "Salzburg"),
 (1633, 1014, "6", "Steiermark"),
 (1634, 1014, "7", "Tirol"),
@@ -4702,7 +4702,7 @@ INSERT INTO
    civicrm_financial_type(name, is_reserved, is_active, is_deductible)
 VALUES
   ( 'Lahjoitus'             , 0, 1, 1 ),
-  ( 'Member Dues'          , 0, 1, 1 ),
+  ( 'Jäsenmaksut'          , 0, 1, 1 ),
   ( 'Kampanjalahjoitus', 0, 1, 0 ),
   ( 'Tapahtuman hinta'            , 0, 1, 0 );
 
@@ -4720,7 +4720,7 @@ VALUES
    ('individual_suffix'             , 'Individual contact suffixes'        , NULL, 1, 1, 0),
    ('acl_role'                      , 'ACL-rooli'                           , NULL, 1, 1, 0),
    ('accept_creditcard'             , 'Accepted Credit Cards'              , NULL, 1, 1, 0),
-   ('payment_instrument'            , 'Payment Methods'                    , 'Integer', 1, 1, 0),
+   ('payment_instrument'            , 'Maksutavat'                    , 'Integer', 1, 1, 0),
    ('contribution_status'           , 'Maksun tila'                , NULL, 1, 1, 1),
    ('pcp_status'                    , 'PCP Status'                         , NULL, 1, 1, 1),
    ('pcp_owner_notify'              , 'PCP owner notifications'            , NULL, 1, 1, 1),
@@ -4789,7 +4789,9 @@ VALUES
    ('msg_mode'                      , 'Message Mode'                       , NULL, 1, 1, 0),
    ('contact_date_reminder_options' , 'Contact Date Reminder Options'      , NULL, 1, 1, 1),
    ('wysiwyg_presets'               , 'WYSIWYG Editor Presets'             , NULL, 1, 1, 0),
-   ('relative_date_filters'         , 'Relative Date Filters'              , NULL, 1, 1, 0);
+   ('relative_date_filters'         , 'Relative Date Filters'              , NULL, 1, 1, 0),
+   ('pledge_status'                 , 'Lupauksen tila'                      , NULL, 1, 1, 1),
+   ('environment'                   , 'Environment'                        , NULL, 0, 1, 0);
 
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
 SELECT @option_group_id_act            := max(id) from civicrm_option_group where name = 'activity_type';
@@ -4869,6 +4871,8 @@ SELECT @option_group_id_msg_mode := max(id) from civicrm_option_group where name
 SELECT @option_group_id_contactDateMode := max(id) from civicrm_option_group where name = 'contact_date_reminder_options';
 SELECT @option_group_id_date_filter    := max(id) from civicrm_option_group where name = 'relative_date_filters';
 SELECT @option_group_id_wysiwyg_presets    := max(id) from civicrm_option_group where name = 'wysiwyg_presets';
+SELECT @option_group_id_ps    := max(id) from civicrm_option_group where name = 'pledge_status';
+SELECT @option_group_id_env    := max(id) from civicrm_option_group where name = 'environment';
 
 SELECT @contributeCompId := max(id) FROM civicrm_component where name = 'CiviContribute';
 SELECT @eventCompId      := max(id) FROM civicrm_component where name = 'CiviEvent';
@@ -4893,8 +4897,8 @@ VALUES
    (@option_group_id_act, 'Sähköposti',                  3,  'Email',                 NULL, 1, NULL, 3,  'Email sent.',                                                          0, 1, 1, NULL, NULL, 'fa-envelope-o'),
    (@option_group_id_act, 'Outbound SMS',           4,  'SMS',                   NULL, 1, NULL, 4,  'Text message (SMS) sent.',                                             0, 1, 1, NULL, NULL, 'fa-mobile'),
    (@option_group_id_act, 'Event Registration',     5,  'Event Registration',    NULL, 1, NULL, 5,  'Online or offline event registration.',                                0, 1, 1, @eventCompId, NULL, NULL),
-   (@option_group_id_act, 'Maksu',           6,  'Contribution',          NULL, 1, NULL, 6,  'Online or offline contribution.',                                      0, 1, 1, @contributeCompId, NULL, NULL),
-   (@option_group_id_act, 'Membership Signup',      7,  'Membership Signup',     NULL, 1, NULL, 7,  'Online or offline membership signup.',                                 0, 1, 1, @memberCompId, NULL, NULL),
+   (@option_group_id_act, 'Lahjoitus',           6,  'Contribution',          NULL, 1, NULL, 6,  'Online or offline contribution.',                                      0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, 'Membership Signup',      7,  'Membership Signup',     NULL, 1, NULL, 7,  'Online- tai offline-liittyminen jäseneksi.',                                 0, 1, 1, @memberCompId, NULL, NULL),
    (@option_group_id_act, 'Membership Renewal',     8,  'Membership Renewal',    NULL, 1, NULL, 8,  'Online or offline membership renewal.',                                0, 1, 1, @memberCompId, NULL, NULL),
    (@option_group_id_act, 'Kerro ystävälle',          9,  'Tell a Friend',         NULL, 1, NULL, 9,  'Send information about a contribution campaign or event to a friend.', 0, 1, 1, NULL, NULL, NULL),
    (@option_group_id_act, 'Pledge Acknowledgment',  10, 'Pledge Acknowledgment', NULL, 1, NULL, 10, 'Send Pledge Acknowledgment.',                                          0, 1, 1, @pledgeCompId, NULL, NULL),
@@ -4930,7 +4934,7 @@ VALUES
    (@option_group_id_act, 'Mass SMS',                           34, 'Mass SMS',         NULL, 1, NULL, 34, 'Mass SMS',                                                    0, 1, 1, NULL, NULL, NULL),
 
 -- Additional Membership-related Activity Types
-   (@option_group_id_act, 'Change Membership Status',           35, 'Change Membership Status',   NULL, 1, NULL, 35, 'Change Membership Status.',                         0, 1, 1, @memberCompId, NULL, NULL),
+   (@option_group_id_act, 'Vaihda jäsenyyden tila',           35, 'Change Membership Status',   NULL, 1, NULL, 35, 'Vaihda jäsenyyden tila.',                         0, 1, 1, @memberCompId, NULL, NULL),
    (@option_group_id_act, 'Change Membership Type',             36, 'Change Membership Type',     NULL, 1, NULL, 36, 'Change Membership Type.',                           0, 1, 1, @memberCompId, NULL, NULL),
 
    (@option_group_id_act, 'Cancel Recurring Contribution',      37, 'Cancel Recurring Contribution', NULL,1, 0, 37, '', 0, 1, 1, @contributeCompId, NULL, NULL),
@@ -5009,16 +5013,16 @@ VALUES
   (@option_group_id_pi, 'Check',        4, 'Check',       NULL, 0, 1, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_pi, 'EFT',          5, 'EFT',         NULL, 0, 0, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_cs, 'Completed'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Suoritettu'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Odottaa'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_cs, 'Cancelled'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Peruutettu'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Failed'     , 4, 'Failed'     , NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'In Progress', 5, 'In Progress', NULL, 0, NULL, 5, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Overdue'    , 6, 'Overdue'    , NULL, 0, NULL, 6, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_cs, 'Refunded'   , 7, 'Refunded'   , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Palautettu'   , 7, 'Refunded'   , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Partially paid', 8, 'Partially paid', NULL, 0, NULL, 8, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Pending refund', 9, 'Pending refund', NULL, 0, NULL, 9, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_cs, 'Chargeback', 10, 'Chargeback', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Pankin peruuttama', 10, 'Chargeback', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL, NULL),
 
   (@option_group_id_pcp, 'Waiting Review', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_pcp, 'Approved'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5181,7 +5185,7 @@ VALUES
   (@option_group_id_report , 'LYBUNT Report',                           'contribute/lybunt',              'CRM_Report_Form_Contribute_Lybunt',              NULL, 0, NULL, 13, 'LYBUNT means last year but not this year. Provides a list of constituents who donated last year but did not donate during the time period you specify as the current year.', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report , 'Soft Credit Report',                      'contribute/softcredit',          'CRM_Report_Form_Contribute_SoftCredit',          NULL, 0, NULL, 14, 'Shows contributions made by contacts that have been soft-credited to other contacts.', 0, 0, 1,@contributeCompId, NULL, NULL),
   (@option_group_id_report , 'Membership Report (Summary)',             'member/summary',                 'CRM_Report_Form_Member_Summary',                 NULL, 0, NULL, 15, 'Provides a summary of memberships by type and join date.', 0, 0, 1, @memberCompId, NULL, NULL),
-  (@option_group_id_report , 'Membership Report (Detail)',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, 'Provides a list of members along with their membership status and membership details (Join Date, Start Date, End Date). Can also display contributions (payments) associated with each membership.', 0, 0, 1, @memberCompId, NULL, NULL),
+  (@option_group_id_report , 'Membership Report (Detail)',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, 'Näyttää listan jäsenistä, heidän jäsenyytensä tilasta ja jäsenyyden yksityiskohdista (liittymispäivä, alkamispäivä, päättymispäivä). Voi myös näyttää jokaiseen jäsenyyteen liittyvät jäsenmaksut.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'Membership Report (Lapsed)',              'member/lapse',                   'CRM_Report_Form_Member_Lapse',                   NULL, 0, NULL, 17, 'Provides a list of memberships that lapsed or will lapse before the date you specify.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'Event Participant Report (List)',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, 'Provides lists of participants for an event.', 0, 0, 1, @eventCompId, NULL, NULL),
   (@option_group_id_report , 'Event Income Report (Summary)',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, 'Provides an overview of event income. You can include key information such as event ID, registration, attendance, and income generated to help you determine the success of an event.', 0, 0, 1, @eventCompId, NULL, NULL),
@@ -5214,18 +5218,18 @@ VALUES
   (@option_group_id_report , 'Contribution Aggregate by Relationship',                   'contribute/history',              'CRM_Report_Form_Contribute_History',              NULL, 0, NULL, 46,  'List contact\'s donation history, grouped by year, along with contributions attributed to any of the contact\'s related contacts.', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report,  'Mail Detail Report',                                            'mailing/detail',     'CRM_Report_Form_Mailing_Detail',          NULL, 0, NULL, 47,  'Provides reporting on Intended and Successful Deliveries, Unsubscribes and Opt-outs, Replies and Forwards.',   0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'Contribution and Membership Details', 'member/contributionDetail', 'CRM_Report_Form_Member_ContributionDetail', NULL, 0, NULL, 48, 'Contribution details for any type of contribution, plus associated membership information for contributions which are in payment for memberships.', 0, 0, 1, @memberCompId, NULL, NULL),
-  (@option_group_id_report, 'Raportti toistuvista maksuista', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, 'Näyttää tietoa toistuvien lahjoitusten tilanteesta', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'Raportti toistuvista maksuista', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, 'Näyttää tietoa toistuvien maksujen tilasta', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report, 'Toistuvien maksujen yhteenveto', 'contribute/recursummary', 'CRM_Report_Form_Contribute_RecurSummary',               NULL, 0, NULL, 49, 'Provides simple summary for each payment instrument for which there are recurring contributions (e.g. Credit Card, Standing Order, Direct Debit, etc., NULL), showing within a given date range.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report, 'Deferred Revenue Details', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'Deferred Revenue Details Report', 0, 0, 1, @contributeCompId, NULL, NULL), 
+  (@option_group_id_report, 'Deferred Revenue Details', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'Deferred Revenue Details Report', 0, 0, 1, @contributeCompId, NULL, NULL),
 
-  (@option_group_id_acs, 'Aikataulutettu',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Completed',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Cancelled',  3, 'Cancelled',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Aikataulutettu',    1, 'Scheduled',    NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Suoritettu',    2, 'Completed',    NULL, 1, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Peruutettu',    3, 'Cancelled',    NULL, 2, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_acs, 'Left Message', 4, 'Left Message', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Tavoittamaton', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Ei vaadittu',  6, 'Not Required',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Saatavilla',  7, 'Available',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'No-show',  8, 'No_show',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Tavoittamaton',  5, 'Unreachable',  NULL, 2, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Ei vaadittu', 6, 'Not Required', NULL, 2, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Saatavilla',    7, 'Available',    NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'No-show',      8, 'No_show',      NULL, 2, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
   (@option_group_id_cas, 'Ongoing' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cas, 'Ratkaistu', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5270,7 +5274,7 @@ VALUES
 
   (@option_group_id_fu, 'päivä'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_fu, 'week'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_fu, '-kuukausi-'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_fu, 'kuukausi'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_fu, 'vuosi'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
 
 -- phone types.
@@ -5363,8 +5367,8 @@ VALUES
 -- Campaign Status
   (@option_group_id_campaignStatus, 'Suunniteltu', 1, 'Planned',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_campaignStatus, 'In Progress', 2, 'In Progress',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_campaignStatus, 'Completed', 3, 'Completed',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_campaignStatus, 'Cancelled', 4, 'Cancelled',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignStatus, 'Suoritettu', 3, 'Completed',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_campaignStatus, 'Peruutettu', 4, 'Cancelled',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- Engagement Level
   (@option_group_id_engagement_index, '1', 1, '1',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL , NULL),
@@ -5472,7 +5476,7 @@ VALUES
    (@option_group_id_conference_slot, 'Evening Sessions', 2, 'Evening Sessions', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- default batch types
-   (@option_group_id_batch_type, 'Maksu', 1, 'Contribution', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_batch_type, 'Lahjoitus', 1, 'Contribution', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_batch_type, 'Jäsenyys', 2, 'Membership', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_batch_type, 'Pledge Payment', 3, 'Pledge Payment', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
@@ -5542,6 +5546,11 @@ VALUES
 (@option_group_id_wysiwyg_presets, 'CiviPosti',  '2', 'civimail',  NULL, NULL, 0, 2, NULL, 0, 1, 1, @mailCompId, NULL, NULL),
 (@option_group_id_wysiwyg_presets, 'CiviTapahtuma', '3', 'civievent', NULL, NULL, 0, 3, NULL, 0, 1, 1, @eventCompId, NULL, NULL),
 
+-- Environment
+(@option_group_id_env, 'Production', 'Production', 'Production', NULL, NULL, 1, 1, 'Production Environment', 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_env, 'Staging', 'Staging', 'Staging', NULL, NULL, 0, 2, 'Staging Environment', 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_env, 'Development', 'Development', 'Development', NULL, NULL, 0, 3, 'Development Environment', 0, 1, 1, NULL, NULL, NULL),
+
 -- Relative Date Filters
    (@option_group_id_date_filter, 'Tänään', 'this.day', 'this.day', NULL, NULL, NULL,1, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'This week', 'this.week', 'this.week', NULL, NULL, NULL,2, NULL, 0, 0, 1, NULL, NULL, NULL),
@@ -5573,10 +5582,10 @@ VALUES
    (@option_group_id_date_filter, 'Next 60 days including today', 'starting_2.month', 'starting_2.month', NULL, NULL, NULL,28, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'Next 90 days including today', 'starting.quarter', 'starting.quarter', NULL, NULL, NULL,29, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'Next 12 months including today', 'starting.year', 'starting.year', NULL, NULL, NULL,30, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current week to-date', 'current.week', 'current.week', NULL, NULL, NULL,31, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current calendar month to-date', 'current.month', 'current.month', NULL, NULL, NULL,32, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current quarter to-date', 'current.quarter', 'current.quarter', NULL, NULL, NULL,33, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current calendar year to-date', 'current.year', 'current.year', NULL, NULL, NULL,34, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Kuluva viikko', 'current.week', 'current.week', NULL, NULL, NULL,31, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Kuluva kalenterikuukausi', 'current.month', 'current.month', NULL, NULL, NULL,32, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Kuluva vuosineljännes', 'current.quarter', 'current.quarter', NULL, NULL, NULL,33, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Kuluva kalenterivuosi', 'current.year', 'current.year', NULL, NULL, NULL,34, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'To end of yesterday', 'earlier.day', 'earlier.day', NULL, NULL, NULL,35, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'To end of previous week', 'earlier.week', 'earlier.week', NULL, NULL, NULL,36, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'To end of previous calendar month', 'earlier.month', 'earlier.month', NULL, NULL, NULL,37, NULL, 0, 0, 1, NULL, NULL, NULL),
@@ -5604,7 +5613,14 @@ VALUES
    (@option_group_id_date_filter, 'From end of previous week', 'greater_previous.week', 'greater_previous.week', NULL, NULL, NULL,59, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'From end of previous calendar month', 'greater_previous.month', 'greater_previous.month', NULL, NULL, NULL,60, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'From end of previous quarter', 'greater_previous.quarter', 'greater_previous.quarter', NULL, NULL, NULL,61, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous calendar year', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL);
+   (@option_group_id_date_filter, 'From end of previous calendar year', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL),
+
+-- Pledge Status
+  (@option_group_id_ps, 'Suoritettu'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'Odottaa'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'Peruutettu'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'In Progress', 5, 'In Progress', NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'Overdue'    , 6, 'Overdue'    , NULL, 0, NULL, 5, NULL, 0, 1, 1, NULL, NULL, NULL);
 
 -- financial accounts
 SELECT @opval := value FROM civicrm_option_value WHERE name = 'Revenue' and option_group_id = @option_group_id_fat;
@@ -5617,7 +5633,7 @@ INSERT INTO
    `civicrm_financial_account` (`name`, `contact_id`, `financial_account_type_id`, `description`, `accounting_code`, `account_type_code`, `is_reserved`, `is_active`, `is_deductible`, `is_default`)
 VALUES
   ( 'Lahjoitus'            , @contactID, @opval, 'Default account for donations', '4200', 'INC', 0, 1, 1, 1 ),
-  ( 'Member Dues'          , @contactID, @opval, 'Default account for membership sales', '4400', 'INC', 0, 1, 1, 0 ),
+  ( 'Jäsenmaksut'          , @contactID, @opval, 'Default account for membership sales', '4400', 'INC', 0, 1, 1, 0 ),
   ( 'Kampanjalahjoitus', @contactID, @opval, 'Sample account for recording payments to a campaign', '4100', 'INC', 0, 1, 0, 0 ),
   ( 'Tapahtuman hinta'            , @contactID, @opval, 'Default account for event ticket sales', '4300', 'INC', 0, 1, 0, 0 ),
   ( 'Banking Fees'         , @contactID, @opexp, 'Payment processor fees and manually recorded banking fees', '5200', 'EXP', 0, 1, 0, 1 ),
@@ -5807,7 +5823,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'os_GE', 'os', 'Ossetian, Ossetic', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'pa_IN', 'pa', 'Panjabi, Punjabi', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'pi_KH', 'pi', 'Pali', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'fa_IR', 'fa', 'Persian (Iran)', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'fa_IR', 'fa', 'Persian (Iran)', @counter := @counter + 1),
   (@option_group_id_languages, 0, 1, 'pl_PL', 'pl', 'Polish', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ps_AF', 'ps', 'Pashto, Pushto', @counter := @counter + 1),
   (@option_group_id_languages, 0, 1, 'pt_BR', 'pt', 'Portuguese (Brazil)', @counter := @counter + 1),
@@ -5823,7 +5839,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'se_NO', 'se', 'Northern Sami', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sm_WS', 'sm', 'Samoan', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sg_CF', 'sg', 'Sango', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'sr_RS', 'sr', 'Serbian', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'sr_RS', 'sr', 'Serbian', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'gd_GB', 'gd', 'Scottish Gaelic; Gaelic', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sn_ZW', 'sn', 'Shona', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'si_LK', 'si', 'Sinhala, Sinhalese', @counter := @counter + 1),
@@ -5854,7 +5870,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'tw_GH', 'tw', 'Twi', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ty_PF', 'ty', 'Tahitian', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ug_CN', 'ug', 'Uighur, Uyghur', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'uk_UA', 'uk', 'Ukrainian', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'uk_UA', 'uk', 'Ukrainian', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ur_PK', 'ur', 'Urdu', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'uz_UZ', 'uz', 'Uzbek', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 've_ZA', 've', 'Venda', @counter := @counter + 1),
@@ -5895,7 +5911,7 @@ VALUES
     ('Grace',     'Grace', 'end_date', null, null,'end_date','month', 1, 1, 0, 3, 0, 1, 0),
     ('Expired',   'Vanhentunut', 'end_date', 'month', 1, null, null, null, 0, 0, 4, 0, 1, 0),
     ('Pending',   'Odottaa', 'join_date', null, null,'join_date',null,null, 0, 0, 5, 0, 1, 1),
-    ('Cancelled', 'Cancelled', 'join_date', null, null,'join_date',null,null, 0, 0, 6, 0, 1, 1),
+    ('Cancelled', 'Peruutettu', 'join_date', null, null,'join_date',null,null, 0, 0, 6, 0, 1, 1),
     ('Deceased',  'Kuollut', null, null, null, null, null, null, 0, 1, 7, 0, 1, 1);
 
 
@@ -6346,7 +6362,7 @@ INSERT INTO civicrm_uf_field
        ( 10,     'contribution_status_id',      1, 1, 3, 'User and User Admin Only', 0, 0, NULL, 'Tila', 'Contribution', NULL, NULL ),
        ( 10,     'receive_date',                1, 1, 4, 'User and User Admin Only', 0, 0, NULL, 'Vastaanotettu', 'Contribution', NULL, NULL ),
        ( 10,     'contribution_source',         0, 0, 5, 'User and User Admin Only', 0, 0, NULL, 'Lähde', 'Contribution', NULL, NULL ),
-       ( 10,     'payment_instrument',          0, 0, 6, 'User and User Admin Only', 0, 0, NULL, 'Payment Method', 'Contribution', NULL, NULL ),
+       ( 10,     'payment_instrument',          0, 0, 6, 'User and User Admin Only', 0, 0, NULL, 'Maksutapa', 'Contribution', NULL, NULL ),
        ( 10,     'contribution_check_number',                0, 0, 7, 'User and User Admin Only', 0, 0, NULL, 'Check Number', 'Contribution', NULL, NULL ),
        ( 10,     'send_receipt',                0, 0, 8, 'User and User Admin Only', 0, 0, NULL, 'Lähetä kuitti', 'Contribution', NULL, NULL ),
        ( 10,     'invoice_id',                  0, 0, 9, 'User and User Admin Only', 0, 0, NULL, 'Laskun ID', 'Contribution', NULL, NULL ),
@@ -6361,7 +6377,7 @@ INSERT INTO civicrm_uf_field
        ( 11,     'financial_type',              0, 1, 7, 'User and User Admin Only', 0, 0, NULL, 'Maksun tyyppi', 'Membership', NULL, NULL ),
        ( 11,     'total_amount',                0, 1, 8, 'User and User Admin Only', 0, 0, NULL, 'Määrä', 'Membership', NULL, NULL ),
        ( 11,     'receive_date',                1, 1, 9, 'User and User Admin Only', 0, 0, NULL, 'Vastaanotettu', 'Membership', NULL, NULL ),
-       ( 11,     'payment_instrument',          0, 0, 10, 'User and User Admin Only', 0, 0, NULL, 'Payment Method', 'Membership', NULL, NULL ),
+       ( 11,     'payment_instrument',          0, 0, 10, 'User and User Admin Only', 0, 0, NULL, 'Maksutapa', 'Membership', NULL, NULL ),
        ( 11,     'contribution_check_number',                0, 0, 11, 'User and User Admin Only', 0, 0, NULL, 'Check Number', 'Membership', NULL, NULL ),
        ( 11,     'contribution_status_id',      1, 1, 12, 'User and User Admin Only', 0, 0, NULL, 'Maksun tila', 'Membership', NULL, NULL ),
        ( 11,     'soft_credit',                 0, 0, 13, 'User and User Admin Only', 0, 0, NULL, 'Soft Credit', 'Membership', NULL, NULL ),
@@ -6380,7 +6396,7 @@ INSERT INTO civicrm_participant_status_type
   (1,  'Registered',                          'Rekisteröity',                          'Positive', 1,           1,         1,          1,      1            ),
   (2,  'Attended',                            'Osallistunut',                            'Positive', 0,           1,         1,          2,      2            ),
   (3,  'No-show',                             'No-show',                             'Negative', 0,           1,         0,          3,      2            ),
-  (4,  'Cancelled',                           'Cancelled',                           'Negative', 1,           1,         0,          4,      2            ),
+  (4,  'Cancelled',                           'Peruutettu',                           'Negative', 1,           1,         0,          4,      2            ),
   (5,  'Pending from pay later',              'Pending (pay later)',                 'Pending',  1,           1,         1,          5,      2            ),
   (6,  'Pending from incomplete transaction', 'Pending (incomplete transaction)',    'Pending',  1,           1,         0,          6,      2            ),
   (7,  'On waitlist',                         'Jonotuslistalla',                         'Waiting',  1,           0,         0,          7,      2            ),
@@ -6455,7 +6471,7 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', 'Tapaukset - lähetä toiminnon kopio',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Maksut - hälytys kahtena kappaleena esiintyvästä yhteisöstä',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Maksut - kuitti (offline-tila)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Maksut - kuitti (online-tila)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_invoice_receipt', 'Contributions - Invoice',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Maksut - toistuva alku- ja loppumuistutus',            5, 5) ,      (@tpl_ogid_contribution, 'contribution_recurring_cancelled', 'Contributions - Recurring Cancellation Notification',            6, 6) ,      (@tpl_ogid_contribution, 'contribution_recurring_billing', 'Contributions - Recurring Billing Updates',            7, 7) ,      (@tpl_ogid_contribution, 'contribution_recurring_edit', 'Contributions - Recurring Updates',            8, 8) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Omat kampanjasivut - ylläpitäjän muistutus',            9, 9) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Omat kampanjasivut - tukijan tilan muutoksen muistutus',            10, 10) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Omat kampanjasivut - tukijan tervetulotervehdys',            11, 11) ,      (@tpl_ogid_contribution, 'pcp_owner_notify', 'Henkilökohtainen kampanjasivu – tiedote omistajalle',            12, 12) ,      (@tpl_ogid_contribution, 'payment_or_refund_notification', 'Additional Payment Receipt or Refund Notification',            13, 13) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Tapahtumat - ilmoittautumisen vahvistus ja kuitti (offline-tila)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Tapahtumat - ilmoittautumisen vahvistus ja kuitti (online-tila)',            2, 2) ,      (@tpl_ogid_event, 'event_registration_receipt', 'Events - Receipt only',            3, 3) ,      (@tpl_ogid_event, 'participant_cancelled', 'Tapahtumat - ilmoittautumisen peruutusmuistutus',            4, 4) ,      (@tpl_ogid_event, 'participant_confirm', 'Tapahtumat - ilmoittautumisen vahvistuksen kutsu',            5, 5) ,      (@tpl_ogid_event, 'participant_expired', 'Tapahtumat - odottavan ilmoittautumisen vanhentumisen muistutus',            6, 6) ,      (@tpl_ogid_event, 'participant_transferred', 'Events - Registration Transferred Notice',            7, 7) ,      (@tpl_ogid_friend, 'friend', 'Kerro ystävälle -sähköposti',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Jäsenyydet - liittymisen ja jäsenyyden uusimisen kuitti (offline-tila)',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Jäsenyydet - kuitti (online-tila)',            2, 2) ,      (@tpl_ogid_membership, 'membership_autorenew_cancelled', 'Memberships - Auto-renew Cancellation Notification',            3, 3) ,      (@tpl_ogid_membership, 'membership_autorenew_billing', 'Memberships - Auto-renew Billing Updates',            4, 4) ,      (@tpl_ogid_meta, 'test_preview', 'Testaa - kuitin yläviite',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Lupaukset - vahvistus',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Lupaukset - maksumuistutus',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Profiilit - ylläpitäjän muistutus',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Vetoomus - allekirjoitus lisätty',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Vetoomus - tarvitsee vahvistuksen',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', 'Tapaukset - lähetä toiminnon kopio',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Maksut - hälytys kahtena kappaleena esiintyvästä yhteisöstä',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Maksut - kuitti (offline-tila)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Maksut - kuitti (online-tila)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_invoice_receipt', 'Contributions - Invoice',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Maksut - toistuva alku- ja loppumuistutus',            5, 5) ,      (@tpl_ogid_contribution, 'contribution_recurring_cancelled', 'Contributions - Recurring Cancellation Notification',            6, 6) ,      (@tpl_ogid_contribution, 'contribution_recurring_billing', 'Contributions - Recurring Billing Updates',            7, 7) ,      (@tpl_ogid_contribution, 'contribution_recurring_edit', 'Contributions - Recurring Updates',            8, 8) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Omat kampanjasivut - ylläpitäjän muistutus',            9, 9) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Omat kampanjasivut - tukijan tilan muutoksen muistutus',            10, 10) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Omat kampanjasivut - tukijan tervetulotervehdys',            11, 11) ,      (@tpl_ogid_contribution, 'pcp_owner_notify', 'Henkilökohtainen kampanjasivu – tiedote omistajalle',            12, 12) ,      (@tpl_ogid_contribution, 'payment_or_refund_notification', 'Additional Payment Receipt or Refund Notification',            13, 13) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Tapahtumat - ilmoittautumisen vahvistus ja kuitti (offline-tila)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Tapahtumat - ilmoittautumisen vahvistus ja kuitti (online-tila)',            2, 2) ,      (@tpl_ogid_event, 'event_registration_receipt', 'Events - Receipt only',            3, 3) ,      (@tpl_ogid_event, 'participant_cancelled', 'Tapahtumat - ilmoittautumisen peruutusmuistutus',            4, 4) ,      (@tpl_ogid_event, 'participant_confirm', 'Tapahtumat - ilmoittautumisen vahvistuksen kutsu',            5, 5) ,      (@tpl_ogid_event, 'participant_expired', 'Tapahtumat - odottavan ilmoittautumisen vanhentumisen muistutus',            6, 6) ,      (@tpl_ogid_event, 'participant_transferred', 'Events - Registration Transferred Notice',            7, 7) ,      (@tpl_ogid_friend, 'friend', 'Kerro ystävälle -sähköposti',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Jäsenyydet - liittymisen ja jäsenyyden jatkamisen kuitti (offline-tila)',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Jäsenyydet - kuitti (online-tila)',            2, 2) ,      (@tpl_ogid_membership, 'membership_autorenew_cancelled', 'Memberships - Auto-renew Cancellation Notification',            3, 3) ,      (@tpl_ogid_membership, 'membership_autorenew_billing', 'Memberships - Auto-renew Billing Updates',            4, 4) ,      (@tpl_ogid_meta, 'test_preview', 'Testaa - kuitin yläviite',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Lupaukset - vahvistus',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Lupaukset - maksumuistutus',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Profiilit - ylläpitäjän muistutus',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Vetoomus - allekirjoitus lisätty',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Vetoomus - tarvitsee vahvistuksen',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -9305,7 +9321,7 @@ INSERT INTO civicrm_msg_template
         <tr>
           <td style = "padding-left:17px;"><font size = "1" align = "center">{$supplemental_address_2}  {$stateProvinceAbbreviation}</font></td>
           <td colspan="1"></td>
-          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_id}</font></td>
+          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_number}</font></td>
           <td>
             <font size = "1" align = "right">
               {if $domain_city}{$domain_city}{/if}
@@ -9776,7 +9792,7 @@ INSERT INTO civicrm_msg_template
         <tr>
           <td style = "padding-left:17px;"><font size = "1" align = "center">{$supplemental_address_2}  {$stateProvinceAbbreviation}</font></td>
           <td colspan="1"></td>
-          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_id}</font></td>
+          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_number}</font></td>
           <td>
             <font size = "1" align = "right">
               {if $domain_city}{$domain_city}{/if}
@@ -17988,7 +18004,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_friend, 0,          1) ,      
       
       
-      ('Jäsenyydet - liittymisen ja jäsenyyden uusimisen kuitti (offline-tila)', '{if $receiptType EQ \'membership signup\'}
+      ('Jäsenyydet - liittymisen ja jäsenyyden jatkamisen kuitti (offline-tila)', '{if $receiptType EQ \'membership signup\'}
 {ts}Membership Confirmation and Receipt{/ts}
 {elseif $receiptType EQ \'membership renewal\'}
 {ts}Membership Renewal Confirmation and Receipt{/ts}
@@ -18403,7 +18419,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_offline_receipt, 1,          0),
-      ('Jäsenyydet - liittymisen ja jäsenyyden uusimisen kuitti (offline-tila)', '{if $receiptType EQ \'membership signup\'}
+      ('Jäsenyydet - liittymisen ja jäsenyyden jatkamisen kuitti (offline-tila)', '{if $receiptType EQ \'membership signup\'}
 {ts}Membership Confirmation and Receipt{/ts}
 {elseif $receiptType EQ \'membership renewal\'}
 {ts}Membership Renewal Confirmation and Receipt{/ts}
@@ -22997,12 +23013,12 @@ SELECT @option_value_rel_id_cg  := value FROM civicrm_option_value WHERE option_
 SELECT @option_value_rel_id_dr  := value FROM civicrm_option_value WHERE option_group_id = @option_group_id_arel AND name = 'Deferred Revenue Account is';
 
 SELECT @financial_type_id_dtn          := max(id) FROM civicrm_financial_type WHERE name = 'Lahjoitus';
-SELECT @financial_type_id_md         := max(id) FROM civicrm_financial_type WHERE name = 'Member Dues';
+SELECT @financial_type_id_md         := max(id) FROM civicrm_financial_type WHERE name = 'Jäsenmaksut';
 SELECT @financial_type_id_cc         := max(id) FROM civicrm_financial_type WHERE name = 'Kampanjalahjoitus';
 SELECT @financial_type_id_ef         := max(id) FROM civicrm_financial_type WHERE name = 'Tapahtuman hinta';
 
 SELECT @financial_account_id_dtn       := max(id) FROM civicrm_financial_account WHERE name = 'Lahjoitus';
-SELECT @financial_account_id_md         := max(id) FROM civicrm_financial_account WHERE name = 'Member Dues';
+SELECT @financial_account_id_md         := max(id) FROM civicrm_financial_account WHERE name = 'Jäsenmaksut';
 SELECT @financial_account_id_cc         := max(id) FROM civicrm_financial_account WHERE name = 'Kampanjalahjoitus';
 SELECT @financial_account_id_ef         := max(id) FROM civicrm_financial_account WHERE name = 'Tapahtuman hinta';
 SELECT @financial_account_id_bf         := max(id) FROM civicrm_financial_account WHERE name = 'Banking Fees';
@@ -23527,10 +23543,11 @@ SET @adminCaselastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
-    ( @domainID, 'civicrm/a/#/caseType',            'Case Types',      'Case Types',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 1 ),
-    ( @domainID, 'civicrm/admin/options/redaction_rule?reset=1',  'Redaction Rules', 'Redaction Rules', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 2 ),
-    ( @domainID, 'civicrm/admin/options/case_status?reset=1',  'Case Statuses', 'Case Statuses', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 3 ),
-    ( @domainID, 'civicrm/admin/options/encounter_medium?reset=1',  'Encounter Medium', 'Encounter Medium', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 4 );
+    ( @domainID, 'civicrm/admin/setting/case?reset=1',   'CiviCase Settings',      'CiviCase Settings',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 1 ),
+    ( @domainID, 'civicrm/a/#/caseType',            'Case Types',      'Case Types',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 2 ),
+    ( @domainID, 'civicrm/admin/options/redaction_rule?reset=1',  'Redaction Rules', 'Redaction Rules', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 3 ),
+    ( @domainID, 'civicrm/admin/options/case_status?reset=1',  'Case Statuses', 'Case Statuses', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 4 ),
+    ( @domainID, 'civicrm/admin/options/encounter_medium?reset=1',  'Encounter Medium', 'Encounter Medium', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 5 );
 
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
@@ -23904,4 +23921,4 @@ INSERT INTO `civicrm_report_instance`
 VALUES
     (  @domainID, 'Survey Details', 'survey/detail', 'Detailed report for canvassing, phone-banking, walk lists or other surveys.', 'access CiviReport', 'a:39:{s:6:"fields";a:2:{s:9:"sort_name";s:1:"1";s:6:"result";s:1:"1";}s:22:"assignee_contact_id_op";s:2:"eq";s:25:"assignee_contact_id_value";s:0:"";s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:17:"street_number_min";s:0:"";s:17:"street_number_max";s:0:"";s:16:"street_number_op";s:3:"lte";s:19:"street_number_value";s:0:"";s:14:"street_name_op";s:3:"has";s:17:"street_name_value";s:0:"";s:15:"postal_code_min";s:0:"";s:15:"postal_code_max";s:0:"";s:14:"postal_code_op";s:3:"lte";s:17:"postal_code_value";s:0:"";s:7:"city_op";s:3:"has";s:10:"city_value";s:0:"";s:20:"state_province_id_op";s:2:"in";s:23:"state_province_id_value";a:0:{}s:13:"country_id_op";s:2:"in";s:16:"country_id_value";a:0:{}s:12:"survey_id_op";s:2:"in";s:15:"survey_id_value";a:0:{}s:12:"status_id_op";s:2:"eq";s:15:"status_id_value";s:1:"1";s:11:"custom_1_op";s:2:"in";s:14:"custom_1_value";a:0:{}s:11:"custom_2_op";s:2:"in";s:14:"custom_2_value";a:0:{}s:17:"custom_3_relative";s:1:"0";s:13:"custom_3_from";s:0:"";s:11:"custom_3_to";s:0:"";s:11:"description";s:75:"Detailed report for canvassing, phone-banking, walk lists or other surveys.";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:17:"access CiviReport";s:6:"groups";s:0:"";s:9:"domain_id";i:1;}');
 
-UPDATE civicrm_domain SET version = '4.7.20';
+UPDATE civicrm_domain SET version = '4.7.25';
