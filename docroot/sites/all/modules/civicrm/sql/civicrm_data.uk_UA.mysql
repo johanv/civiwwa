@@ -577,8 +577,8 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (1627, 1010, "T", "Tucuman"),
 (1628, 1014, "1", "Burgenland"),
 (1629, 1014, "2", "Kärnten"),
-(1630, 1014, "3", "Niederosterreich"),
-(1631, 1014, "4", "Oberosterreich"),
+(1630, 1014, "3", "Niederösterreich"),
+(1631, 1014, "4", "Oberösterreich"),
 (1632, 1014, "5", "Salzburg"),
 (1633, 1014, "6", "Steiermark"),
 (1634, 1014, "7", "Tirol"),
@@ -4715,12 +4715,12 @@ VALUES
    ('activity_type'                 , 'Тип діяльності'                      , 'Integer', 1, 1, 0),
    ('gender'                        , 'Стать'                             , 'Integer', 1, 1, 0),
    ('instant_messenger_service'     , 'Імена вікон у системі Миттєвих Повідомлень (МП)', NULL, 1, 1, 0),
-   ('mobile_provider'               , 'Провайдер мобільного зв\'язку'             , NULL, 1, 1, 0),
+   ('mobile_provider'               , 'Служба мобільного зв\'язку'             , NULL, 1, 1, 0),
    ('individual_prefix'             , 'Особисті контактні префікси'        , NULL, 1, 1, 0),
    ('individual_suffix'             , 'Особисті контактні суфікси'        , NULL, 1, 1, 0),
    ('acl_role'                      , 'ACL Роль'                           , NULL, 1, 1, 0),
    ('accept_creditcard'             , 'Приймаються кредитні картки'              , NULL, 1, 1, 0),
-   ('payment_instrument'            , 'Payment Methods'                    , 'Integer', 1, 1, 0),
+   ('payment_instrument'            , 'Методи оплати'                    , 'Integer', 1, 1, 0),
    ('contribution_status'           , 'Статус внесків'                , NULL, 1, 1, 1),
    ('pcp_status'                    , 'Статус ПСК'                         , NULL, 1, 1, 1),
    ('pcp_owner_notify'              , 'Сповіщення власника ПСК'            , NULL, 1, 1, 1),
@@ -4789,7 +4789,9 @@ VALUES
    ('msg_mode'                      , 'Режим повідомлення'                       , NULL, 1, 1, 0),
    ('contact_date_reminder_options' , 'Опції нагадування дати контакту'      , NULL, 1, 1, 1),
    ('wysiwyg_presets'               , 'WYSIWYG Editor Presets'             , NULL, 1, 1, 0),
-   ('relative_date_filters'         , 'Relative Date Filters'              , NULL, 1, 1, 0);
+   ('relative_date_filters'         , 'Відносні фільтри дат'              , NULL, 1, 1, 0),
+   ('pledge_status'                 , 'Статус платіжного зобов’язання'                      , NULL, 1, 1, 1),
+   ('environment'                   , 'Environment'                        , NULL, 0, 1, 0);
 
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
 SELECT @option_group_id_act            := max(id) from civicrm_option_group where name = 'activity_type';
@@ -4869,6 +4871,8 @@ SELECT @option_group_id_msg_mode := max(id) from civicrm_option_group where name
 SELECT @option_group_id_contactDateMode := max(id) from civicrm_option_group where name = 'contact_date_reminder_options';
 SELECT @option_group_id_date_filter    := max(id) from civicrm_option_group where name = 'relative_date_filters';
 SELECT @option_group_id_wysiwyg_presets    := max(id) from civicrm_option_group where name = 'wysiwyg_presets';
+SELECT @option_group_id_ps    := max(id) from civicrm_option_group where name = 'pledge_status';
+SELECT @option_group_id_env    := max(id) from civicrm_option_group where name = 'environment';
 
 SELECT @contributeCompId := max(id) FROM civicrm_component where name = 'CiviContribute';
 SELECT @eventCompId      := max(id) FROM civicrm_component where name = 'CiviEvent';
@@ -4914,7 +4918,7 @@ VALUES
    (@option_group_id_act, 'Загальна розсилка',                         19, 'Bulk Email',         NULL, 1, NULL, 19, 'Загальна розсилка відправлена.',                                                    0, 1, 1, NULL, NULL, NULL),
    (@option_group_id_act, 'Призначити Роль у Справі',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-plus'),
    (@option_group_id_act, 'Видалити Роль у Справі',                   21, 'Remove Case Role', NULL,0, 0, 21, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-times'),
-   (@option_group_id_act, 'Print/Merge Document',               22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Export letters and other printable documents.',                     0, 1, 1, NULL, NULL, 'fa-file-pdf-o'),
+   (@option_group_id_act, 'Друкувати/об\'єднати документ',               22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Експортувати листи та інші друковані документи.',                     0, 1, 1, NULL, NULL, 'fa-file-pdf-o'),
    (@option_group_id_act, 'Об\'єднати справи',                         23, 'Merge Case', NULL, 0,  NULL, 23, '', 0, 1, 1, @caseCompId, NULL , 'fa-compress'),
    (@option_group_id_act, 'Перепризначена Справа',                    24, 'Reassigned Case', NULL, 0,  NULL, 24, '', 0, 1, 1, @caseCompId, NULL , 'fa-user-circle-o'),
    (@option_group_id_act, 'Зв\'язати Справи',                         25, 'Link Cases', NULL, 0,  NULL, 25, '', 0, 1, 1, @caseCompId, NULL , 'fa-link'),
@@ -4961,7 +4965,7 @@ VALUES
 
   -- for manual contact merge
    (@option_group_id_act, 'Контакт об\'єднаний з іншим', 51, 'Contact Merged', NULL, 1, NULL, 51, 'Контакт об\'єднаний з іншим',0, 1, 1, NULL, NULL, NULL),
-   (@option_group_id_act, 'Contact Deleted by Merge', 52, 'Contact Deleted by Merge', NULL, 1, NULL, 52, 'Contact was merged into another contact',0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, 'Контакт видалено об\'єднанням', 52, 'Contact Deleted by Merge', NULL, 1, NULL, 52, 'Контакт було об\'єднано в інший контакт',0, 1, 1, NULL, NULL, NULL),
 
   -- Activity Type for failed payment
    (@option_group_id_act, 'Failed Payment', 54, 'Failed Payment', NULL, 1, 0, 54, 'Failed Payment', 0, 1, 1, @contributeCompId, NULL, NULL),
@@ -5018,7 +5022,7 @@ VALUES
   (@option_group_id_cs, 'Відшкодовано'   , 7, 'Refunded'   , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Частково сплачено', 8, 'Partially paid', NULL, 0, NULL, 8, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cs, 'Відшкодування у статусі очікування', 9, 'Pending refund', NULL, 0, NULL, 9, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_cs, 'Chargeback', 10, 'Chargeback', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_cs, 'Відкликання платежу', 10, 'Chargeback', NULL, 0, NULL, 10, NULL, 0, 1, 1, NULL, NULL, NULL),
 
   (@option_group_id_pcp, 'Очікує перевірки', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_pcp, 'Схвалено'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5028,7 +5032,7 @@ VALUES
   (@option_group_id_pcpOwnerNotify, 'Сповіщення відправляються УСІМ власникам'      , 2, 'all_owners'      , NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_pcpOwnerNotify, 'Сповіщення НЕ є доступними'  , 3, 'no_notifications'  , NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
 
-  (@option_group_id_pRole, 'Відвідувач',  1, 'Attendee',  NULL, 1, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_pRole, 'Учасник',  1, 'Attendee',  NULL, 1, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_pRole, 'Волонтер', 2, 'Volunteer', NULL, 1, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_pRole, 'Місце проведення',      3, 'Host',      NULL, 1, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_pRole, 'Доповідач',   4, 'Speaker',   NULL, 1, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
@@ -5168,8 +5172,8 @@ VALUES
 -- report templates
   (@option_group_id_report , 'Звіт по громадянах  (короткий)',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  'Надає перелік адрес та телефонів по записах громадян у Вашій системі.', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report , 'Звіт по громадянах (детальний)',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  'Надає інформацію, що містить контактні дані щодо внесків, членства, заходів та діяльностей.',   0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'Activity Details Report',                 'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  'Надає список діяльності громадян, включаючи статистику діяльності для одного/всіх контактів в зазначеному часовому проміжку (необхідно вказати)', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'Звіт по Переліку телефонів/адрес для візитів',                'walklist',                       'CRM_Report_Form_Walklist_Walklist',                       NULL, 0, NULL, 4,  'Provides a detailed report for your walk/phonelist for targeted contacts', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report , 'Звіт про деталі діяльності',                 'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  'Надає список діяльності громадян, включаючи статистику діяльності для одного/всіх контактів в зазначеному часовому проміжку (необхідно вказати)', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'Звіт по Переліку телефонів/адрес для візитів',                'walklist',                       'CRM_Report_Form_Walklist_Walklist',                       NULL, 0, NULL, 4,  'Надає детальний звіт по переліку телефонів/адрес для візитів для помічених контактів', 0, 0, 0, NULL, NULL, NULL),
   (@option_group_id_report , 'Поточний звіт роботодавця',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  'Надає деталізований перелік відносин \"роботодавець-працівник\" разом з подробицями про роботодавця на дату колишнього працевлаштування', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report , 'Короткий звіт по внесках',             'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  'Групи і загальні показники внесків за критеріями, включаючи контакт, період часу, фінансовий тип, місцезнаходження суб\'єкта внеску тощо.', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report , 'Детальний звіт по внесках',              'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  'Перераховує певні внески за критеріями, включаючи інформацію про контакт, часовий проміжок, тип внесків, місцезнаходження суб\'єкту внеску тощо. Короткий звіт по внесках включається в колонку деталізованої інформації по внесках.', 0, 0, 1, @contributeCompId, NULL, NULL),
@@ -5183,17 +5187,17 @@ VALUES
   (@option_group_id_report , 'Звіт по членству (короткий)',             'member/summary',                 'CRM_Report_Form_Member_Summary',                 NULL, 0, NULL, 15, 'Надає підсумок по членству за типом і датою приєднання.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по членству (детальний)',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, 'Надає список членів, включаючи їхній членський статус та деталізовану інформацію по членству (дата приєднання, дата початку, дата закінчення). Також може відображати внески (платежі) асоційовані з кожним членством.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по членствах (які закінчилися)',              'member/lapse',                   'CRM_Report_Form_Member_Lapse',                   NULL, 0, NULL, 17, 'Надає список членств, які вже не дійсні, або стануть недійсними на обрану Вами дату.', 0, 0, 1, @memberCompId, NULL, NULL),
-  (@option_group_id_report , 'Звіт по учасниках події (перелік)',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, 'Надає список учасників заходу.', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report , 'Звіт по учасниках заходу (перелік)',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, 'Надає список учасників заходу.', 0, 0, 1, @eventCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по дохідності події (короткий)',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, 'Надає загальний огляд доходів від події. Ви можете включити основну інформацію, зокрема: ID події, реєстрація, кількість відвідувань, та отриманий дохід - ця інформація допоможе Вам визначити успішність події.', 0, 0, 1, @eventCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по дохідності події (детальний)',            'event/income',                   'CRM_Report_Form_Event_Income',                   NULL, 0, NULL, 20, 'Допомагає Вам проаналізувати дохід отриманий від події. Звіт може містити деталізовану інформацію, розподілену за типом учасників, статусом та платіжним методом.', 0, 0, 1, @eventCompId, NULL, NULL),
-  (@option_group_id_report , 'Pledge Detail Report',                    'pledge/detail',                  'CRM_Report_Form_Pledge_Detail',                  NULL, 0, NULL, 21, 'List of pledges including amount pledged, pledge status, next payment date, balance due, total amount paid etc.', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , 'Звіт про деталі платежу',                    'pledge/detail',                  'CRM_Report_Form_Pledge_Detail',                  NULL, 0, NULL, 21, 'Список платіжних зобов\'язань,  в тому числі суми, за якими було зроблено платіж, статус зобов\'язань, наступна дата платежу, дебетове сальдо, загальна сума виплат тощо.', 0, 0, 1, @pledgeCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по існуючим зобов\'язанням, за якими ще не було виплат',             'pledge/pbnp',                    'CRM_Report_Form_Pledge_Pbnp',                    NULL, 0, NULL, 22, 'Звіт по існуючим зобов\'язанням, за якими ще не було виплат', 0, 0, 1, @pledgeCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по відносинах',                     'contact/relationship',           'CRM_Report_Form_Contact_Relationship',           NULL, 0, NULL, 23, 'Звіт по відносинах', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report , 'Короткий звіт за справою',                     'case/summary',                   'CRM_Report_Form_Case_Summary',                   NULL, 0, NULL, 24, 'Надає короткий опис справ та їхніх термінів за діапазоном дат, статусом, штатом виконавців та/або роллю справи.', 0, 0, 1, @caseCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт по часу, витраченому за справою ',                  'case/timespent',                 'CRM_Report_Form_Case_TimeSpent',                 NULL, 0, NULL, 25, 'Підсумовує час, витрачений на кейсові та / або не пов\'язані з кейсами заходи за типом діяльності та контактами.', 0, 0, 1, @caseCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт демографічної ситуації по контактах',             'case/demographics',              'CRM_Report_Form_Case_Demographics',              NULL, 0, NULL, 26, 'Демографічне розподілення клієнтів у справі (або не пов\'язаних зі справою контактів) у ВАшій базі даних. Включає контактні поля, що налаштовуються користувачем.', 0, 0, 1, @caseCompId, NULL, NULL),
   (@option_group_id_report , 'Звіт протоколу бази даних',                     'contact/log',                    'CRM_Report_Form_Contact_Log',                    NULL, 0, NULL, 27, 'Протокол записів контактів та діяльностей, створених чи оновлених за певний проміжок часу.', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'Activity Summary Report',                 'activitySummary',                'CRM_Report_Form_ActivitySummary',                NULL, 0, NULL, 28, 'Показує статистику діяльності за типом/датою', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'Підсумковий звіт про діяльність',                 'activitySummary',                'CRM_Report_Form_ActivitySummary',                NULL, 0, NULL, 28, 'Показує статистику діяльності за типом/датою', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report, 'Звіт обліку грошових переказів',          'contribute/bookkeeping',         'CRM_Report_Form_Contribute_Bookkeeping',         NULL, 0, 0, 29,    'Показує звіт Обліку грошових переказів', 0, 0, 1, 2, NULL, NULL),
   (@option_group_id_report , 'Звіт по грантам (деталізований)', 'grant/detail', 'CRM_Report_Form_Grant_Detail', NULL, 0, 0, 30, 'Деталізований звіт по грантам', 0, 0, 1, @grantCompId, NULL, NULL),
   (@option_group_id_report, 'Звіт Підрахунку Переліку  Учасників', 'event/participantlist', 'CRM_Report_Form_Event_ParticipantListCount', NULL, 0, 0, 31, 'Показує перелік учасників з підрахунком учасників.', 0, 0, 1, @eventCompId, NULL, NULL),
@@ -5202,7 +5206,7 @@ VALUES
   (@option_group_id_report, 'Звіт по поштових відмовах', 'Mailing/bounce', 'CRM_Report_Form_Mailing_Bounce', NULL, 0, NULL, 34, 'Звіт по поштових відмовах', 0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'Короткий звіт по поштовій розсилці', 'Mailing/summary', 'CRM_Report_Form_Mailing_Summary', NULL, 0, NULL, 35, 'Звітна статистика по поштовій розсилці', 0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'Звіт про відкриття листів', 'Mailing/opened', 'CRM_Report_Form_Mailing_Opened', NULL, 0, NULL, 36, 'Відобразити контакти, які відкривали електронні листи із надісланої розсилки', 0, 0, 1, @mailCompId, NULL, NULL),
-  (@option_group_id_report, 'Mail Click-Through Report', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Відобразити переходи за посиланнями для кожної розсилки', 0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, 'Звіт переходів за посиланням у поштовій розсилці', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Відобразити переходи за посиланнями для кожної розсилки', 0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'Звіт протоколювання контакту (Резюме)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'Звіт про зміни контактів для протоколювання інфраструктури (резюме).', 0, 0, 0, NULL, NULL, NULL),
   (@option_group_id_report, 'Звіт протоколювання контакту (Детально)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'Звіт про зміни контактів для протоколювання інфраструктури (детальний).', 0, 0, 0, NULL, NULL, NULL),
   (@option_group_id_report, 'Звіт протоколу внеску (короткий)', 'logging/contribute/summary', 'CRM_Report_Form_Contribute_LoggingSummary', NULL, 0, NULL, 40, 'Звіт про зміни внеску для протоколювання інфраструктури (короткий)', 0, 0, 0, @contributeCompId, NULL, NULL),
@@ -5210,22 +5214,22 @@ VALUES
   (@option_group_id_report, 'Звіт по грантам (статистика)', 'grant/statistics', 'CRM_Report_Form_Grant_Statistics', NULL, 0, NULL, 42, 'Показати статистику по грантам', 0, 0, 1, @grantCompId, NULL, NULL),
   (@option_group_id_report, 'Звіт по дослідженню (деталізований)',    'survey/detail', 'CRM_Report_Form_Campaign_SurveyDetails',  NULL, 0, NULL, 43, 'Деталізований звіт по агітаційній діяльності, банку телефонів, маршрутам зустрічей з виборцями (walk lists) або іншим опитування.', 0, 0, 1, @campaignCompId, NULL, NULL),
   (@option_group_id_report, 'Звіт по Персональній сторінці кампанії', 'contribute/pcp', 'CRM_Report_Form_Contribute_PCP', NULL, 0, NULL, 44, 'Підсумовує зібрану суму і кількість людей, що зробили внесок для кожної  Персональної Сторінки Кампаній.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report , 'Короткий звіт по зобов\'язанням', 'pledge/summary', 'CRM_Report_Form_Pledge_Summary', NULL, 0, NULL, 45, 'Groups and totals pledges by criteria including contact, time period, pledge status, location, etc.', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , 'Короткий звіт по зобов\'язанням', 'pledge/summary', 'CRM_Report_Form_Pledge_Summary', NULL, 0, NULL, 45, 'Групи і загальні показники платежів за критеріями, включаючи контакт, період часу, фінансовий тип, місцезнаходження суб\'єкта внеску тощо.', 0, 0, 1, @pledgeCompId, NULL, NULL),
   (@option_group_id_report , 'Сукупність внесків за Відносинами',                   'contribute/history',              'CRM_Report_Form_Contribute_History',              NULL, 0, NULL, 46,  'Виводить перелік історії внесків контактів, сортовані за роками, включаючи внески від контактів, пов\'язаних з цим контактом.', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report,  'Деталізований звіт по поштових розсилках',                                            'mailing/detail',     'CRM_Report_Form_Mailing_Detail',          NULL, 0, NULL, 47,  'Надає звіт по запланованим або успішним доставкам, анулюванням підписок і відмовам, відповідям та переадресуванням.',   0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'Інформація щодо внесків та членства', 'member/contributionDetail', 'CRM_Report_Form_Member_ContributionDetail', NULL, 0, NULL, 48, 'Деталізована інформація по будь якому типу внесків, плюс інформація про асоційоване членство для внесків, які мають бути зроблені як членський платіж.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report, 'Звіт про повторювані внески', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, 'Надає інформацію щодо статусу періодичних внесків', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report, 'Recurring Contributions Summary', 'contribute/recursummary', 'CRM_Report_Form_Contribute_RecurSummary',               NULL, 0, NULL, 49, 'Provides simple summary for each payment instrument for which there are recurring contributions (e.g. Credit Card, Standing Order, Direct Debit, etc., NULL), showing within a given date range.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report, 'Deferred Revenue Details', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'Deferred Revenue Details Report', 0, 0, 1, @contributeCompId, NULL, NULL), 
+  (@option_group_id_report, 'Резюме регулярних внесків', 'contribute/recursummary', 'CRM_Report_Form_Contribute_RecurSummary',               NULL, 0, NULL, 49, 'Provides simple summary for each payment instrument for which there are recurring contributions (e.g. Credit Card, Standing Order, Direct Debit, etc., NULL), showing within a given date range.', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'Деталі про відкладені доходи', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'Звіт про деталі відкладених доходів', 0, 0, 1, @contributeCompId, NULL, NULL),
 
-  (@option_group_id_acs, 'Заплановано',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Завершено',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Відмінено',  3, 'Cancelled',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Заплановано',    1, 'Scheduled',    NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Завершено',    2, 'Completed',    NULL, 1, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Відмінено',    3, 'Cancelled',    NULL, 2, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_acs, 'Залишити повідомлення', 4, 'Left Message', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Не досяжний', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Не є необхідним',  6, 'Not Required',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Наявно',  7, 'Available',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'Не показувати',  8, 'No_show',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Не досяжний',  5, 'Unreachable',  NULL, 2, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Не є необхідним', 6, 'Not Required', NULL, 2, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Наявно',    7, 'Available',    NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'Не показувати',      8, 'No_show',      NULL, 2, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
   (@option_group_id_cas, 'той, що триває' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cas, 'Вирішено', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5250,7 +5254,7 @@ VALUES
   (@option_group_id_sfe, 'xlsx', 13, 'xlsx',  NULL, 0, 0, 13, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_sfe, 'odt',  14, 'odt',   NULL, 0, 0, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
 
-  (@option_group_id_we, 'Textarea', 1, 'Textarea', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_we, 'Поле для тексту', 1, 'Textarea', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_we, 'CKEditor', 2, 'CKEditor', NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
 
   (@option_group_id_mt, 'Редактор пошуку',      1, 'Search Builder',      NULL, 0, 0,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5439,7 +5443,7 @@ VALUES
 
 -- activity_contacts
    (@option_group_id_aco, 'Уповноважені за діяльністю', 1, 'Activity Assignees', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_aco, 'Джерело Діяльності', 2, 'Activity Source', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aco, 'Джерело події', 2, 'Activity Source', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_aco, 'Цілі Діяльності', 3, 'Activity Targets', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- financial_account_type
@@ -5452,7 +5456,7 @@ VALUES
 
 -- account_relationship
     (@option_group_id_arel, 'Рахунок доходів - це', 1, 'Income Account is', NULL, 0, 1, 1, 'Income Account is', 0, 1, 1, 2, NULL, NULL),
-    (@option_group_id_arel, 'Credit/Contra Revenue Account is', 2, 'Credit/Contra Revenue Account is', NULL, 0, 0, 2, 'Credit/Contra Revenue Account is', 0, 1, 1, 2, NULL, NULL),
+    (@option_group_id_arel, 'Кредитний/Контрактний дохід рахунку є', 2, 'Credit/Contra Revenue Account is', NULL, 0, 0, 2, 'Credit/Contra Revenue Account is', 0, 1, 1, 2, NULL, NULL),
     (@option_group_id_arel, 'Рахунок для прийняття внесків - це', 3, 'Accounts Receivable Account is', NULL, 0, 0, 3, 'Accounts Receivable Account is', 0, 1, 1, 2, NULL, NULL),
     (@option_group_id_arel, 'Кредитний рахунок пасивів - це', 4, 'Credit Liability Account is', NULL, 0, 0, 4, 'Credit Liability Account is', 0, 1, 0, 2, NULL, NULL),
      (@option_group_id_arel, 'Рахунок для витрат - це', 5, 'Expense Account is', NULL, 0, 0, 5, 'Expense Account is', 0, 1, 1, 2, NULL, NULL),
@@ -5461,8 +5465,8 @@ VALUES
      (@option_group_id_arel, 'Рахунок для обліку премій - це', 8, 'Premiums Inventory Account is', NULL, 0, 0, 8, 'Premiums Inventory Account is', 0, 1, 1, 2, NULL, NULL),
      (@option_group_id_arel, 'Рахунок знижок - це', 9, 'Discounts Account is', NULL, 0, 0, 9, 'Discounts Account is', 0, 1, 1, 2, NULL, NULL),
      (@option_group_id_arel, 'Обліковий запис податку з продажів є', 10, 'Sales Tax Account is', NULL, 0, 0, 10, 'Sales Tax Account is', 0, 1, 1, 2, NULL, NULL),
-     (@option_group_id_arel, 'Chargeback Account is', 11, 'Chargeback Account is', NULL, 0, 0, 11, 'Chargeback Account is', 0, 1, 1, 2, NULL, NULL),
-     (@option_group_id_arel, 'Deferred Revenue Account is', 12, 'Deferred Revenue Account is', NULL, 0, 0, 12, 'Deferred Revenue Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Обліковий запис про оплату є', 11, 'Chargeback Account is', NULL, 0, 0, 11, 'Chargeback Account is', 0, 1, 1, 2, NULL, NULL),
+     (@option_group_id_arel, 'Обліковий запис відкладених доходів - це', 12, 'Deferred Revenue Account is', NULL, 0, 0, 12, 'Deferred Revenue Account is', 0, 1, 1, 2, NULL, NULL),
 
 -- event_contacts
    (@option_group_id_ere, 'Роль учасника', 1, 'participant_role', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
@@ -5542,69 +5546,81 @@ VALUES
 (@option_group_id_wysiwyg_presets, 'CiviПошта',  '2', 'civimail',  NULL, NULL, 0, 2, NULL, 0, 1, 1, @mailCompId, NULL, NULL),
 (@option_group_id_wysiwyg_presets, 'CiviЗахід', '3', 'civievent', NULL, NULL, 0, 3, NULL, 0, 1, 1, @eventCompId, NULL, NULL),
 
+-- Environment
+(@option_group_id_env, 'Production', 'Production', 'Production', NULL, NULL, 1, 1, 'Production Environment', 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_env, 'Staging', 'Staging', 'Staging', NULL, NULL, 0, 2, 'Staging Environment', 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_env, 'Development', 'Development', 'Development', NULL, NULL, 0, 3, 'Development Environment', 0, 1, 1, NULL, NULL, NULL),
+
 -- Relative Date Filters
    (@option_group_id_date_filter, 'Сьогодні', 'this.day', 'this.day', NULL, NULL, NULL,1, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'This week', 'this.week', 'this.week', NULL, NULL, NULL,2, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'This calendar month', 'this.month', 'this.month', NULL, NULL, NULL,3, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'This quarter', 'this.quarter', 'this.quarter', NULL, NULL, NULL,4, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'This fiscal year', 'this.fiscal_year', 'this.fiscal_year', NULL, NULL, NULL,5, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'This calendar year', 'this.year', 'this.year', NULL, NULL, NULL,6, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цей тиждень', 'this.week', 'this.week', NULL, NULL, NULL,2, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цей календарний місяць', 'this.month', 'this.month', NULL, NULL, NULL,3, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цей квартал', 'this.quarter', 'this.quarter', NULL, NULL, NULL,4, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цей фіскальний рік', 'this.fiscal_year', 'this.fiscal_year', NULL, NULL, NULL,5, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цей календарний рік', 'this.year', 'this.year', NULL, NULL, NULL,6, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'Вчора', 'previous.day', 'previous.day', NULL, NULL, NULL,7, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous week', 'previous.week', 'previous.week', NULL, NULL, NULL,8, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous calendar month', 'previous.month', 'previous.month', NULL, NULL, NULL,9, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous quarter', 'previous.quarter', 'previous.quarter', NULL, NULL, NULL,10, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous fiscal year', 'previous.fiscal_year', 'previous.fiscal_year', NULL, NULL, NULL,11, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous calendar year', 'previous.year', 'previous.year', NULL, NULL, NULL,12, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 7 days including today', 'ending.week', 'ending.week', NULL, NULL, NULL,13, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 30 days including today', 'ending.month', 'ending.month', NULL, NULL, NULL,14, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 60 days including today', 'ending_2.month', 'ending_2.month', NULL, NULL, NULL,15, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 90 days including today', 'ending.quarter', 'ending.quarter', NULL, NULL, NULL,16, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 12 months including today', 'ending.year', 'ending.year', NULL, NULL, NULL,17, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 2 years including today', 'ending_2.year', 'ending_2.year', NULL, NULL, NULL,18, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Last 3 years including today', 'ending_3.year', 'ending_3.year', NULL, NULL, NULL,19, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередній тиждень', 'previous.week', 'previous.week', NULL, NULL, NULL,8, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Пропередній календарний місяць', 'previous.month', 'previous.month', NULL, NULL, NULL,9, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередній квартал', 'previous.quarter', 'previous.quarter', NULL, NULL, NULL,10, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередній фіскальний рік ', 'previous.fiscal_year', 'previous.fiscal_year', NULL, NULL, NULL,11, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Пропередній календарний рік', 'previous.year', 'previous.year', NULL, NULL, NULL,12, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 7 днів, в тому числі сьогодні', 'ending.week', 'ending.week', NULL, NULL, NULL,13, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 30 днів, в тому числі сьогодні', 'ending.month', 'ending.month', NULL, NULL, NULL,14, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 60 днів, в тому числі сьогодні', 'ending_2.month', 'ending_2.month', NULL, NULL, NULL,15, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 90 днів, в тому числі сьогодні', 'ending.quarter', 'ending.quarter', NULL, NULL, NULL,16, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 12 місяців, в тому числі сьогодні', 'ending.year', 'ending.year', NULL, NULL, NULL,17, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 2 роки, в тому числі сьогодні', 'ending_2.year', 'ending_2.year', NULL, NULL, NULL,18, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Останні 3 роки, в тому числі сьогодні', 'ending_3.year', 'ending_3.year', NULL, NULL, NULL,19, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'Завтра', 'starting.day', 'starting.day', NULL, NULL, NULL,20, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next week', 'next.week', 'next.week', NULL, NULL, NULL,21, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next calendar month', 'next.month', 'next.month', NULL, NULL, NULL,22, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next quarter', 'next.quarter', 'next.quarter', NULL, NULL, NULL,23, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next fiscal year', 'next.fiscal_year', 'next.fiscal_year', NULL, NULL, NULL,24, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next calendar year', 'next.year', 'next.year', NULL, NULL, NULL,25, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 7 days including today', 'starting.week', 'starting.week', NULL, NULL, NULL,26, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 30 days including today', 'starting.month', 'starting.month', NULL, NULL, NULL,27, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 60 days including today', 'starting_2.month', 'starting_2.month', NULL, NULL, NULL,28, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 90 days including today', 'starting.quarter', 'starting.quarter', NULL, NULL, NULL,29, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Next 12 months including today', 'starting.year', 'starting.year', NULL, NULL, NULL,30, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current week to-date', 'current.week', 'current.week', NULL, NULL, NULL,31, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current calendar month to-date', 'current.month', 'current.month', NULL, NULL, NULL,32, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current quarter to-date', 'current.quarter', 'current.quarter', NULL, NULL, NULL,33, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Current calendar year to-date', 'current.year', 'current.year', NULL, NULL, NULL,34, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of yesterday', 'earlier.day', 'earlier.day', NULL, NULL, NULL,35, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous week', 'earlier.week', 'earlier.week', NULL, NULL, NULL,36, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous calendar month', 'earlier.month', 'earlier.month', NULL, NULL, NULL,37, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous quarter', 'earlier.quarter', 'earlier.quarter', NULL, NULL, NULL,38, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of previous calendar year', 'earlier.year', 'earlier.year', NULL, NULL, NULL,39, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current day', 'greater.day', 'greater.day', NULL, NULL, NULL,40, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current week', 'greater.week', 'greater.week', NULL, NULL, NULL,41, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current calendar month', 'greater.month', 'greater.month', NULL, NULL, NULL,42, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current quarter', 'greater.quarter', 'greater.quarter', NULL, NULL, NULL,43, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From start of current calendar year', 'greater.year', 'greater.year', NULL, NULL, NULL,44, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current week', 'less.week', 'less.week', NULL, NULL, NULL,45, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current calendar month', 'less.month', 'less.month', NULL, NULL, NULL,46, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current quarter', 'less.quarter', 'less.quarter', NULL, NULL, NULL,47, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'To end of current calendar year', 'less.year', 'less.year', NULL, NULL, NULL,48, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 days', 'previous_2.day', 'previous_2.day', NULL, NULL, NULL,49, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 weeks', 'previous_2.week', 'previous_2.week', NULL, NULL, NULL,50, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 calendar months', 'previous_2.month', 'previous_2.month', NULL, NULL, NULL,51, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 quarters', 'previous_2.quarter', 'previous_2.quarter', NULL, NULL, NULL,52, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Previous 2 calendar years', 'previous_2.year', 'previous_2.year', NULL, NULL, NULL,53, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Day prior to yesterday', 'previous_before.day', 'previous_before.day', NULL, NULL, NULL,54, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Week prior to previous week', 'previous_before.week', 'previous_before.week', NULL, NULL, NULL,55, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Month prior to previous calendar month', 'previous_before.month', 'previous_before.month', NULL, NULL, NULL,56, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Quarter prior to previous quarter', 'previous_before.quarter', 'previous_before.quarter', NULL, NULL, NULL,57, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'Year prior to previous calendar year', 'previous_before.year', 'previous_before.year', NULL, NULL, NULL,58, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous week', 'greater_previous.week', 'greater_previous.week', NULL, NULL, NULL,59, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous calendar month', 'greater_previous.month', 'greater_previous.month', NULL, NULL, NULL,60, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous quarter', 'greater_previous.quarter', 'greater_previous.quarter', NULL, NULL, NULL,61, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'From end of previous calendar year', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL);
+   (@option_group_id_date_filter, 'На наступному тижні', 'next.week', 'next.week', NULL, NULL, NULL,21, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'У наступному календарному місяці', 'next.month', 'next.month', NULL, NULL, NULL,22, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'У наступному кварталі', 'next.quarter', 'next.quarter', NULL, NULL, NULL,23, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'У наступному фіскальному році', 'next.fiscal_year', 'next.fiscal_year', NULL, NULL, NULL,24, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'У наступному календарному році', 'next.year', 'next.year', NULL, NULL, NULL,25, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Наступні 7 днів, в тому числі сьогодні', 'starting.week', 'starting.week', NULL, NULL, NULL,26, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Наступні 30 днів, в тому числі сьогодні', 'starting.month', 'starting.month', NULL, NULL, NULL,27, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Наступні 60 днів, в тому числі сьогодні', 'starting_2.month', 'starting_2.month', NULL, NULL, NULL,28, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Наступні 90 днів, в тому числі сьогодні', 'starting.quarter', 'starting.quarter', NULL, NULL, NULL,29, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Наступні 12 місяців, в тому числі сьогодні', 'starting.year', 'starting.year', NULL, NULL, NULL,30, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цього тижня дотепер', 'current.week', 'current.week', NULL, NULL, NULL,31, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цього календарного місяця дотепер', 'current.month', 'current.month', NULL, NULL, NULL,32, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цього кватралу дотепер', 'current.quarter', 'current.quarter', NULL, NULL, NULL,33, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Цього календарного року дотепер', 'current.year', 'current.year', NULL, NULL, NULL,34, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця вчорашнього дня', 'earlier.day', 'earlier.day', NULL, NULL, NULL,35, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця минулого тижня', 'earlier.week', 'earlier.week', NULL, NULL, NULL,36, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця минулого календарного місяця', 'earlier.month', 'earlier.month', NULL, NULL, NULL,37, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця минулого кварталу', 'earlier.quarter', 'earlier.quarter', NULL, NULL, NULL,38, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця минулого календарного року', 'earlier.year', 'earlier.year', NULL, NULL, NULL,39, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З початку поточного дня', 'greater.day', 'greater.day', NULL, NULL, NULL,40, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З початку поточного тижня', 'greater.week', 'greater.week', NULL, NULL, NULL,41, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З початку поточного календарного місяця', 'greater.month', 'greater.month', NULL, NULL, NULL,42, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З початку поточного кварталу', 'greater.quarter', 'greater.quarter', NULL, NULL, NULL,43, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З початку поточного календарного року', 'greater.year', 'greater.year', NULL, NULL, NULL,44, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця поточного тижня', 'less.week', 'less.week', NULL, NULL, NULL,45, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця поточного календарного місяця', 'less.month', 'less.month', NULL, NULL, NULL,46, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця поточного кварталу', 'less.quarter', 'less.quarter', NULL, NULL, NULL,47, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'До кінця поточного календарного року', 'less.year', 'less.year', NULL, NULL, NULL,48, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередні 2 дні', 'previous_2.day', 'previous_2.day', NULL, NULL, NULL,49, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередні 2 тижні', 'previous_2.week', 'previous_2.week', NULL, NULL, NULL,50, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередні 2 календарні місяці', 'previous_2.month', 'previous_2.month', NULL, NULL, NULL,51, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередні 2 квартали', 'previous_2.quarter', 'previous_2.quarter', NULL, NULL, NULL,52, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Попередні 2 календарні роки', 'previous_2.year', 'previous_2.year', NULL, NULL, NULL,53, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Післявчора', 'previous_before.day', 'previous_before.day', NULL, NULL, NULL,54, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Тиждень перед попереднім тижнем', 'previous_before.week', 'previous_before.week', NULL, NULL, NULL,55, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Місяць перед попереднім місяцем', 'previous_before.month', 'previous_before.month', NULL, NULL, NULL,56, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Квартал перед попереднім кварталом', 'previous_before.quarter', 'previous_before.quarter', NULL, NULL, NULL,57, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'Рік перед попереднім роком', 'previous_before.year', 'previous_before.year', NULL, NULL, NULL,58, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З кінця минулого тижня', 'greater_previous.week', 'greater_previous.week', NULL, NULL, NULL,59, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З кінця минулого календарного місяця', 'greater_previous.month', 'greater_previous.month', NULL, NULL, NULL,60, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З кінця минулого кварталу', 'greater_previous.quarter', 'greater_previous.quarter', NULL, NULL, NULL,61, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_date_filter, 'З кінця минулого календарного року', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL),
+
+-- Pledge Status
+  (@option_group_id_ps, 'Завершено'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'В очікуванні'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'Відмінено'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'У процесі', 5, 'In Progress', NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'Затримується'    , 6, 'Overdue'    , NULL, 0, NULL, 5, NULL, 0, 1, 1, NULL, NULL, NULL);
 
 -- financial accounts
 SELECT @opval := value FROM civicrm_option_value WHERE name = 'Revenue' and option_group_id = @option_group_id_fat;
@@ -5628,8 +5644,8 @@ VALUES
   ( 'Облік Премій'   , @contactID, @opAsset, 'Account representing value of premiums inventory', '1375', 'OCASSET', 0, 1, 0, 0 ),
   ( 'Знижки'            , @contactID, @opval, 'Contra-revenue account for amounts discounted from sales', '4900', 'INC', 0, 1, 0, 0 ),
   ( 'Рахунки Платіжної системи', @contactID, @opAsset, 'Account to record payments into a payment processor merchant account', '1150', 'BANK', 0, 1, 0, 0),
-  ( 'Deferred Revenue - Event Fee', @contactID, @opLiability, 'Event revenue to be recognized in future months when the events occur', '2730', 'OCLIAB', 0, 1, 0, 0),
-  ( 'Deferred Revenue - Member Dues', @contactID, @opLiability, 'Membership revenue to be recognized in future months', '2740', 'OCLIAB', 0, 1, 0, 0
+  ( 'Відкладений дохід - плата за подію', @contactID, @opLiability, 'Event revenue to be recognized in future months when the events occur', '2730', 'OCLIAB', 0, 1, 0, 0),
+  ( 'Відкладений дохід - Членські збори', @contactID, @opLiability, 'Membership revenue to be recognized in future months', '2740', 'OCLIAB', 0, 1, 0, 0
 );
 
 -- Now insert option values which require domainID
@@ -5807,7 +5823,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'os_GE', 'os', 'Осетинська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'pa_IN', 'pa', 'Пенджабська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'pi_KH', 'pi', 'Pali', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'fa_IR', 'fa', 'Перська (Іран)', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'fa_IR', 'fa', 'Перська (Іран)', @counter := @counter + 1),
   (@option_group_id_languages, 0, 1, 'pl_PL', 'pl', 'Польська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ps_AF', 'ps', 'Пушту', @counter := @counter + 1),
   (@option_group_id_languages, 0, 1, 'pt_BR', 'pt', 'Португальська (Бразилія)', @counter := @counter + 1),
@@ -5823,7 +5839,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'se_NO', 'se', 'Північносаамська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sm_WS', 'sm', 'Самоанська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sg_CF', 'sg', 'Санго', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'sr_RS', 'sr', 'Сербська', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'sr_RS', 'sr', 'Сербська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'gd_GB', 'gd', 'Шотландська Гельська; Гельська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sn_ZW', 'sn', 'Шонська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'si_LK', 'si', 'Сингальська', @counter := @counter + 1),
@@ -5854,7 +5870,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'tw_GH', 'tw', 'Тві', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ty_PF', 'ty', 'Таїтянська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ug_CN', 'ug', 'Уйгурська', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'uk_UA', 'uk', 'Українська', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'uk_UA', 'uk', 'Українська', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ur_PK', 'ur', 'Урду', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'uz_UZ', 'uz', 'Узбецька', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 've_ZA', 've', 'Венда', @counter := @counter + 1),
@@ -5902,13 +5918,13 @@ VALUES
 INSERT INTO `civicrm_preferences_date`
   (name, start, end, date_format, time_format, description)
 VALUES
-  ( 'activityDate'    ,  20, 10, '',    '',  'Date for activities including contributions: receive, receipt, cancel. membership: join, start, renew. case: start, end.'         ),
-  ( 'activityDateTime',  20, 10, '',     1,  'Date and time for activity: scheduled. participant: registered.'                                                                  ),
-  ( 'birth'           , 100,  0, '',    '',  'Birth and deceased dates. Only year, month and day fields are supported.'                                                         ),
-  ( 'creditCard'      ,   0, 10, 'M Y', '',  'Month and year only for credit card expiration.'                                                                                  ),
-  ( 'custom'          ,  20, 20, '',    '',  'Uses date range passed in by form field. Can pass in a posix date part parameter. Start and end offsets defined here are ignored.'),
-  ( 'mailing'         ,   0,  1, '',    '',  'Date and time. Used for scheduling mailings.'                                                                                     ),
-  ( 'searchDate'      ,  20, 20, '',    '',  'Used in search forms and for relationships.'                                                                                      );
+  ( 'activityDate'    ,  20, 10, '',    '',  'Дата проведення діяльностей, включаючи внески: отримання, квитанція, скасування. Членство: приєднатися, почати, оновлювати Справа: початок, кінець'         ),
+  ( 'activityDateTime',  20, 10, '',     1,  'Дата та час діяльності: заплановано. Учасник: зареєстрований.'                                                                  ),
+  ( 'birth'           , 100,  0, '',    '',  'Дата народження та смерті. Підтримуються тільки поля року, місяця та дня.'                                                         ),
+  ( 'creditCard'      ,   0, 10, 'M Y', '',  'Місяць та рік лише для закінчення терміну дії кредитної картки.'                                                                                  ),
+  ( 'custom'          ,  20, 20, '',    '',  'Використовує діапазон дат, що пройшов у полі форми. Може передати частковий параметр позиції дати. Початкові та кінцеві відтермінування, визначені тут, ігноруються.'),
+  ( 'mailing'         ,   0,  1, '',    '',  'Дата і час. Використовується для планування розсилки.'                                                                                     ),
+  ( 'searchDate'      ,  20, 20, '',    '',  'Використовується в пошукових формах та у відносинах.'                                                                                      );
 
 
 -- various processor options
@@ -6318,7 +6334,7 @@ INSERT INTO civicrm_uf_field
        (  6,           'household_name',        1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,          'Назва домогосподарства',           'Household',    NULL,  NULL),
        (  6,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,          'Адреси електронної пошти',            'Contact',      NULL,  NULL),
        (  7,           'phone',                 1,           0,           1,      'User and User Admin Only',  0,           0,             1,             'Домашній телефон',               'Contact',      NULL,  1 ),
-       (  7,           'phone',                 1,           0,           2,      'User and User Admin Only',  0,           0,             1,             'Особистий мобільний телефон',              'Contact',      NULL,  2 ),
+       (  7,           'phone',                 1,           0,           2,      'User and User Admin Only',  0,           0,             1,             'Мобільний телефон',              'Contact',      NULL,  2 ),
        (  7,           'street_address',        1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,          'Основна адреса',          'Contact',      NULL,  NULL),
        (  7,           'city',                  1,           0,           4,      'User and User Admin Only',  0,           0,             NULL,          'Місто',                     'Contact',      NULL,  NULL),
        (  7,           'state_province',        1,           0,           5,      'User and User Admin Only',  0,           0,             NULL,          'Область',                    'Contact',      NULL,  NULL),
@@ -6346,7 +6362,7 @@ INSERT INTO civicrm_uf_field
        ( 10,     'contribution_status_id',      1, 1, 3, 'User and User Admin Only', 0, 0, NULL, 'Статус', 'Contribution', NULL, NULL ),
        ( 10,     'receive_date',                1, 1, 4, 'User and User Admin Only', 0, 0, NULL, 'Отримано', 'Contribution', NULL, NULL ),
        ( 10,     'contribution_source',         0, 0, 5, 'User and User Admin Only', 0, 0, NULL, 'Джерело', 'Contribution', NULL, NULL ),
-       ( 10,     'payment_instrument',          0, 0, 6, 'User and User Admin Only', 0, 0, NULL, 'Payment Method', 'Contribution', NULL, NULL ),
+       ( 10,     'payment_instrument',          0, 0, 6, 'User and User Admin Only', 0, 0, NULL, 'Метод оплати', 'Contribution', NULL, NULL ),
        ( 10,     'contribution_check_number',                0, 0, 7, 'User and User Admin Only', 0, 0, NULL, 'Перевірити номер', 'Contribution', NULL, NULL ),
        ( 10,     'send_receipt',                0, 0, 8, 'User and User Admin Only', 0, 0, NULL, 'Надіслати підтвердження', 'Contribution', NULL, NULL ),
        ( 10,     'invoice_id',                  0, 0, 9, 'User and User Admin Only', 0, 0, NULL, 'ID чеку', 'Contribution', NULL, NULL ),
@@ -6361,7 +6377,7 @@ INSERT INTO civicrm_uf_field
        ( 11,     'financial_type',              0, 1, 7, 'User and User Admin Only', 0, 0, NULL, 'Фінансовий тип', 'Membership', NULL, NULL ),
        ( 11,     'total_amount',                0, 1, 8, 'User and User Admin Only', 0, 0, NULL, 'Сума', 'Membership', NULL, NULL ),
        ( 11,     'receive_date',                1, 1, 9, 'User and User Admin Only', 0, 0, NULL, 'Отримано', 'Membership', NULL, NULL ),
-       ( 11,     'payment_instrument',          0, 0, 10, 'User and User Admin Only', 0, 0, NULL, 'Payment Method', 'Membership', NULL, NULL ),
+       ( 11,     'payment_instrument',          0, 0, 10, 'User and User Admin Only', 0, 0, NULL, 'Метод оплати', 'Membership', NULL, NULL ),
        ( 11,     'contribution_check_number',                0, 0, 11, 'User and User Admin Only', 0, 0, NULL, 'Перевірити номер', 'Membership', NULL, NULL ),
        ( 11,     'contribution_status_id',      1, 1, 12, 'User and User Admin Only', 0, 0, NULL, 'Статус платежу', 'Membership', NULL, NULL ),
        ( 11,     'soft_credit',                 0, 0, 13, 'User and User Admin Only', 0, 0, NULL, 'Завдяки кому', 'Membership', NULL, NULL ),
@@ -6378,11 +6394,11 @@ INSERT INTO civicrm_uf_field
 INSERT INTO civicrm_participant_status_type
   (id, name,                                  label,                                                       class,      is_reserved, is_active, is_counted, weight, visibility_id) VALUES
   (1,  'Registered',                          'Зареєстрований',                          'Positive', 1,           1,         1,          1,      1            ),
-  (2,  'Attended',                            'Був відвіданий',                            'Positive', 0,           1,         1,          2,      2            ),
+  (2,  'Attended',                            'Відвідав',                            'Positive', 0,           1,         1,          2,      2            ),
   (3,  'No-show',                             'Не показувати',                             'Negative', 0,           1,         0,          3,      2            ),
   (4,  'Cancelled',                           'Відмінено',                           'Negative', 1,           1,         0,          4,      2            ),
-  (5,  'Pending from pay later',              'Pending (pay later)',                 'Pending',  1,           1,         1,          5,      2            ),
-  (6,  'Pending from incomplete transaction', 'Pending (incomplete transaction)',    'Pending',  1,           1,         0,          6,      2            ),
+  (5,  'Pending from pay later',              'В очікуванні (оплата пізніше)',                 'Pending',  1,           1,         1,          5,      2            ),
+  (6,  'Pending from incomplete transaction', 'В очікуванні (незавершена транзакція)',    'Pending',  1,           1,         0,          6,      2            ),
   (7,  'On waitlist',                         'У переліку очікування',                         'Waiting',  1,           0,         0,          7,      2            ),
   (8,  'Awaiting approval',                   'Очікує схвалення',                   'Waiting',  1,           0,         1,          8,      2            ),
   (9,  'Pending from waitlist',               'В очікуванні від переліку очікування',               'Pending',  1,           0,         1,          9,      2            ),
@@ -6392,7 +6408,7 @@ INSERT INTO civicrm_participant_status_type
   (13, 'Pending in cart',                     'В очікуванні, у кошику покупок',                     'Pending',  1,           1,         0,          13,     2            ),
   (14,  'Partially paid',                      'Частково сплачено',                      'Positive', 1,           1,         1,          14,     2           ),
   (15,  'Pending refund',                      'Відшкодування у статусі очікування',                      'Positive', 1,           1,         1,          15,     2           ),
-  (16,  'Transferred',                         'Transferred',                         'Negative', 1, 1, 0, 16, 2);
+  (16,  'Transferred',                         'Передано',                         'Negative', 1, 1, 0, 16, 2);
 
 -- CRM-8150
 INSERT INTO civicrm_action_mapping
@@ -6455,7 +6471,7 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', 'Справи - Надіслати копію Діяльності',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Внески - продублювати інформаційне повідомлення про Організацію',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Внески - Підтвердження (оф-лайн)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Внески - Підтвердження (он-лайн)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_invoice_receipt', 'Внески - Інвойс',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Внески - Повторювані повідомлення Початку та Закінчення',            5, 5) ,      (@tpl_ogid_contribution, 'contribution_recurring_cancelled', 'Внески - Повторювані повідомлення про відміну',            6, 6) ,      (@tpl_ogid_contribution, 'contribution_recurring_billing', 'Внески - Повторювані оновлення платіжних реквізитів',            7, 7) ,      (@tpl_ogid_contribution, 'contribution_recurring_edit', 'Внески - Повторювані оновлення',            8, 8) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Персональна сторінка кампанії - повідомлення Адміністратора',            9, 9) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Персональна сторінка кампанії - повідомлення про зміну статусу Прихильника',            10, 10) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Персональна сторінка кампанії - Привітання Прихильника',            11, 11) ,      (@tpl_ogid_contribution, 'pcp_owner_notify', 'Персональні сторінки кампаній - Сповіщення власника',            12, 12) ,      (@tpl_ogid_contribution, 'payment_or_refund_notification', 'Додаткова платіжна квитанція або повідомлення про відшкодування',            13, 13) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Заходи - Підтвердження та Схвалення Реєстрації (оф-лайн)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Заходи - Підтвердження та Схвалення Реєстрації (он-лайн)',            2, 2) ,      (@tpl_ogid_event, 'event_registration_receipt', 'Заходи - лише підтвердження',            3, 3) ,      (@tpl_ogid_event, 'participant_cancelled', 'Заходи - Повідомлення про відміну реєстрації',            4, 4) ,      (@tpl_ogid_event, 'participant_confirm', 'Заходи - Запрошення на підтвердження реєстрації',            5, 5) ,      (@tpl_ogid_event, 'participant_expired', 'Заходи - Повідомлення про наближення терміну реєстрації',            6, 6) ,      (@tpl_ogid_event, 'participant_transferred', 'Events - Registration Transferred Notice',            7, 7) ,      (@tpl_ogid_friend, 'friend', 'Електронний лист \"Розповісти другу\"',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Членство - Підтвердження заяв та подовжень (оф-лайн) ',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Членство - Підтвердження отримання (он-лайн) ',            2, 2) ,      (@tpl_ogid_membership, 'membership_autorenew_cancelled', 'Членство - Автоматично оновити повідомлення про анулювання',            3, 3) ,      (@tpl_ogid_membership, 'membership_autorenew_billing', 'Членство - Автоматично оновити платіжну інформацію',            4, 4) ,      (@tpl_ogid_meta, 'test_preview', 'Пробний запуск - Заголовок підтвердження отримання',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Платіжні зобов\'язання - Підтвердження',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Платіжні зобов\'язання - Нагадування про сплату',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Профілі - Повідомлення Адміністратора',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Петиція - підпис додано',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Петиції - потрібна верифікація',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', 'Справи - Надіслати копію Діяльності',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Внески - продублювати інформаційне повідомлення про Організацію',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Внески - Підтвердження (оф-лайн)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Внески - Підтвердження (он-лайн)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_invoice_receipt', 'Внески - Інвойс',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Внески - Повторювані повідомлення Початку та Закінчення',            5, 5) ,      (@tpl_ogid_contribution, 'contribution_recurring_cancelled', 'Внески - Повторювані повідомлення про відміну',            6, 6) ,      (@tpl_ogid_contribution, 'contribution_recurring_billing', 'Внески - Повторювані оновлення платіжних реквізитів',            7, 7) ,      (@tpl_ogid_contribution, 'contribution_recurring_edit', 'Внески - Повторювані оновлення',            8, 8) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Персональна сторінка кампанії - повідомлення Адміністратора',            9, 9) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Персональна сторінка кампанії - повідомлення про зміну статусу Прихильника',            10, 10) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Персональна сторінка кампанії - Привітання Прихильника',            11, 11) ,      (@tpl_ogid_contribution, 'pcp_owner_notify', 'Персональні сторінки кампаній - Сповіщення власника',            12, 12) ,      (@tpl_ogid_contribution, 'payment_or_refund_notification', 'Додаткова платіжна квитанція або повідомлення про відшкодування',            13, 13) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Заходи - Підтвердження та Схвалення Реєстрації (оф-лайн)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Заходи - Підтвердження та Схвалення Реєстрації (он-лайн)',            2, 2) ,      (@tpl_ogid_event, 'event_registration_receipt', 'Заходи - лише підтвердження',            3, 3) ,      (@tpl_ogid_event, 'participant_cancelled', 'Заходи - Повідомлення про відміну реєстрації',            4, 4) ,      (@tpl_ogid_event, 'participant_confirm', 'Заходи - Запрошення на підтвердження реєстрації',            5, 5) ,      (@tpl_ogid_event, 'participant_expired', 'Заходи - Повідомлення про наближення терміну реєстрації',            6, 6) ,      (@tpl_ogid_event, 'participant_transferred', 'Події - Сповіщення про передачу реєстрації',            7, 7) ,      (@tpl_ogid_friend, 'friend', 'Електронний лист \"Розповісти другу\"',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Членство - Підтвердження заяв та подовжень (оф-лайн) ',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Членство - Підтвердження отримання (он-лайн) ',            2, 2) ,      (@tpl_ogid_membership, 'membership_autorenew_cancelled', 'Членство - Автоматично оновити повідомлення про анулювання',            3, 3) ,      (@tpl_ogid_membership, 'membership_autorenew_billing', 'Членство - Автоматично оновити платіжну інформацію',            4, 4) ,      (@tpl_ogid_meta, 'test_preview', 'Пробний запуск - Заголовок підтвердження отримання',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Платіжні зобов\'язання - Підтвердження',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Платіжні зобов\'язання - Нагадування про сплату',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Профілі - Повідомлення Адміністратора',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Петиція - підпис додано',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Петиції - потрібна верифікація',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -9305,7 +9321,7 @@ INSERT INTO civicrm_msg_template
         <tr>
           <td style = "padding-left:17px;"><font size = "1" align = "center">{$supplemental_address_2}  {$stateProvinceAbbreviation}</font></td>
           <td colspan="1"></td>
-          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_id}</font></td>
+          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_number}</font></td>
           <td>
             <font size = "1" align = "right">
               {if $domain_city}{$domain_city}{/if}
@@ -9776,7 +9792,7 @@ INSERT INTO civicrm_msg_template
         <tr>
           <td style = "padding-left:17px;"><font size = "1" align = "center">{$supplemental_address_2}  {$stateProvinceAbbreviation}</font></td>
           <td colspan="1"></td>
-          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_id}</font></td>
+          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_number}</font></td>
           <td>
             <font size = "1" align = "right">
               {if $domain_city}{$domain_city}{/if}
@@ -17518,7 +17534,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_participant_expired, 0,          1) ,      
       
       
-      ('Events - Registration Transferred Notice', '{ts 1=$event.event_title}Event Registration Transferred for %1{/ts}
+      ('Події - Сповіщення про передачу реєстрації', '{ts 1=$event.event_title}Event Registration Transferred for %1{/ts}
 ', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$to_participant}Your Event Registration has been transferred to %1.{/ts}
@@ -17694,7 +17710,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_participant_transferred, 1,          0),
-      ('Events - Registration Transferred Notice', '{ts 1=$event.event_title}Event Registration Transferred for %1{/ts}
+      ('Події - Сповіщення про передачу реєстрації', '{ts 1=$event.event_title}Event Registration Transferred for %1{/ts}
 ', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$to_participant}Your Event Registration has been transferred to %1.{/ts}
@@ -23010,8 +23026,8 @@ SELECT @financial_account_id_ap        := max(id) FROM civicrm_financial_account
 SELECT @financial_account_id_ar        := max(id) FROM civicrm_financial_account WHERE name = 'Депозитний банківський рахунок';
 SELECT @financial_account_id_pp        := max(id) FROM civicrm_financial_account WHERE name = 'Рахунки Платіжної системи';
 SELECT @financial_account_id_pr        := max(id) FROM civicrm_financial_account WHERE name = 'Премії';
-SELECT @financial_account_id_dref      := max(id) FROM civicrm_financial_account WHERE name = 'Deferred Revenue - Event Fee';
-SELECT @financial_account_id_drmd      := max(id) FROM civicrm_financial_account WHERE name = 'Deferred Revenue - Member Dues';
+SELECT @financial_account_id_dref      := max(id) FROM civicrm_financial_account WHERE name = 'Відкладений дохід - плата за подію';
+SELECT @financial_account_id_drmd      := max(id) FROM civicrm_financial_account WHERE name = 'Відкладений дохід - Членські збори';
 
 INSERT INTO `civicrm_entity_financial_account`
      ( entity_table, entity_id, account_relationship, financial_account_id )
@@ -23527,10 +23543,11 @@ SET @adminCaselastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
-    ( @domainID, 'civicrm/a/#/caseType',            'Case Types',      'Case Types',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 1 ),
-    ( @domainID, 'civicrm/admin/options/redaction_rule?reset=1',  'Redaction Rules', 'Redaction Rules', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 2 ),
-    ( @domainID, 'civicrm/admin/options/case_status?reset=1',  'Case Statuses', 'Case Statuses', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 3 ),
-    ( @domainID, 'civicrm/admin/options/encounter_medium?reset=1',  'Encounter Medium', 'Encounter Medium', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 4 );
+    ( @domainID, 'civicrm/admin/setting/case?reset=1',   'CiviCase Settings',      'CiviCase Settings',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 1 ),
+    ( @domainID, 'civicrm/a/#/caseType',            'Case Types',      'Case Types',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 2 ),
+    ( @domainID, 'civicrm/admin/options/redaction_rule?reset=1',  'Redaction Rules', 'Redaction Rules', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 3 ),
+    ( @domainID, 'civicrm/admin/options/case_status?reset=1',  'Case Statuses', 'Case Statuses', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 4 ),
+    ( @domainID, 'civicrm/admin/options/encounter_medium?reset=1',  'Encounter Medium', 'Encounter Medium', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 5 );
 
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
@@ -23904,4 +23921,4 @@ INSERT INTO `civicrm_report_instance`
 VALUES
     (  @domainID, 'Survey Details', 'survey/detail', 'Detailed report for canvassing, phone-banking, walk lists or other surveys.', 'access CiviReport', 'a:39:{s:6:"fields";a:2:{s:9:"sort_name";s:1:"1";s:6:"result";s:1:"1";}s:22:"assignee_contact_id_op";s:2:"eq";s:25:"assignee_contact_id_value";s:0:"";s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:17:"street_number_min";s:0:"";s:17:"street_number_max";s:0:"";s:16:"street_number_op";s:3:"lte";s:19:"street_number_value";s:0:"";s:14:"street_name_op";s:3:"has";s:17:"street_name_value";s:0:"";s:15:"postal_code_min";s:0:"";s:15:"postal_code_max";s:0:"";s:14:"postal_code_op";s:3:"lte";s:17:"postal_code_value";s:0:"";s:7:"city_op";s:3:"has";s:10:"city_value";s:0:"";s:20:"state_province_id_op";s:2:"in";s:23:"state_province_id_value";a:0:{}s:13:"country_id_op";s:2:"in";s:16:"country_id_value";a:0:{}s:12:"survey_id_op";s:2:"in";s:15:"survey_id_value";a:0:{}s:12:"status_id_op";s:2:"eq";s:15:"status_id_value";s:1:"1";s:11:"custom_1_op";s:2:"in";s:14:"custom_1_value";a:0:{}s:11:"custom_2_op";s:2:"in";s:14:"custom_2_value";a:0:{}s:17:"custom_3_relative";s:1:"0";s:13:"custom_3_from";s:0:"";s:11:"custom_3_to";s:0:"";s:11:"description";s:75:"Detailed report for canvassing, phone-banking, walk lists or other surveys.";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:17:"access CiviReport";s:6:"groups";s:0:"";s:9:"domain_id";i:1;}');
 
-UPDATE civicrm_domain SET version = '4.7.20';
+UPDATE civicrm_domain SET version = '4.7.25';

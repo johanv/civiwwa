@@ -577,8 +577,8 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (1627, 1010, "T", "Tucuman"),
 (1628, 1014, "1", "Burgenland"),
 (1629, 1014, "2", "Kärnten"),
-(1630, 1014, "3", "Niederosterreich"),
-(1631, 1014, "4", "Oberosterreich"),
+(1630, 1014, "3", "Niederösterreich"),
+(1631, 1014, "4", "Oberösterreich"),
 (1632, 1014, "5", "Salzburg"),
 (1633, 1014, "6", "Steiermark"),
 (1634, 1014, "7", "Tirol"),
@@ -4661,7 +4661,7 @@ INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, d
           ( 'Spouse of', 'همسر', 'Spouse of', 'همسر', 'رابطه زناشوئی', 'Individual', 'Individual', 0 ),
           ( 'Partner of', 'یار و شریک', 'Partner of', 'یار و شریک', 'رابطه ی شراکتی', 'Individual', 'Individual', 0 ),
           ( 'Sibling of', 'برادر و خواهر', 'Sibling of', 'برادر و خواهر', 'رابطه برادر و خواهری', 'Individual','Individual', 0 ),
-          ( 'Employee of', 'کارگر', 'Employer of', 'کارفرما', 'Employment relationship.','Individual','Organization', 1 ),
+          ( 'Employee of', 'کارگر', 'Employer of', 'کارفرما', 'ویرایش ارتباط','Individual','Organization', 1 ),
           ( 'Volunteer for', 'داوطلب برای', 'Volunteer is', 'داوطلب است', 'رابطه داوطلب.','Individual','Organization', 0 ),
           ( 'Head of Household for', 'سرپرست خانواده برای', 'Head of Household is', 'سرپرست خانواده هست', 'سرپرست خانواده ','Individual','Household', 1 ),
           ( 'Household Member of', 'عضو خانواده ای از', 'Household Member is', 'عضو خانواده هست', 'عضویت خانواده','Individual','Household', 1 );
@@ -4676,10 +4676,10 @@ INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, d
 -- Sample Tags
 INSERT INTO civicrm_tag( name, description, parent_id,used_for )
     VALUES
-    ( 'غیر انتفاعی', 'Any not-for-profit organization.', NULL,'civicrm_contact'),
-    ( 'گروه', 'For-profit organization.', NULL,'civicrm_contact'),
+    ( 'غیر انتفاعی', 'هر سازمان غیر انتفاعی', NULL,'civicrm_contact'),
+    ( 'گروه', 'هر سازمان غیر انتفاعی', NULL,'civicrm_contact'),
     ( 'نهاد دولتی', 'هر نهاد دولتی', NULL,'civicrm_contact'),
-    ( 'اهداکننده اصلی', 'High-value supporter of our organization.', NULL,'civicrm_contact'),
+    ( 'اهداکننده اصلی', 'حامی ارزشمند سازمان ما.', NULL,'civicrm_contact'),
     ( 'داوطلب', 'داوطلب های فعال', NULL,'civicrm_contact' );
 
 
@@ -4687,14 +4687,14 @@ INSERT INTO civicrm_tag( name, description, parent_id,used_for )
 INSERT INTO civicrm_mailing_component
     (name,component_type,subject,body_html,body_text,is_default,is_active)
 VALUES
-    ('سرفصل پستی','Header','Descriptive Title for this Header','Sample Header for HTML formatted content.','Sample Header for TEXT formatted content.',1,1),
-    ('پاورقی پست','Footer','Descriptive Title for this Footer.','Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
-    ('اشتراک \\dhl','Subscribe','درخواست مجوز ثبت نام','You have a pending subscription to the {subscribe.group} mailing list. To confirm this subscription, reply to this email or click <a href=\"{subscribe.url}\">here</a>.','You have a pending subscription to the {subscribe.group} mailing list. To confirm this subscription, reply to this email or click on this link: {subscribe.url}',1,1),
-    ('پیام خوش آمد گویی','Welcome','Your Subscription has been Activated','Welcome. Your subscription to the {welcome.group} mailing list has been activated.','Welcome. Your subscription to the {welcome.group} mailing list has been activated.',1,1),
-    ('پیام لغو ثبت نام','Unsubscribe','Un-subscribe Confirmation','You have been un-subscribed from the following groups: {unsubscribe.group}. You can re-subscribe by mailing {action.resubscribe} or clicking <a href=\"{action.resubscribeUrl}\">here</a>.','You have been un-subscribed from the following groups: {unsubscribe.group}. You can re-subscribe by mailing {action.resubscribe} or clicking ',1,1),
-    ('پیام ثبت نام مجدد','Resubscribe','تایید مجدد','You have been re-subscribed to the following groups: {resubscribe.group}. You can un-subscribe by mailing {action.unsubscribe} or clicking <a href=\"{action.unsubscribeUrl}\">here</a>.','You have been re-subscribed to the following groups: {resubscribe.group}. You can un-subscribe by mailing {action.unsubscribe} or clicking {action.unsubscribeUrl}',1,1),
-    ('پیام انتخاب','OptOut','Opt-out Confirmation','Your email address has been removed from {domain.name} mailing lists.','Your email address has been removed from {domain.name} mailing lists.',1,1),
-    ('پاسخ گوی خورکار','Reply','Please Send Inquiries to Our Contact Email Address','This is an automated reply from an un-attended mailbox. Please send any inquiries to the contact email address listed on our web-site.','This is an automated reply from an un-attended mailbox. Please send any inquiries to the contact email address listed on our web-site.',1,1);
+    ('سرفصل پستی','Header','این رویداد تعریف نشده است','سربرگ نمونه برای محتوای فرمت شده HTML.','سربرگ نمونه برای محتوای فرمت TEXT.',1,1),
+    ('پاورقی پست','Footer','یک نام توصیفی برای این قانون وارد کنید.','Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
+    ('اشتراک \\dhl','Subscribe','درخواست مجوز ثبت نام','شما توضیحی عقب افتاده دارید در فهرست پیام یک درصدی تان برای تایید این توضیح پیامی بزنید یا کلیک کنید','شما یک توضیح عقب افتاده دارید در فهرست پیام برای تایید این پیامی بزنید یا کلیکی کنید روی این لینک دو درصدی',1,1),
+    ('پیام خوش آمد گویی','Welcome','قانون انجمن شما ویرایش شده است','خوش آمدی.اشتراک شما در لیست پستی٪ 1 فعال شده است.','خوش آمدی.اشتراک شما در لیست پستی٪ 1 فعال شده است.',1,1),
+    ('پیام لغو ثبت نام','Unsubscribe','تایید مجدد','شما از این گروه اشتراکتان تمام شده میتوانید دوباره اشتراک بگیرید با ارسال پیام یا کلیک','شما اشتراک خود از این گروه ها را از دست داده اید برای بازگشت پیامی بدهید یا کلطک کنید',1,1),
+    ('پیام ثبت نام مجدد','Resubscribe','تایید مجدد','شما اشتراک خود را در گروه های زیر از دست داده اید میتوانید بازگردی با پیام یا کلیک','شما میتوانید یکی از گروه ها را انتخاب کنید میتوانید از راه پیام دادن این را تنجام دهید',1,1),
+    ('پیام انتخاب','OptOut','تاییدیه','آدرس ایمیل شما از لیست٪ 1 حذف شده است.','آدرس ایمیل شما از لیست٪ 1 حذف شده است.',1,1),
+    ('پاسخ گوی خورکار','Reply','لطفا آدرس ایمیل دوست خود را وارد کنید','این یک پاسخ خودکار از یک صندوق پستی بدون حضور است.لطفا هرگونه سؤال را به آدرس ایمیل تماس ذکر شده در وب سایت ما ارسال کنید.','این یک پاسخ خودکار از یک صندوق پستی بدون حضور است.لطفا هرگونه سؤال را به آدرس ایمیل تماس ذکر شده در وب سایت ما ارسال کنید.',1,1);
 
 
 -- contribution types
@@ -4714,7 +4714,7 @@ VALUES
    ('preferred_communication_method', 'نوع ارتباط مورد علاقه'     , NULL, 1, 1, 0),
    ('activity_type'                 , 'نوع فعالیت'                      , 'Integer', 1, 1, 0),
    ('gender'                        , 'جنسیت'                             , 'Integer', 1, 1, 0),
-   ('instant_messenger_service'     , 'Instant Messenger (IM) screen-names', NULL, 1, 1, 0),
+   ('instant_messenger_service'     , 'شناسه پیام رسان فوری', NULL, 1, 1, 0),
    ('mobile_provider'               , 'اپراتور تلفن همراه'             , NULL, 1, 1, 0),
    ('individual_prefix'             , 'پیشوند خصوصی مخاطب'        , NULL, 1, 1, 0),
    ('individual_suffix'             , 'پسوند خصوصی مخاطب'        , NULL, 1, 1, 0),
@@ -4727,7 +4727,7 @@ VALUES
    ('participant_role'              , 'وظیفه شرکت کنندگان'                   , 'Integer', 1, 1, 0),
    ('event_type'                    , 'نوع رویداد'                         , 'Integer', 1, 1, 0),
    ('contact_view_options'          , 'گزینه های دیدن مخاطب'               , NULL, 1, 1, 1),
-   ('contact_smart_group_display'   , 'Contact Smart Group View Options'   , NULL, 1, 1, 1),
+   ('contact_smart_group_display'   , 'گزینه های دیدن مخاطب'   , NULL, 1, 1, 1),
    ('contact_edit_options'          , 'گزینه های ویرایش مخاطب'               , NULL, 1, 1, 1),
    ('advanced_search_options'       , 'تنظیمات جستجو پیشرفته'            , NULL, 1, 1, 1),
    ('user_dashboard_options'        , 'گزینه های داشبورد کاربر'             , NULL, 1, 1, 1),
@@ -4741,9 +4741,9 @@ VALUES
    ('case_status'                   , 'وضعیت پرونده'                        , NULL, 1, 1, 0),
    ('participant_listing'           , 'لیست شرکت کننده ها'                , NULL, 1, 1, 0),
    ('safe_file_extension'           , 'پسوند فایل ایمن'                , NULL, 1, 1, 0),
-   ('from_email_address'            , 'From Email Address'                 , NULL, 1, 1, 0),
+   ('from_email_address'            , 'از آدرس ایمیل'                 , NULL, 1, 1, 0),
    ('mapping_type'                  , 'نوع نقشه برداری'                       , NULL, 1, 1, 1),
-   ('wysiwyg_editor'                , 'WYSIWYG Editor'                     , NULL, 1, 1, 0),
+   ('wysiwyg_editor'                , 'ویرایشگر WYSIWYG'                     , NULL, 1, 1, 0),
    ('recur_frequency_units'         , 'واحدهای تناوب تکرار'          , NULL, 1, 1, 0),
    ('phone_type'                    , 'نوع تلفن'                         , NULL, 1, 1, 0),
    ('custom_data_type'              , 'نوع داده سفارشی'                   , NULL, 1, 1, 0),
@@ -4758,16 +4758,16 @@ VALUES
    ('contact_autocomplete_options'  , 'تکمیل خودکار جستجوی مخاطب'        , NULL, 1, 1, 1),
    ('contact_reference_options'     , 'تکمیل خودکار گزینه های ارجاع به مخاطبین ', NULL, 1, 1, 1),
    ('website_type'                  , 'نوع وبسایت'                       , NULL, 1, 1, 0),
-   ('tag_used_for'                  , 'Tag Used For'                       , NULL, 1, 1, 1),
-   ('currencies_enabled'            , 'Currencies Enabled'                 , NULL, 1, 1, 0),
+   ('tag_used_for'                  , 'بکاررفته برای'                       , NULL, 1, 1, 1),
+   ('currencies_enabled'            , 'نماد و سمبل واحد پولی/ارزی'                 , NULL, 1, 1, 0),
    ('event_badge'                   , 'نشان نام رویداد'                   , NULL, 1, 1, 0),
-   ('note_privacy'                  , 'Privacy levels for notes'           , NULL, 1, 1, 0),
+   ('note_privacy'                  , 'سطوح حریم خصوصی برای یادداشت ها'           , NULL, 1, 1, 0),
    ('campaign_type'                 , 'انواع کمپین'                      , NULL, 1, 1, 0),
    ('campaign_status'               , 'وضعیت کمپین'                    , NULL, 1, 1, 0),
    ('system_extensions'             , 'افزونه های سیوی'                 , NULL, 1, 1, 0),
    ('mail_approval_status'          , 'وضعیت تایید CiviMail'           , NULL, 1, 1, 0),
    ('engagement_index'              , 'شاخص‌های نامزدی'                   , NULL, 1, 1, 0),
-   ('cg_extend_objects'             , 'Objects a custom group extends to'  , NULL, 1, 1, 0),
+   ('cg_extend_objects'             , 'بسط های گروه سفارشی'  , NULL, 1, 1, 0),
    ('paper_size'                    , 'سایز کاغذ'                         , NULL, 1, 1, 0),
    ('pdf_format'                    , 'فرمت/قالب صفحه PDF '                    , NULL, 1, 1, 0),
    ('label_format'                  , 'قالب برچسب های پستی'               , NULL, 1, 1, 0),
@@ -4789,7 +4789,9 @@ VALUES
    ('msg_mode'                      , 'حالت پیام'                       , NULL, 1, 1, 0),
    ('contact_date_reminder_options' , 'گزینه های  یادآوری تاریخ به مخاطب'      , NULL, 1, 1, 1),
    ('wysiwyg_presets'               , 'WYSIWYG Editor Presets'             , NULL, 1, 1, 0),
-   ('relative_date_filters'         , 'صافی های فرمان مربوط'              , NULL, 1, 1, 0);
+   ('relative_date_filters'         , 'صافی های فرمان مربوط'              , NULL, 1, 1, 0),
+   ('pledge_status'                 , 'وضعیت تعهد/ضمانت'                      , NULL, 1, 1, 1),
+   ('environment'                   , 'Environment'                        , NULL, 0, 1, 0);
 
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
 SELECT @option_group_id_act            := max(id) from civicrm_option_group where name = 'activity_type';
@@ -4869,6 +4871,8 @@ SELECT @option_group_id_msg_mode := max(id) from civicrm_option_group where name
 SELECT @option_group_id_contactDateMode := max(id) from civicrm_option_group where name = 'contact_date_reminder_options';
 SELECT @option_group_id_date_filter    := max(id) from civicrm_option_group where name = 'relative_date_filters';
 SELECT @option_group_id_wysiwyg_presets    := max(id) from civicrm_option_group where name = 'wysiwyg_presets';
+SELECT @option_group_id_ps    := max(id) from civicrm_option_group where name = 'pledge_status';
+SELECT @option_group_id_env    := max(id) from civicrm_option_group where name = 'environment';
 
 SELECT @contributeCompId := max(id) FROM civicrm_component where name = 'CiviContribute';
 SELECT @eventCompId      := max(id) FROM civicrm_component where name = 'CiviEvent';
@@ -4896,7 +4900,7 @@ VALUES
    (@option_group_id_act, 'همکاری و مشارکت',           6,  'Contribution',          NULL, 1, NULL, 6,  'مشارکت آنلاین یا آفلاین',                                      0, 1, 1, @contributeCompId, NULL, NULL),
    (@option_group_id_act, 'ثبت نام عضویت',      7,  'Membership Signup',     NULL, 1, NULL, 7,  'ثبت نام عضویت آنلاین یا آفلاین',                                 0, 1, 1, @memberCompId, NULL, NULL),
    (@option_group_id_act, 'تمدید عضویت',     8,  'Membership Renewal',    NULL, 1, NULL, 8,  'تمدید عضویت آنلاین یا آفلاین',                                0, 1, 1, @memberCompId, NULL, NULL),
-   (@option_group_id_act, 'با دوست تماس بگیرید',          9,  'Tell a Friend',         NULL, 1, NULL, 9,  'Send information about a contribution campaign or event to a friend.', 0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, 'با دوست تماس بگیرید',          9,  'Tell a Friend',         NULL, 1, NULL, 9,  'ارسال اطلاعات در مورد یک کمپین یا رویداد کمک به یک دوست.', 0, 1, 1, NULL, NULL, NULL),
    (@option_group_id_act, 'تعهدات اعلام وصول',  10, 'Pledge Acknowledgment', NULL, 1, NULL, 10, 'ارسال تعهدات اعلام وصول',                                          0, 1, 1, @pledgeCompId, NULL, NULL),
    (@option_group_id_act, 'یادآوری تعهد',        11, 'Pledge Reminder',       NULL, 1, NULL, 11, 'یاداوری اولیه را ارسال کن.',                                                0, 1, 1, @pledgeCompId, NULL, NULL),
    (@option_group_id_act, 'ایمیل به درون',          12, 'Inbound Email',         NULL, 1, NULL, 12, 'ایمیل به درون',                                                       0, 1, 1, NULL, NULL, NULL),
@@ -4912,7 +4916,7 @@ VALUES
    (@option_group_id_act, 'یادآوری تمدید عضویت',        17, 'Membership Renewal Reminder',  NULL, 1, NULL, 17, 'یادآوری تمدید عضویت آفلاین',                      0, 1, 1, @memberCompId, NULL, NULL),
    (@option_group_id_act, ' تغییر تاریخ شروع پرونده',             18, 'Change Case Start Date',         NULL, 0,  0, 18, '', 0, 1, 1, @caseCompId, NULL , 'fa-calendar'),
    (@option_group_id_act, 'ایمیل گروهی',                         19, 'Bulk Email',         NULL, 1, NULL, 19, 'ایمیل گروهی فرستاده شد.',                                                    0, 1, 1, NULL, NULL, NULL),
-   (@option_group_id_act, 'Assign Case Role',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-plus'),
+   (@option_group_id_act, 'قانون هویت لیست کنترل جریان ترافیک اختصاص یافت',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-plus'),
    (@option_group_id_act, 'پاک کردن نقش پرونده',                   21, 'Remove Case Role', NULL,0, 0, 21, '', 0, 1, 1, @caseCompId, NULL, 'fa-user-times'),
    (@option_group_id_act, 'چاپ یا ادغام مدرک',               22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'نامه ها و سایر مدارک قاب چاپ را بفرستید',                     0, 1, 1, NULL, NULL, 'fa-file-pdf-o'),
    (@option_group_id_act, 'ادغام پرونده',                         23, 'Merge Case', NULL, 0,  NULL, 23, '', 0, 1, 1, @caseCompId, NULL , 'fa-compress'),
@@ -4923,9 +4927,9 @@ VALUES
 
 -- Activity Types for CiviCampaign
    (@option_group_id_act, 'نظرشنجی',                             28, 'Survey', NULL,0, 0, 27, '', 0, 1, 1, @campaignCompId, NULL, NULL),
-   (@option_group_id_act, 'Canvass',                            29, 'Canvass', NULL,0, 0, 28, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, 'پرده نقاشی',                            29, 'Canvass', NULL,0, 0, 28, '', 0, 1, 1, @campaignCompId, NULL, NULL),
    (@option_group_id_act, 'تلفن بانک',                          30, 'PhoneBank', NULL,0, 0, 29, '', 0, 1, 1, @campaignCompId, NULL, NULL),
-   (@option_group_id_act, 'WalkList',                           31, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL, NULL),
+   (@option_group_id_act, 'لیست مقدم',                           31, 'WalkList', NULL,0, 0, 30, '', 0, 1, 1, @campaignCompId, NULL, NULL),
    (@option_group_id_act, ' امضاهای دادخواست',                 32, 'Petition', NULL,0, 0, 31, '', 0, 1, 1, @campaignCompId, NULL, NULL),
    (@option_group_id_act, 'انبوه پیامک',                           34, 'Mass SMS',         NULL, 1, NULL, 34, 'انبوه پیامک',                                                    0, 1, 1, NULL, NULL, NULL),
 
@@ -4946,15 +4950,15 @@ VALUES
 
 -- new sms options
    (@option_group_id_act, 'تحویل پیامک', 44, 'SMS delivery', NULL, 1, NULL, 44, 'تحویل پیامک', 0, 1, 1, NULL, NULL, NULL),
-   (@option_group_id_act, 'Inbound SMS',  45, 'Inbound SMS', NULL, 1, NULL,  45, 'Inbound SMS', 0, 1, 1, NULL, NULL, NULL),
+   (@option_group_id_act, 'ارسال پیامک',  45, 'Inbound SMS', NULL, 1, NULL,  45, 'ارسال پیامک', 0, 1, 1, NULL, NULL, NULL),
 
 
  -- Activity types for particial payment
-   (@option_group_id_act, 'پرداخت', 46, 'Payment', NULL, 1, NULL, 46, 'Additional payment recorded for event or membership fee.', 0, 1, 1, @contributeCompId, NULL, NULL),
-   (@option_group_id_act, 'مسترد', 47, 'Refund', NULL, 1, NULL, 47, 'Refund recorded for event or membership fee.', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, 'پرداخت', 46, 'Payment', NULL, 1, NULL, 46, 'پرداخت اضافی برای هزینه رویداد یا عضویت ثبت می شود.', 0, 1, 1, @contributeCompId, NULL, NULL),
+   (@option_group_id_act, 'مسترد', 47, 'Refund', NULL, 1, NULL, 47, 'پرداخت اضافی برای هزینه رویداد یا عضویت ثبت می شود.', 0, 1, 1, @contributeCompId, NULL, NULL),
 
  -- for selection changes
-   (@option_group_id_act, 'تغییر ثبت نام', 48, 'Change Registration', NULL, 1, NULL, 48, 'Changes to an existing event registration.', 0, 1, 1, @eventCompId, NULL, NULL),
+   (@option_group_id_act, 'تغییر ثبت نام', 48, 'Change Registration', NULL, 1, NULL, 48, 'لینک برای ثبت رویداد', 0, 1, 1, @eventCompId, NULL, NULL),
  -- for Print or Email Contribution Invoices
    (@option_group_id_act, 'فاکتور دانلود شده', 49, 'Downloaded Invoice',      NULL, 1, NULL, 49, 'فاکتور دانلود شده',0, 1, 1, NULL, NULL, NULL),
    (@option_group_id_act, 'فاکتور بصورت ایمیل', 50, 'Emailed Invoice',      NULL, 1, NULL, 50, 'فاکتور بصورت ایمیل',0, 1, 1, NULL, NULL, NULL),
@@ -5136,7 +5140,7 @@ VALUES
   (@option_group_id_adOpt, 'عرض جغرافیایی'          , 11, 'geo_code_1'    , NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_adOpt, 'طول جغرافیایی'         , 12, 'geo_code_2', NULL, 0, NULL, 12, NULL, 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_adOpt, 'اسم آدرس'      , 13, 'address_name', NULL, 0, NULL, 13, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_adOpt, 'Street Address Parsing', 14, 'street_address_parsing', NULL, 0, NULL, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_adOpt, 'آدرس خیابان 2', 14, 'street_address_parsing', NULL, 0, NULL, 14, NULL, 0, 0, 1, NULL, NULL, NULL),
 
   (@option_group_id_gType, 'کنترل دسترسی', 1, 'Access Control', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_gType, 'لیست پستی',   2, 'Mailing List',   NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5157,19 +5161,19 @@ VALUES
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_Proximity'            , 6, 'CRM_Contact_Form_Search_Custom_Proximity', NULL, 0, NULL, 6, 'جستجوی نزدیک به عبارت', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_EventAggregate'       , 7, 'CRM_Contact_Form_Search_Custom_EventAggregate', NULL, 0, NULL, 7, 'رویداد مشارکت غیرمستقیم', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ActivitySearch'       , 8, 'CRM_Contact_Form_Search_Custom_ActivitySearch', NULL, 0, NULL, 8, 'جستجوی فعالیت', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSet'             , 9, 'CRM_Contact_Form_Search_Custom_PriceSet', NULL, 0, NULL, 9, 'Price Set Details for Event Participants', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSet'             , 9, 'CRM_Contact_Form_Search_Custom_PriceSet', NULL, 0, NULL, 9, 'بروز رسانی برنامه ها برای شرکت در رویدادها', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ZipCodeRange'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, 'محدوده کد پستی', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_DateAdded'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, 'تاریخ اضافه شده به سامانه مدیریت ارتباط با مشتریان', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_MultipleValues'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, 'Custom Group Multiple Values Listing', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_MultipleValues'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, 'لیست زیر انواع گروه سفارشی', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContribSYBNT'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, 'مشارکت ها در سال x و نه در سال y اتفاق افتاد', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_TagContributions'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, 'مقدارمشارکت را توسط برچسب بیابید', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_FullText'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, 'جستجوی تمام متن', 0, 0, 1, NULL, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , 'گزارش موسسان (خلاصه)',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  'تهیه فهرستی از اطلاعات آدرس و تلفن مووسسان برای ثبت در سوابق آنها در سیستم', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'گزارش موسسان (جزئیات)',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  'Provides contact-related information on contributions, memberships, events and activities.',   0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'گزارش جزئیات فعالیت',                 'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  'Provides a list of constituent activity including activity statistics for one/all contacts during a given date range(required)', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'پیاده روی /گزارش فهرست تلفن ',                'walklist',                       'CRM_Report_Form_Walklist_Walklist',                       NULL, 0, NULL, 4,  'Provides a detailed report for your walk/phonelist for targeted contacts', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report , 'گزارش موسسان (جزئیات)',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  'اطلاعات مربوط به مخاطبین را در رابطه با اشتراک ها، عضویت ها، رویدادها و فعالیت ها فراهم می کند.',   0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'گزارش جزئیات فعالیت',                 'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  'تهیه فهرستی از فعالیت های مووسسان از جمله آمار فعالیت ها مربوط به یک/کلیه مخاطبین در طول یک محدوده زمانی مشخص (اجباری)', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'پیاده روی /گزارش فهرست تلفن ',                'walklist',                       'CRM_Report_Form_Walklist_Walklist',                       NULL, 0, NULL, 4,  'گزارش دقیق برای پیاده روی / تماس تلفنی شما را برای مخاطبین هدفمند فراهم می کند.', 0, 0, 0, NULL, NULL, NULL),
   (@option_group_id_report , 'گزارش کارفرما جاری',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  'تهیه لیستی دقیق از روابط کارکنان و کارفرما همراه با جزئیات اشتغال و تاریخ استخدام', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report , 'گزارش خلاصه سهام',             'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  'گروه ها و مجموع اشتراک ها با معیارهایی از جمله مخاطب/تماس، مدت زمان، نوع مشارکت، محل زندگی مشترک، و ....', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش جزئیات سهام',              'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  'لیست اشتراک های خاص با معیارهایی از جمله مخاطب/تماس، مدت زمان، نوع مشارکت، محل زندگی مشترک و غیره. خلاصه گزارش مشارکت ها برای جزئیات بیشتر به این گزارش ارجاع می دهد. ', 0, 0, 1, @contributeCompId, NULL, NULL),
@@ -5177,55 +5181,55 @@ VALUES
   (@option_group_id_report , 'گزارش مشارکت توسط سازمان',    'contribute/organizationSummary', 'CRM_Report_Form_Contribute_OrganizationSummary', NULL, 0, NULL, 9,  'نمایش لیستی کامل از مشارکت های گروه بندی شده توسط سازمان، که شامل مشارکت کارکنان برای سازمان نیز می شود.', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش مشارکت توسط اعضای داخلی',       'contribute/householdSummary',    'CRM_Report_Form_Contribute_HouseholdSummary',    NULL, 0, NULL, 10, 'نمایش لیستی کامل از مشارکت های گروه بندی شده توسط خانوارها، که شامل مشارکت اعضای خانوارها نیز می شود', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش برترین اهدا کنندگان',                       'contribute/topDonor',            'CRM_Report_Form_Contribute_TopDonor',            NULL, 0, NULL, 11, 'این گزینه لیستی از اهداکنندگان/مشترکان  برتر را در طول یک دوره زمانی مشخص ارائه می کند.شما می توانید  تعداد این اهدا کنندگان/مشترکان را  تعیین کنید (به عنوام مثال، 100 نفر اول از میان کلیه اهداکنندگان).', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report , 'SYBUNT Report',                           'contribute/sybunt',              'CRM_Report_Form_Contribute_Sybunt',              NULL, 0, NULL, 12, 'SYBUNT/سیبانت (برخی  سال ها اما  نه سال فعلی). این گزینه اعضایی را مشخص می کند که در گذشته مشارکت داشته اند ولی در طول مدت زمان خاصی که شما مشخص کرده اید مشارکتی نداشته اند. ', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report , 'LYBUNT Report',                           'contribute/lybunt',              'CRM_Report_Form_Contribute_Lybunt',              NULL, 0, NULL, 13, 'LYBUNT means last year but not this year. Provides a list of constituents who donated last year but did not donate during the time period you specify as the current year.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report , 'Soft Credit Report',                      'contribute/softcredit',          'CRM_Report_Form_Contribute_SoftCredit',          NULL, 0, NULL, 14, 'این گزینه مشارکت هایی را نشان می دهد که مخاطبین به طور غیر مستقیم از سایر مخاطبین دریافت کرده اند.', 0, 0, 1,@contributeCompId, NULL, NULL),
+  (@option_group_id_report , 'گزارش دقیق برای پیاده روی / تماس تلفنی شما را برای مخاطبین هدفمند فراهم می کند.',                           'contribute/sybunt',              'CRM_Report_Form_Contribute_Sybunt',              NULL, 0, NULL, 12, 'SYBUNT/سیبانت (برخی  سال ها اما  نه سال فعلی). این گزینه اعضایی را مشخص می کند که در گذشته مشارکت داشته اند ولی در طول مدت زمان خاصی که شما مشخص کرده اید مشارکتی نداشته اند. ', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , 'گزارش',                           'contribute/lybunt',              'CRM_Report_Form_Contribute_Lybunt',              NULL, 0, NULL, 13, 'لیبانت/LYBUNT (سال گذشته اما نه سال فعلی). این گزینه اعضایی را مشخص می کند که در سال گذشته مشارکت داشته اند ولی در طول مدت زمان خاصی که شما مشخص کرده اید مشارکتی نداشته اند.', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , 'شمار اعتبار مشارکات غیرمستقیم',                      'contribute/softcredit',          'CRM_Report_Form_Contribute_SoftCredit',          NULL, 0, NULL, 14, 'این گزینه مشارکت هایی را نشان می دهد که مخاطبین به طور غیر مستقیم از سایر مخاطبین دریافت کرده اند.', 0, 0, 1,@contributeCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش عضویت (خلاصه)',             'member/summary',                 'CRM_Report_Form_Member_Summary',                 NULL, 0, NULL, 15, 'خلاصه ای از وضعیت عضویت بر اساس نوع و تاریخ عضویت', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش عضویت (جزئیات)',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, 'این گزینه لیستی از اعضای را به همراه وضعیت عضویت و جزئیات عضویت آنها  (تاریخ عضویت، تاریخ شروع، تاریخ پایان) ارائه می دهد.این گزینه  میزان مشارکت (پرداخت های) هر عضو را نیز نمایش می دهد.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش عضویت (سپری شده)',              'member/lapse',                   'CRM_Report_Form_Member_Lapse',                   NULL, 0, NULL, 17, 'این گزینه لیستی از عضویت هایی را ارائه می دهد که تا قبل از تاریخ مشخص شده توسط شما به پایان خواهند رسید/منقضی خواهند شد.', 0, 0, 1, @memberCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش شرکن کنندگان رویداد (List)',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, 'ارائه لیستی از شرکت کنندگان در یک رویداد', 0, 0, 1, @eventCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش درآمد رخداد (خلاصه)',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, 'این گزینه گزارشی کلی از میزان درآمد رویدادها را ارائه می دهد. همچنین می توانید اطلاعات کلیدی مانند شناسه رویداد، ثبت، حضور و مشارکت، و نیز درآمد حاصله را برای تعیین میزان موفقیت یک رویداد  به این گزینه اضافه کنید.', 0, 0, 1, @eventCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش درآمد رخداد (جزئیات)',            'event/income',                   'CRM_Report_Form_Event_Income',                   NULL, 0, NULL, 20, 'این گزینه در تجزیه و تحلیل درآمد ایجاد شده توسط یک رویداد به شما کمک می کند  . این گزارش می تواند شامل جزئیاتی باشد که بر اساس نوع شرکت کنندگان، وضعیت و شیوه پرداخت دسته بندی شده اند.', 0, 0, 1, @eventCompId, NULL, NULL),
-  (@option_group_id_report , 'گزارش مفصل تعهدات',                    'pledge/detail',                  'CRM_Report_Form_Pledge_Detail',                  NULL, 0, NULL, 21, 'List of pledges including amount pledged, pledge status, next payment date, balance due, total amount paid etc.', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , 'گزارش مفصل تعهدات',                    'pledge/detail',                  'CRM_Report_Form_Pledge_Detail',                  NULL, 0, NULL, 21, 'لیست تعهدات شامل مبلغ وعده داده شده، وضعیت تعهد، تاریخ پرداخت بعدی، تعرفه، مبلغ کلی و غیره', 0, 0, 1, @pledgeCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش بیعانه های مشخص شده اما پرداخت نشده',             'pledge/pbnp',                    'CRM_Report_Form_Pledge_Pbnp',                    NULL, 0, NULL, 22, 'گزارش بیعانه های مشخص شده اما پرداخت نشده', 0, 0, 1, @pledgeCompId, NULL, NULL),
   (@option_group_id_report , 'گزارش ارتباطات',                     'contact/relationship',           'CRM_Report_Form_Contact_Relationship',           NULL, 0, NULL, 23, 'گزارش ارتباطات', 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_report , 'گزارش خلاصه پرونده',                     'case/summary',                   'CRM_Report_Form_Case_Summary',                   NULL, 0, NULL, 24, 'Provides a summary of cases and their duration by date range, status, staff member and / or case role.', 0, 0, 1, @caseCompId, NULL, NULL),
-  (@option_group_id_report , 'گزارش زمان پرونده ',                  'case/timespent',                 'CRM_Report_Form_Case_TimeSpent',                 NULL, 0, NULL, 25, 'Aggregates time spent on case and / or non-case activities by activity type and contact.', 0, 0, 1, @caseCompId, NULL, NULL),
-  (@option_group_id_report , 'تماس با جمعیت گزارش',             'case/demographics',              'CRM_Report_Form_Case_Demographics',              NULL, 0, NULL, 26, 'Demographic breakdown for case clients (and or non-case contacts) in your database. Includes custom contact fields.', 0, 0, 1, @caseCompId, NULL, NULL),
-  (@option_group_id_report , 'گزارش ورود پایگاه داده',                     'contact/log',                    'CRM_Report_Form_Contact_Log',                    NULL, 0, NULL, 27, 'Log of contact and activity records created or updated in a given date range.', 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_report , 'گزارش خلاصه پرونده',                     'case/summary',                   'CRM_Report_Form_Case_Summary',                   NULL, 0, NULL, 24, 'خلاصه ای از موارد و مدت زمان آنها را با محدوده تاریخ، وضعیت، کارمند و / یا نقش پرونده ارائه می دهد.', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report , 'گزارش زمان پرونده ',                  'case/timespent',                 'CRM_Report_Form_Case_TimeSpent',                 NULL, 0, NULL, 25, 'زمانهای جمعآوری شده در فعالیتهای مورد و / یا غیرقانونی با نوع فعالیت و تماس با آنها صرف میشوند.', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report , 'تماس با جمعیت گزارش',             'case/demographics',              'CRM_Report_Form_Case_Demographics',              NULL, 0, NULL, 26, 'برای موارد شکست هورده و شمارگان در دیتایتان میتوانید زمینه ی شمارگان را وارد کنید', 0, 0, 1, @caseCompId, NULL, NULL),
+  (@option_group_id_report , 'گزارش ورود پایگاه داده',                     'contact/log',                    'CRM_Report_Form_Contact_Log',                    NULL, 0, NULL, 27, 'فعالیت ثبت شده ی شمارگان درست یا بروزرسانی شده در دیتا', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report , 'گزارش خلاصه فعالیت',                 'activitySummary',                'CRM_Report_Form_ActivitySummary',                NULL, 0, NULL, 28, 'این گزینه آمار فعالیت ها را بر اساس نوع/تاریخ آنها ارائه می دهد.', 0, 0, 1, NULL, NULL, NULL),
   (@option_group_id_report, 'گزارش معاملات حسابداری',          'contribute/bookkeeping',         'CRM_Report_Form_Contribute_Bookkeeping',         NULL, 0, 0, 29,    'نمایش گزارش معاملات حسابداری', 0, 0, 1, 2, NULL, NULL),
   (@option_group_id_report , 'گزارش هدایا (جزئیات)', 'grant/detail', 'CRM_Report_Form_Grant_Detail', NULL, 0, 0, 30, 'جزییات گزارش کمک های مالی/هدایا', 0, 0, 1, @grantCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش لیست تعداد شرکت کنندگان ', 'event/participantlist', 'CRM_Report_Form_Event_ParticipantListCount', NULL, 0, 0, 31, 'لیست شرکت کنندگان با تعداد شرکت کننده را نشان می دهد.', 0, 0, 1, @eventCompId, NULL, NULL),
-  (@option_group_id_report, 'تعداد درآمد خلاصه گزارش', 'event/incomesummary', 'CRM_Report_Form_Event_IncomeCountSummary', NULL, 0, 0, 32, 'Shows the Income Summary of events with Count.', 0, 0, 1, @eventCompId, NULL, NULL),
+  (@option_group_id_report, 'تعداد درآمد خلاصه گزارش', 'event/incomesummary', 'CRM_Report_Form_Event_IncomeCountSummary', NULL, 0, 0, 32, 'نشان دهنده ی وارو شدن خلاصه وقایع با شمارش', 0, 0, 1, @eventCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش جزییات پرونده', 'case/detail', 'CRM_Report_Form_Case_Detail', NULL, 0, 0, 33, 'جزئیات پرونده', 0, 0, 1, @caseCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش برگشت ای میل', 'Mailing/bounce', 'CRM_Report_Form_Mailing_Bounce', NULL, 0, NULL, 34, 'گزارش برگشت ایمیل ها', 0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش خلاصه میل', 'Mailing/summary', 'CRM_Report_Form_Mailing_Summary', NULL, 0, NULL, 35, 'خلاصه آمار ایمیل ها', 0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش باز شدن ایمیل', 'Mailing/opened', 'CRM_Report_Form_Mailing_Opened', NULL, 0, NULL, 36, 'این گزینه مخاطبانی را نشان می دهد که ایمیل ها را باز کرده اند.', 0, 0, 1, @mailCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش  ارسال ها از طریق کلیک', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'نمایش کلیک ها از هر نامه نگاری', 0, 0, 1, @mailCompId, NULL, NULL),
-  (@option_group_id_report, 'گزارش ورود مخاطبین به سیستم (خلاصه)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'Contact modification report for the logging infrastructure (summary).', 0, 0, 0, NULL, NULL, NULL),
-  (@option_group_id_report, 'گزارش تماس ورود به سیستم (جزئیات)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'Contact modification report for the logging infrastructure (detail).', 0, 0, 0, NULL, NULL, NULL),
-  (@option_group_id_report, 'گزارش ورود به سیستم (خلاصه)', 'logging/contribute/summary', 'CRM_Report_Form_Contribute_LoggingSummary', NULL, 0, NULL, 40, 'Contribute modification report for the logging infrastructure (summary).', 0, 0, 0, @contributeCompId, NULL, NULL),
-  (@option_group_id_report, 'گزارش ورود به سیستم (جزئیات)', 'logging/contribute/detail', 'CRM_Report_Form_Contribute_LoggingDetail', NULL, 0, NULL, 41, 'Contribute modification report for the logging infrastructure (detail).', 0, 0, 0, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'گزارش ورود مخاطبین به سیستم (خلاصه)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'اخبار برای وارد شدن بصورت خلاصه', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report, 'گزارش تماس ورود به سیستم (جزئیات)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'اخبار شمارش برای وارد شدن', 0, 0, 0, NULL, NULL, NULL),
+  (@option_group_id_report, 'گزارش ورود به سیستم (خلاصه)', 'logging/contribute/summary', 'CRM_Report_Form_Contribute_LoggingSummary', NULL, 0, NULL, 40, 'اخبار برای ورود', 0, 0, 0, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'گزارش ورود به سیستم (جزئیات)', 'logging/contribute/detail', 'CRM_Report_Form_Contribute_LoggingDetail', NULL, 0, NULL, 41, 'مشترک شدن در اخبار', 0, 0, 0, @contributeCompId, NULL, NULL),
   (@option_group_id_report, 'گزارش هدایا (آمار)', 'grant/statistics', 'CRM_Report_Form_Grant_Statistics', NULL, 0, NULL, 42, 'آمار برای کمک های مالی نشان می دهد.', 0, 0, 1, @grantCompId, NULL, NULL),
-  (@option_group_id_report, 'گزارش بررسی (جزئیات)',    'survey/detail', 'CRM_Report_Form_Campaign_SurveyDetails',  NULL, 0, NULL, 43, 'Detailed report for canvassing, phone-banking, walk lists or other surveys.', 0, 0, 1, @campaignCompId, NULL, NULL),
-  (@option_group_id_report, 'کمپین شخصی صفحه گزارش', 'contribute/pcp', 'CRM_Report_Form_Contribute_PCP', NULL, 0, NULL, 44, 'Summarizes amount raised and number of contributors for each Personal Campaign Page.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report , ' خلاصه گزارش تعهد', 'pledge/summary', 'CRM_Report_Form_Pledge_Summary', NULL, 0, NULL, 45, 'Groups and totals pledges by criteria including contact, time period, pledge status, location, etc.', 0, 0, 1, @pledgeCompId, NULL, NULL),
-  (@option_group_id_report , 'مصالح سهم رابطه',                   'contribute/history',              'CRM_Report_Form_Contribute_History',              NULL, 0, NULL, 46,  'List contact\'s donation history, grouped by year, along with contributions attributed to any of the contact\'s related contacts.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report,  'گزارش جزییات پیام',                                            'mailing/detail',     'CRM_Report_Form_Mailing_Detail',          NULL, 0, NULL, 47,  'Provides reporting on Intended and Successful Deliveries, Unsubscribes and Opt-outs, Replies and Forwards.',   0, 0, 1, @mailCompId, NULL, NULL),
-  (@option_group_id_report, 'جزییات عضویت و مشارکت', 'member/contributionDetail', 'CRM_Report_Form_Member_ContributionDetail', NULL, 0, NULL, 48, 'Contribution details for any type of contribution, plus associated membership information for contributions which are in payment for memberships.', 0, 0, 1, @memberCompId, NULL, NULL),
-  (@option_group_id_report, 'گزارش مشارکت مکرر', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, 'Provides information about the status of recurring contributions', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report, 'گزارش بررسی (جزئیات)',    'survey/detail', 'CRM_Report_Form_Campaign_SurveyDetails',  NULL, 0, NULL, 43, 'اخبار با حزییات برای گوشی یا دیگر فهرستها', 0, 0, 1, @campaignCompId, NULL, NULL),
+  (@option_group_id_report, 'کمپین شخصی صفحه گزارش', 'contribute/pcp', 'CRM_Report_Form_Contribute_PCP', NULL, 0, NULL, 44, 'خلاصه برداری از شماره و ارتباط برای هر صفحه شخصی ای', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report , ' خلاصه گزارش تعهد', 'pledge/summary', 'CRM_Report_Form_Pledge_Summary', NULL, 0, NULL, 45, 'گروه ها و کل اشتراک ها را براساس معیارها شامل مخاطب، دوره زمانی، وضعیت تعهد، محل سکونت و ...', 0, 0, 1, @pledgeCompId, NULL, NULL),
+  (@option_group_id_report , 'مصالح سهم رابطه',                   'contribute/history',              'CRM_Report_Form_Contribute_History',              NULL, 0, NULL, 46,  'فهرست شماره ها و تاریخ گروه بندی شده هر سال با ارتباطات ', 0, 0, 1, @contributeCompId, NULL, NULL),
+  (@option_group_id_report,  'گزارش جزییات پیام',                                            'mailing/detail',     'CRM_Report_Form_Mailing_Detail',          NULL, 0, NULL, 47,  'اخبار شامل اتفاقات رسیده شده',   0, 0, 1, @mailCompId, NULL, NULL),
+  (@option_group_id_report, 'جزییات عضویت و مشارکت', 'member/contributionDetail', 'CRM_Report_Form_Member_ContributionDetail', NULL, 0, NULL, 48, 'جزییات مشترک برای هر نوعی علاوه بر عضویت برای فعالیت برای عضویت ها', 0, 0, 1, @memberCompId, NULL, NULL),
+  (@option_group_id_report, 'گزارش مشارکت مکرر', 'contribute/recur', 'CRM_Report_Form_Contribute_Recur',               NULL, 0, NULL, 49, 'اطلاعات را شامل میشود ', 0, 0, 1, @contributeCompId, NULL, NULL),
   (@option_group_id_report, 'خلاصه مشارکت های مکرر', 'contribute/recursummary', 'CRM_Report_Form_Contribute_RecurSummary',               NULL, 0, NULL, 49, 'Provides simple summary for each payment instrument for which there are recurring contributions (e.g. Credit Card, Standing Order, Direct Debit, etc., NULL), showing within a given date range.', 0, 0, 1, @contributeCompId, NULL, NULL),
-  (@option_group_id_report, 'جزئیات دیرکرد درآمد', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'گزارش جزئیات دیرکرد درآمد', 0, 0, 1, @contributeCompId, NULL, NULL), 
+  (@option_group_id_report, 'جزئیات دیرکرد درآمد', 'contribute/deferredrevenue', 'CRM_Report_Form_Contribute_DeferredRevenue', NULL, 0, NULL, 50, 'گزارش جزئیات دیرکرد درآمد', 0, 0, 1, @contributeCompId, NULL, NULL),
 
-  (@option_group_id_acs, 'زمان بندی شده',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'تکمیل شده',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'لغو شد',  3, 'Cancelled',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'زمان بندی شده',    1, 'Scheduled',    NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'تکمیل شده',    2, 'Completed',    NULL, 1, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'لغو شد',    3, 'Cancelled',    NULL, 2, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_acs, 'پیام بگذارید', 4, 'Left Message', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'غیر قابل دسترسی', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'الزامی نیست',  6, 'Not Required',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'در دسترس',  7, 'Available',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
-  (@option_group_id_acs, 'بدون نشان دادن',  8, 'No_show',  NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'غیر قابل دسترسی',  5, 'Unreachable',  NULL, 2, NULL, 5, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'الزامی نیست', 6, 'Not Required', NULL, 2, NULL, 6, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'در دسترس',    7, 'Available',    NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL, NULL),
+  (@option_group_id_acs, 'بدون نشان دادن',      8, 'No_show',      NULL, 2, NULL, 8, NULL, 0, 0, 1, NULL, NULL, NULL),
 
   (@option_group_id_cas, 'در حال پردازش' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL, NULL),
   (@option_group_id_cas, 'حل شده', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
@@ -5438,7 +5442,7 @@ VALUES
   (@option_group_id_paperSize, 'کاغذ سایز SRA4',        '{"metric":"pt","width":637.8,"height":907.09}',    'sra4',        NULL, NULL, 0, 62, NULL, 0, 0, 1, NULL, NULL, NULL),
 
 -- activity_contacts
-   (@option_group_id_aco, 'Activity Assignees', 1, 'Activity Assignees', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
+   (@option_group_id_aco, 'وارد شدن فعالیتها', 1, 'Activity Assignees', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_aco, 'منبع فعالیت', 2, 'Activity Source', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_aco, 'اهداف فعالیت', 3, 'Activity Targets', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL, NULL),
 
@@ -5542,6 +5546,11 @@ VALUES
 (@option_group_id_wysiwyg_presets, 'چاپار',  '2', 'civimail',  NULL, NULL, 0, 2, NULL, 0, 1, 1, @mailCompId, NULL, NULL),
 (@option_group_id_wysiwyg_presets, 'رویداد', '3', 'civievent', NULL, NULL, 0, 3, NULL, 0, 1, 1, @eventCompId, NULL, NULL),
 
+-- Environment
+(@option_group_id_env, 'Production', 'Production', 'Production', NULL, NULL, 1, 1, 'Production Environment', 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_env, 'Staging', 'Staging', 'Staging', NULL, NULL, 0, 2, 'Staging Environment', 0, 1, 1, NULL, NULL, NULL),
+(@option_group_id_env, 'Development', 'Development', 'Development', NULL, NULL, 0, 3, 'Development Environment', 0, 1, 1, NULL, NULL, NULL),
+
 -- Relative Date Filters
    (@option_group_id_date_filter, 'امروز', 'this.day', 'this.day', NULL, NULL, NULL,1, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'این هفته', 'this.week', 'this.week', NULL, NULL, NULL,2, NULL, 0, 0, 1, NULL, NULL, NULL),
@@ -5604,7 +5613,14 @@ VALUES
    (@option_group_id_date_filter, 'از آخر هفته پیش', 'greater_previous.week', 'greater_previous.week', NULL, NULL, NULL,59, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'از انتهای ماه پیش', 'greater_previous.month', 'greater_previous.month', NULL, NULL, NULL,60, NULL, 0, 0, 1, NULL, NULL, NULL),
    (@option_group_id_date_filter, 'از پایان شش ماهه قبل', 'greater_previous.quarter', 'greater_previous.quarter', NULL, NULL, NULL,61, NULL, 0, 0, 1, NULL, NULL, NULL),
-   (@option_group_id_date_filter, 'از پایان پارسال', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL);
+   (@option_group_id_date_filter, 'از پایان پارسال', 'greater_previous.year', 'greater_previous.year', NULL, NULL, NULL,62, NULL, 0, 0, 1, NULL, NULL, NULL),
+
+-- Pledge Status
+  (@option_group_id_ps, 'تکمیل شده'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'معطل'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'لغو شد'  , 3, 'Cancelled'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'در حال پیشرفت', 5, 'In Progress', NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL, NULL),
+  (@option_group_id_ps, 'دارای دیرکرد، گذشته از موعد'    , 6, 'Overdue'    , NULL, 0, NULL, 5, NULL, 0, 1, 1, NULL, NULL, NULL);
 
 -- financial accounts
 SELECT @opval := value FROM civicrm_option_value WHERE name = 'Revenue' and option_group_id = @option_group_id_fat;
@@ -5807,7 +5823,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'os_GE', 'os', 'کاسکی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'pa_IN', 'pa', 'پنجابی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'pi_KH', 'pi', 'پالی', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'fa_IR', 'fa', 'پارسی(ایران)', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'fa_IR', 'fa', 'پارسی(ایران)', @counter := @counter + 1),
   (@option_group_id_languages, 0, 1, 'pl_PL', 'pl', 'لهستانی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ps_AF', 'ps', 'پشتو', @counter := @counter + 1),
   (@option_group_id_languages, 0, 1, 'pt_BR', 'pt', 'پرتغالی(برزیل)', @counter := @counter + 1),
@@ -5823,7 +5839,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'se_NO', 'se', 'سامی شمالی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sm_WS', 'sm', 'ساموآیی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sg_CF', 'sg', 'سانگو', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'sr_RS', 'sr', 'صربی', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'sr_RS', 'sr', 'صربی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'gd_GB', 'gd', 'اسکاتلندی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'sn_ZW', 'sn', 'شونا', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'si_LK', 'si', 'سینهالایی', @counter := @counter + 1),
@@ -5854,7 +5870,7 @@ VALUES
   (@option_group_id_languages, 0, 0, 'tw_GH', 'tw', 'تویی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ty_PF', 'ty', 'تاهیتی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ug_CN', 'ug', 'اویگور', @counter := @counter + 1),
-  (@option_group_id_languages, 0, 0, 'uk_UA', 'uk', 'اکراینی', @counter := @counter + 1),
+  (@option_group_id_languages, 0, 1, 'uk_UA', 'uk', 'اکراینی', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'ur_PK', 'ur', 'اردو', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 'uz_UZ', 'uz', 'ازبک', @counter := @counter + 1),
   (@option_group_id_languages, 0, 0, 've_ZA', 've', 'وندا', @counter := @counter + 1),
@@ -5902,11 +5918,11 @@ VALUES
 INSERT INTO `civicrm_preferences_date`
   (name, start, end, date_format, time_format, description)
 VALUES
-  ( 'activityDate'    ,  20, 10, '',    '',  'Date for activities including contributions: receive, receipt, cancel. membership: join, start, renew. case: start, end.'         ),
+  ( 'activityDate'    ,  20, 10, '',    '',  'تاریخ برای فعالیت ها از جمله مشارکت: دریافت، دریافت، لغو. عضویت: پیوستن، شروع، تمدید مورد: شروع، پایان'         ),
   ( 'activityDateTime',  20, 10, '',     1,  'تاریخ و ساعت برای فعالیت:جدول بندی شده.مشارکت:ثبت شده'                                                                  ),
   ( 'birth'           , 100,  0, '',    '',  'تاریخ تولد و وفات.فقط  فیلدهای سال ماه و روز قابل قبول هستند'                                                         ),
   ( 'creditCard'      ,   0, 10, 'M Y', '',  'ماه و سال تاریخ انقضا کارت اعتباری'                                                                                  ),
-  ( 'custom'          ,  20, 20, '',    '',  'Uses date range passed in by form field. Can pass in a posix date part parameter. Start and end offsets defined here are ignored.'),
+  ( 'custom'          ,  20, 20, '',    '',  'از محدوده زمانی استفاده شده توسط فیلد فرم استفاده می شود. می توانید یک پارامتر بخشی از زمان ارسال را ارسال کنید. شروع و پایان تعرفه های تعریف شده در اینجا نادیده گرفته می شوند.'),
   ( 'mailing'         ,   0,  1, '',    '',  'تاریخ و ساعت.بکار رفته در جدول بندی پستی'                                                                                     ),
   ( 'searchDate'      ,  20, 20, '',    '',  'بکار رفته در فرم های جستجو و رابطه'                                                                                      );
 
@@ -9305,7 +9321,7 @@ INSERT INTO civicrm_msg_template
         <tr>
           <td style = "padding-left:17px;"><font size = "1" align = "center">{$supplemental_address_2}  {$stateProvinceAbbreviation}</font></td>
           <td colspan="1"></td>
-          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_id}</font></td>
+          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_number}</font></td>
           <td>
             <font size = "1" align = "right">
               {if $domain_city}{$domain_city}{/if}
@@ -9776,7 +9792,7 @@ INSERT INTO civicrm_msg_template
         <tr>
           <td style = "padding-left:17px;"><font size = "1" align = "center">{$supplemental_address_2}  {$stateProvinceAbbreviation}</font></td>
           <td colspan="1"></td>
-          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_id}</font></td>
+          <td style = "padding-left:70px;"><font size = "1" align = "right">{$invoice_number}</font></td>
           <td>
             <font size = "1" align = "right">
               {if $domain_city}{$domain_city}{/if}
@@ -23527,10 +23543,11 @@ SET @adminCaselastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
-    ( @domainID, 'civicrm/a/#/caseType',            'Case Types',      'Case Types',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 1 ),
-    ( @domainID, 'civicrm/admin/options/redaction_rule?reset=1',  'Redaction Rules', 'Redaction Rules', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 2 ),
-    ( @domainID, 'civicrm/admin/options/case_status?reset=1',  'Case Statuses', 'Case Statuses', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 3 ),
-    ( @domainID, 'civicrm/admin/options/encounter_medium?reset=1',  'Encounter Medium', 'Encounter Medium', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 4 );
+    ( @domainID, 'civicrm/admin/setting/case?reset=1',   'CiviCase Settings',      'CiviCase Settings',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 1 ),
+    ( @domainID, 'civicrm/a/#/caseType',            'Case Types',      'Case Types',      'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 2 ),
+    ( @domainID, 'civicrm/admin/options/redaction_rule?reset=1',  'Redaction Rules', 'Redaction Rules', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 3 ),
+    ( @domainID, 'civicrm/admin/options/case_status?reset=1',  'Case Statuses', 'Case Statuses', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 4 ),
+    ( @domainID, 'civicrm/admin/options/encounter_medium?reset=1',  'Encounter Medium', 'Encounter Medium', 'administer CiviCase', NULL, @adminCaselastID, '1', NULL, 5 );
 
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
@@ -23904,4 +23921,4 @@ INSERT INTO `civicrm_report_instance`
 VALUES
     (  @domainID, 'Survey Details', 'survey/detail', 'Detailed report for canvassing, phone-banking, walk lists or other surveys.', 'access CiviReport', 'a:39:{s:6:"fields";a:2:{s:9:"sort_name";s:1:"1";s:6:"result";s:1:"1";}s:22:"assignee_contact_id_op";s:2:"eq";s:25:"assignee_contact_id_value";s:0:"";s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:17:"street_number_min";s:0:"";s:17:"street_number_max";s:0:"";s:16:"street_number_op";s:3:"lte";s:19:"street_number_value";s:0:"";s:14:"street_name_op";s:3:"has";s:17:"street_name_value";s:0:"";s:15:"postal_code_min";s:0:"";s:15:"postal_code_max";s:0:"";s:14:"postal_code_op";s:3:"lte";s:17:"postal_code_value";s:0:"";s:7:"city_op";s:3:"has";s:10:"city_value";s:0:"";s:20:"state_province_id_op";s:2:"in";s:23:"state_province_id_value";a:0:{}s:13:"country_id_op";s:2:"in";s:16:"country_id_value";a:0:{}s:12:"survey_id_op";s:2:"in";s:15:"survey_id_value";a:0:{}s:12:"status_id_op";s:2:"eq";s:15:"status_id_value";s:1:"1";s:11:"custom_1_op";s:2:"in";s:14:"custom_1_value";a:0:{}s:11:"custom_2_op";s:2:"in";s:14:"custom_2_value";a:0:{}s:17:"custom_3_relative";s:1:"0";s:13:"custom_3_from";s:0:"";s:11:"custom_3_to";s:0:"";s:11:"description";s:75:"Detailed report for canvassing, phone-banking, walk lists or other surveys.";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:17:"access CiviReport";s:6:"groups";s:0:"";s:9:"domain_id";i:1;}');
 
-UPDATE civicrm_domain SET version = '4.7.20';
+UPDATE civicrm_domain SET version = '4.7.25';
