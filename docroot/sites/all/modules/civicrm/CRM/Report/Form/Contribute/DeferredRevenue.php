@@ -302,7 +302,7 @@ class CRM_Report_Form_Contribute_DeferredRevenue extends CRM_Report_Form {
         ON entity_financial_trxn_item.entity_id = {$this->_aliases['civicrm_financial_item']}.id
         AND entity_financial_trxn_item.entity_table = 'civicrm_financial_item'
       INNER JOIN civicrm_financial_trxn {$this->_aliases['civicrm_financial_trxn_1']}
-        ON {$this->_aliases['civicrm_financial_trxn_1']}.from_financial_account_id = {$this->_aliases['civicrm_financial_account']}.id
+        ON {$this->_aliases['civicrm_financial_trxn_1']}.to_financial_account_id = {$this->_aliases['civicrm_financial_account']}.id
         AND {$this->_aliases['civicrm_financial_trxn_1']}.id =  entity_financial_trxn_item.financial_trxn_id 
       INNER JOIN civicrm_entity_financial_trxn financial_trxn_contribution
         ON financial_trxn_contribution.financial_trxn_id = {$this->_aliases['civicrm_financial_trxn_1']}.id
@@ -384,6 +384,13 @@ class CRM_Report_Form_Contribute_DeferredRevenue extends CRM_Report_Form {
    */
   public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_financial_account']}.id,  {$this->_aliases['civicrm_financial_account_1']}.id, {$this->_aliases['civicrm_financial_item']}.id";
+    $this->_select = CRM_Contact_BAO_Query::appendAnyValueToSelect(
+      $this->_selectClauses,
+      array(
+        "{$this->_aliases['civicrm_financial_account_1']}.id",
+        "{$this->_aliases['civicrm_financial_item']}.id",
+      )
+    );
   }
 
   /**

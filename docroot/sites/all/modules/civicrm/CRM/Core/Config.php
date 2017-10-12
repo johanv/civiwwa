@@ -261,6 +261,28 @@ class CRM_Core_Config extends CRM_Core_Config_MagicMerge {
   }
 
   /**
+   * Function to get environment.
+   *
+   * @param string $env
+   * @param bool $reset
+   *
+   * @return string
+   */
+  public static function environment($env = NULL, $reset = FALSE) {
+    static $environment;
+    if ($env) {
+      $environment = $env;
+    }
+    if ($reset || empty($environment)) {
+      $environment = Civi::settings()->get('environment');
+    }
+    if (!$environment) {
+      $environment = 'Production';
+    }
+    return $environment;
+  }
+
+  /**
    * Do general cleanup of caches, temp directories and temp tables
    * CRM-8739
    *
@@ -489,7 +511,7 @@ class CRM_Core_Config extends CRM_Core_Config_MagicMerge {
    * Conditionally fire an event during the first page run.
    *
    * The install system is currently implemented several times, so it's hard to add
-   * new installation logic. We use a poor-man's method to detect the first run.
+   * new installation logic. We use a makeshift method to detect the first run.
    *
    * Situations to test:
    *  - New installation
