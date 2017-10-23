@@ -24,4 +24,7 @@ class CRM_Newsletter_Groups {
   public static function NEWSLETTER() {
     return CRM_IdCache_Cache_Generic::getId('Group', 'newsletter');
   }
+  public static function PRESS() {
+      return CRM_IdCache_Cache_Generic::getId('Group', 'press');
+  }
 }
