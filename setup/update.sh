@@ -40,13 +40,14 @@ $DRUSH cc all
 $DRUSH -u 1 cvapi Extension.upgrade
 $DRUSH -u 1 cvapi ApiAccess.reconfigure
 
-$DRUSH vset maintenance_mode 0
-$DRUSH cc all
-
 if [ "$1" = "dev" ]
 then
     $DRUSH en -y civiwwa_dev
+    $DRUSH cvapi Extension.disable key=uk.co.vedaconsulting.mailchimp
 fi
+
+$DRUSH vset maintenance_mode 0
+$DRUSH cc all
 
 $DRUSH uli --uri=http://localhost
 $DRUSH cc all

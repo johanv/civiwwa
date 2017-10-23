@@ -3,5 +3,10 @@
     "name": "newsletter",
     "title": "Nieuwsbrief",
     "description": "Nieuwsbrief IWWA"
+  },
+  "press": {
+    "name": "press",
+    "title": "Perslijst",
+    "description": "Perslijst"
   }
 }
