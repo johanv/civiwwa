@@ -38,6 +38,20 @@ class CRM_Newsletter_Upgrader extends CRM_Newsletter_Upgrader_Base {
     return !$result['is_error'] && $result['count'] == 1;
   }
 
+  public function upgrade_4701() {
+      $configResult = civicrm_api3('Civiconfig', 'load_json', [
+          // there should be a better way to do this.
+          'path' => realpath(__DIR__ . '/../../') . '/resources/'
+      ]);
+
+      $result = civicrm_api3('Group', 'create', [
+          'id' => CRM_Newsletter_Groups::PRESS(),
+          CRM_Newsletter_Fields::MC_LIST_ID() => CRM_Core_BAO_Setting::getItem('iwwa_newsletter', 'press_list_id'),
+          'is_active' => TRUE,
+      ]);
+      return (!$configResult['is_error'] && !$result['is_error']);
+  }
+
   /**
    * Enable the extension.
    *
