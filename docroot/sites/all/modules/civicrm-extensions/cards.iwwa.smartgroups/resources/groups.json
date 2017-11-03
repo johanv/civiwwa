@@ -1,0 +1,13 @@
+{
+    "all_participants": {
+        "name": "all_participants",
+        "title": "Iedereen die ooit inschreef",
+        "description": "Iedereen die ooit ingeschreven was voor een evenement",
+        "is_active": 1,
+        "is_reserved": 1,
+        "form_values": [
+            ["participant_test", "=", "0"],
+            ["contact_type", "IN", {"Individual": "Individual"}]
+        ]
+    }
+}
