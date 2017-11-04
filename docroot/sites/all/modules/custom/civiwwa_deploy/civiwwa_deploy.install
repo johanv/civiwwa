@@ -116,3 +116,14 @@ function civiwwa_deploy_update_7109(&$sandbox) {
   civicrm_initialize();
   civicrm_api3('Extension', 'enable', ['key' => 'ca.bidon.civiexportexcel']);
 }
+
+
+/**
+ * Enable smartgroups and idotproof extensions (#73).
+ */
+function civiwwa_deploy_update_7110(&$sandbox) {
+  civicrm_initialize();
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.smartgroups']);
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.idiotproof']);  
+}
+
