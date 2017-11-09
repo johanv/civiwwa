@@ -32,7 +32,10 @@ return array(
     'add' => '4.7',
     'is_domain' => 0,
     'is_contact' => 0,
-    'description' => 'CiviCRM group name of "general members"',
+    'description' => 'Name of CiviCRM group that defines the "general members"',
+    'title' => 'General members group',
     'help_text' => 'Name of a CiviCRM group. The idiotproof extension provides general functionality like "show me all the members"; Contacts in the CiviCRM group with this name are considered to be "the members".',
+    'html_type' => 'Text',
+    'quick_form_type' => 'Element',
   )
 );
