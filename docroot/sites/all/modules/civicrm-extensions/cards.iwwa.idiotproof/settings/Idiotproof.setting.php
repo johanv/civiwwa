@@ -37,5 +37,22 @@ return array(
     'help_text' => 'Name of a CiviCRM group. The idiotproof extension provides general functionality like "show me all the members"; Contacts in the CiviCRM group with this name are considered to be "the members".',
     'html_type' => 'Text',
     'quick_form_type' => 'Element',
+  ),
+  'idiotproof_primary_relationship_type' => array(
+    'group_name' => 'Idiotproof Preferences',
+    'group' => 'idiotproof',
+    'name' => 'idiotproof_primary_relationship_type',
+    // TODO: Can't I have a drop down with available types?
+    'type' => 'String',
+    'default' => '',
+    'add' => '4.7',
+    'is_domain' => 0,
+    'is_contact' => 0,
+    'description' => 'Relationships of this type will be shown in the custom searches of the idiotproof extension.',
+    'title' => 'Primary relationship type',
+    // TODO: support relationship direction. For the moment only a_b is supported
+    'help_text' => 'Name of a CiviCRM relationship type (name_a_b). Choose the "most important" relationship type for individuals in your CRM.',
+    'html_type' => 'Text',
+    'quick_form_type' => 'Element',
   )
 );
