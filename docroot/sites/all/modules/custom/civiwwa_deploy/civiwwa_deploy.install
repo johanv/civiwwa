@@ -125,6 +125,7 @@ function civiwwa_deploy_update_7110(&$sandbox) {
   civicrm_initialize();
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.smartgroups']);
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.settingsform']);
-  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.idiotproof']);  
+  civicrm_api3('Extension', 'enable', ['key' => 'ca.bidon.civiexportexcel']);
+  civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.idiotproof']);
 }
 
