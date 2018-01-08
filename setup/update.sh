@@ -43,6 +43,7 @@ $DRUSH -u 1 cvapi ApiAccess.reconfigure
 if [ "$1" = "dev" ]
 then
     $DRUSH en -y civiwwa_dev
+    $DRUSH cvapi Extension.disable key=cards.iwwa.newsletter
     $DRUSH cvapi Extension.disable key=uk.co.vedaconsulting.mailchimp
 fi
 
