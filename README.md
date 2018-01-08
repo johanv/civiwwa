@@ -36,7 +36,7 @@ sudo docker-compose exec buildkit /opt/setup/build.sh
 ## Copy from live (need ssh access to server)
 
 ```
-sudo docker-compose exec buildkit /opt/setup/createdevformlive.sh
+sudo docker-compose exec buildkit /opt/setup/createdevfromlive.sh
 ```
 
 You will get errors because the script tries to write backups
