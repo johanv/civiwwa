@@ -502,9 +502,15 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * @param $value
+   * Strip thousand separator from a money string.
    *
-   * @return mixed
+   * Note that this should be done at the form layer. Once we are processing
+   * money at the BAO or processor layer we should be working with something that
+   * is already in a normalised format.
+   *
+   * @param string $value
+   *
+   * @return string
    */
   public static function cleanMoney($value) {
     // first remove all white space
@@ -909,6 +915,17 @@ class CRM_Utils_Rule {
     if ($lowDate > $highDate) {
       $errors[$fieldName . '_range_error'] = ts('%1: Please check that your date range is in correct chronological order.', array(1 => $title));
     }
+  }
+
+  /**
+   * @param string $key Extension Key to check
+   * @return bool
+   */
+  public static function checkExtesnionKeyIsValid($key = NULL) {
+    if (!empty($key) && !preg_match('/^[0-9a-zA-Z._-]+$/', $key)) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
 }

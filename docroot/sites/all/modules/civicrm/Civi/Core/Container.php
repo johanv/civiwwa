@@ -208,6 +208,11 @@ class Container {
         ->setFactory(array($class, 'singleton'));
     }
 
+    $container->setDefinition('civi.mailing.triggers', new Definition(
+      'Civi\Core\SqlTrigger\TimestampTriggers',
+      array('civicrm_mailing', 'Mailing')
+    ))->addTag('kernel.event_listener', array('event' => 'hook_civicrm_triggerInfo', 'method' => 'onTriggerInfo'));
+
     $container->setDefinition('civi.activity.triggers', new Definition(
       'Civi\Core\SqlTrigger\TimestampTriggers',
       array('civicrm_activity', 'Activity')
@@ -293,6 +298,8 @@ class Container {
     $dispatcher->addListener('hook_civicrm_eventDefs', array('\Civi\API\Events', 'hookEventDefs'));
     $dispatcher->addListener('hook_civicrm_eventDefs', array('\Civi\Core\Event\SystemInstallEvent', 'hookEventDefs'));
     $dispatcher->addListener('hook_civicrm_buildAsset', array('\Civi\Angular\Page\Modules', 'buildAngularModules'));
+    $dispatcher->addListener('hook_civicrm_buildAsset', array('\CRM_Utils_VisualBundle', 'buildAssetJs'));
+    $dispatcher->addListener('hook_civicrm_buildAsset', array('\CRM_Utils_VisualBundle', 'buildAssetCss'));
     $dispatcher->addListener('civi.dao.postInsert', array('\CRM_Core_BAO_RecurringEntity', 'triggerInsert'));
     $dispatcher->addListener('civi.dao.postUpdate', array('\CRM_Core_BAO_RecurringEntity', 'triggerUpdate'));
     $dispatcher->addListener('civi.dao.postDelete', array('\CRM_Core_BAO_RecurringEntity', 'triggerDelete'));
