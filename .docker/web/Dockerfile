@@ -17,5 +17,8 @@ memory_limit = 256M \n\
 max_execution_time = 120 \n\
 " > /usr/local/etc/php/php.ini
 
+# excel export
+RUN docker-php-ext-install zip
+
 RUN a2enmod rewrite
 RUN apachectl graceful
