@@ -6,7 +6,3 @@ https://www.drupal.org/files/fboauth-keep_the_scheme_consistent-1794458-1.patch
 https://www.drupal.org/node/2769345
 https://www.drupal.org/files/issues/fboauth-login_button_alt_text-2769345-3.patch
 
-civicrm
-=======
-https://issues.civicrm.org/jira/browse/CRM-8140
-https://github.com/civicrm/civicrm-core/pull/11458
