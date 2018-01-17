@@ -22,6 +22,22 @@
  * Settings metadata file
  */
 return array(
+  'idiotproof_menu_name' => array(
+    'group_name' => 'Idiotproof Preferences',
+    'group' => 'idiotproof',
+    'name' => 'idiotproof_menu_name',
+    // TODO: Can't I have a drop down with available groups?
+    'type' => 'String',
+    'default' => '',
+    'add' => '4.7',
+    'is_domain' => 0,
+    'is_contact' => 0,
+    'description' => 'Caption of the idiotproof menu',
+    'title' => 'Menu caption',
+    'help_text' => 'The idiotproof extension creates a menu in the navigation bar. Enter the title of this menu in here.',
+    'html_type' => 'Text',
+    'quick_form_type' => 'Element',
+  ),
   'idiotproof_general_members_group_name' => array(
     'group_name' => 'Idiotproof Preferences',
     'group' => 'idiotproof',

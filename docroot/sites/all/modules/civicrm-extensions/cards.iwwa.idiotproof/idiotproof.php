@@ -138,15 +138,28 @@ function idiotproof_civicrm_preProcess($formName, &$form) {
  * Implements hook_civicrm_navigationMenu().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- *
+ * @throws CiviCRM_API3_Exception
+ */
 function idiotproof_civicrm_navigationMenu(&$menu) {
+  // E::ts() can be used to translate...
+  $settingsResult = civicrm_api3('Setting', 'get', ['return' => 'idiotproof_menu_name']);
+  $caption = CRM_Utils_Array::first($settingsResult['values'])['idiotproof_menu_name'];
+
   _idiotproof_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => E::ts('The Page'),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
+    'label' => $caption,
+    'name' => 'idiotproof_submenu',
+    'url' => null,
+    'permission' => 'access CiviCRM',
     'separator' => 0,
   ));
+
+  _idiotproof_civix_insert_navigation_menu($menu, 'idiotproof_submenu', array(
+    'label' => E::ts('Members list'),
+    'name' => 'the_page',
+    'url' => 'civicrm/the-page',
+    'permission' => 'access CiviCRM',
+    'separator' => 0,
+  ));
+
   _idiotproof_civix_navigationMenu($menu);
 } // */
