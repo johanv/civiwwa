@@ -1,6 +1,7 @@
 # civicrm patches
 
-## API double chaining
+## Export hook for custom searches
 
-* https://issues.civicrm.org/jira/browse/CRM-21246
-* https://github.com/civicrm/civicrm-core/pull/11056
+* `CRM-21657-custom_search_export_hook.patch`
+* https://issues.civicrm.org/jira/browse/CRM-21657
+* https://github.com/civicrm/civicrm-core/pull/11517
