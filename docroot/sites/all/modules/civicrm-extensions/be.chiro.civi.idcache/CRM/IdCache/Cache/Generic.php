@@ -32,7 +32,6 @@ class CRM_IdCache_Cache_Generic extends CRM_IdCache_Cache {
       'CaseType',
       'ContactType',
       'CustomGroup',
-      'CustomSearch',
       'FinancialAccount',
       'FinancialType',
       'Group',
