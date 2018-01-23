@@ -154,7 +154,7 @@ function idiotproof_civicrm_navigationMenu(&$menu) {
     'separator' => 0,
   ));
 
-  $membersSearchId = CRM_IdCache_Cache_CustomSearch::getSearchId('CRM_Idiotproof_Form_Search_CRM_Idiotproof_Form_Search_GeneralMembers');
+  $membersSearchId = CRM_IdCache_Cache_CustomSearch::getSearchId('CRM_Idiotproof_Form_Search_GeneralMembers');
 
   _idiotproof_civix_insert_navigation_menu($menu, 'idiotproof_submenu', array(
     'label' => E::ts('Members list'),

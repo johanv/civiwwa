@@ -3,7 +3,7 @@
 /**
  * A custom contact search
  */
-class CRM_Idiotproof_Form_Search_CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   function __construct(&$formValues) {
     parent::__construct($formValues);
 
