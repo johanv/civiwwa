@@ -26,7 +26,6 @@ return array(
     'group_name' => 'Idiotproof Preferences',
     'group' => 'idiotproof',
     'name' => 'idiotproof_menu_name',
-    // TODO: Can't I have a drop down with available groups?
     'type' => 'String',
     'default' => '',
     'add' => '4.7',

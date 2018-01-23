@@ -26,5 +26,6 @@
   </civix>
   <requires>
     <ext>cards.iwwa.settingsform</ext>
+    <ext>be.chiro.civi.idcache</ext>
   </requires>
 </extension>

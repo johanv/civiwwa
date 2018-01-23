@@ -139,6 +139,7 @@ function idiotproof_civicrm_preProcess($formName, &$form) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
  * @throws CiviCRM_API3_Exception
+ * @throws Exception
  */
 function idiotproof_civicrm_navigationMenu(&$menu) {
   // E::ts() can be used to translate...
@@ -153,10 +154,12 @@ function idiotproof_civicrm_navigationMenu(&$menu) {
     'separator' => 0,
   ));
 
+  $membersSearchId = CRM_IdCache_Cache_CustomSearch::getSearchId('CRM_Idiotproof_Form_Search_CRM_Idiotproof_Form_Search_GeneralMembers');
+
   _idiotproof_civix_insert_navigation_menu($menu, 'idiotproof_submenu', array(
     'label' => E::ts('Members list'),
     'name' => 'the_page',
-    'url' => 'civicrm/the-page',
+    'url' => "civicrm/contact/search/custom?csid={$membersSearchId}&reset=1",
     'permission' => 'access CiviCRM',
     'separator' => 0,
   ));
