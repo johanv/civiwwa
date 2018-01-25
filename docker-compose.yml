@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     environment:
-      XDEBUG_CONFIG: remote_host=172.23.0.1
+      XDEBUG_CONFIG: remote_host=172.18.0.1
     volumes:
       - ./docroot:/var/www/html:z
       - ./setup:/opt/setup:z

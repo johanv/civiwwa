@@ -6,14 +6,14 @@
 return array (
   0 => 
   array (
-    'name' => 'CRM_Idiotproof_Form_Search_GeneralMembers',
+    'name' => 'CRM_Idiotproof_Form_Search_Organizations',
     'entity' => 'CustomSearch',
     'params' => 
     array (
       'version' => 3,
-      'label' => 'General members',
-      'description' => 'General members (cards.iwwa.idiotproof)',
-      'class_name' => 'CRM_Idiotproof_Form_Search_GeneralMembers',
+      'label' => 'Organizations',
+      'description' => 'Organizations (cards.iwwa.idiotproof)',
+      'class_name' => 'CRM_Idiotproof_Form_Search_Organizations',
     ),
   ),
 );
