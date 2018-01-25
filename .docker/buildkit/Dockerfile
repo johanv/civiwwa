@@ -1,8 +1,8 @@
-FROM php:cli
+FROM php:7.1-cli
 MAINTAINER johan.vervloet@chiro.be
 
 RUN apt-get update \
-  && apt-get install -yq mysql-client libxml2-dev libmcrypt-dev libpng12-dev git unzip zip \
+  && apt-get install -yq mysql-client libxml2-dev libmcrypt-dev libpng-dev git unzip zip \
   && docker-php-ext-install xml mcrypt gd pdo pdo_mysql mysqli mbstring \
   && git clone https://github.com/civicrm/civicrm-buildkit.git /opt/buildkit
 
