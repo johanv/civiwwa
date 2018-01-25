@@ -49,7 +49,7 @@ class CRM_Idiotproof_Form_Search_Organizations extends CRM_Contact_Form_Search_C
   function buildForm(&$form) {
     CRM_Utils_System::setTitle(ts('Organizations'));
 
-    // contact type selection
+    // Drop down for organization sub types:
     $result = civicrm_api3('ContactType', 'get', [
       'parent_id' => 'Organization'
     ]);
@@ -59,10 +59,15 @@ class CRM_Idiotproof_Form_Search_Organizations extends CRM_Contact_Form_Search_C
     };
     $form->add('select', 'contact_sub_type', ts('Find...'), $contactTypeChoices, TRUE, array('class' => 'crm-select2 huge'));
 
-    // country - province magic. Don't need to add the state_province_id field explicitly.
-    $form->addChainSelect('state_province_id');
-    $country = array('' => ts('- select -')) + CRM_Core_PseudoConstant::country();
-    $form->add('select', 'country_id', ts('Country'), $country, FALSE, array('class' => 'crm-select2'));
+    // Drop down for state/province of default country
+    $result = civicrm_api3('StateProvince', 'get', [
+      'country_id' => Civi::settings()->get('defaultContactCountry')
+    ]);
+    $stateProvinceChoices = [0 => ts('(all)')];
+    foreach ($result['values'] as $value) {
+      $stateProvinceChoices[$value['id']] = $value['name'];
+    }
+    $form->add('select', 'state_province_id', ts('State/Province'), $stateProvinceChoices, FALSE, array('class' => 'crm-select2 huge'));
 
     /**
      * if you are using the standard template, this array tells the template what elements
@@ -70,7 +75,6 @@ class CRM_Idiotproof_Form_Search_Organizations extends CRM_Contact_Form_Search_C
      */
     $form->assign('elements', array(
       'contact_sub_type',
-      'country_id',
       'state_province_id',
     ));
   }
@@ -81,10 +85,7 @@ class CRM_Idiotproof_Form_Search_Organizations extends CRM_Contact_Form_Search_C
    * @return array
    */
   public function setDefaultValues() {
-    $defaults = array(
-      'country_id' => Civi::settings()->get('defaultContactCountry'),
-    );
-    return $defaults;
+    return [];
   }
 
   /**
@@ -175,13 +176,6 @@ class CRM_Idiotproof_Form_Search_Organizations extends CRM_Contact_Form_Search_C
     if ($stateId) {
       $params[1] = [$stateId, 'Integer'];
       $clause[] = "ca.state_province_id = %1";
-    }
-
-    $countryId = CRM_Utils_Array::value('country_id', $this->_formValues);
-
-    if ($countryId) {
-      $params[2] = [$countryId, 'Integer'];
-      $clause[] = 'cc.id = %2';
     }
 
     if (!empty($clause)) {
