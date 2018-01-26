@@ -146,6 +146,7 @@ function idiotproof_civicrm_navigationMenu(&$menu) {
   $settingsResult = civicrm_api3('Setting', 'get', ['return' => 'idiotproof_menu_name']);
   $caption = CRM_Utils_Array::first($settingsResult['values'])['idiotproof_menu_name'];
 
+  // Add the idiotproof submenu.
   _idiotproof_civix_insert_navigation_menu($menu, NULL, array(
     'label' => $caption,
     'name' => 'idiotproof_submenu',
@@ -154,12 +155,22 @@ function idiotproof_civicrm_navigationMenu(&$menu) {
     'separator' => 0,
   ));
 
+  // Add menu item for members list
   $membersSearchId = CRM_IdCache_Cache_CustomSearch::getSearchId('CRM_Idiotproof_Form_Search_GeneralMembers');
-
   _idiotproof_civix_insert_navigation_menu($menu, 'idiotproof_submenu', array(
     'label' => E::ts('Members list'),
-    'name' => 'the_page',
+    'name' => 'members_list',
     'url' => "civicrm/contact/search/custom?csid={$membersSearchId}&reset=1",
+    'permission' => 'access CiviCRM',
+    'separator' => 0,
+  ));
+
+  // Add menu item for organizations list
+  $organizationsSearchId = CRM_IdCache_Cache_CustomSearch::getSearchId('CRM_Idiotproof_Form_Search_Organizations');
+  _idiotproof_civix_insert_navigation_menu($menu, 'idiotproof_submenu', array(
+    'label' => E::ts('Organizations list'),
+    'name' => 'organizations_list',
+    'url' => "civicrm/contact/search/custom?csid={$organizationsSearchId}&reset=1",
     'permission' => 'access CiviCRM',
     'separator' => 0,
   ));
