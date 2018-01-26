@@ -50,17 +50,25 @@ class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_
   function buildForm(&$form) {
     CRM_Utils_System::setTitle(ts('General members'));
 
-    // country - province magic. Don't need to add the state_province_id field explicitly.
-    $form->addChainSelect('state_province_id');
-    $country = array('' => ts('- select -')) + CRM_Core_PseudoConstant::country();
-    $form->add('select', 'country_id', ts('Country'), $country, FALSE, array('class' => 'crm-select2'));
+    // Don't use the 'default' state/province-country magic, because if the user
+    // wants to filter on province, he will probably only be interested in the
+    // provinces of the default country.
+
+    // Drop down for state/province of default country
+    $result = civicrm_api3('StateProvince', 'get', [
+      'country_id' => Civi::settings()->get('defaultContactCountry')
+    ]);
+    $stateProvinceChoices = [0 => ts('(all)')];
+    foreach ($result['values'] as $value) {
+      $stateProvinceChoices[$value['id']] = $value['name'];
+    }
+    $form->add('select', 'state_province_id', ts('State/Province'), $stateProvinceChoices, FALSE, array('class' => 'crm-select2 huge'));
 
     /**
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
     $form->assign('elements', array(
-      'country_id',
       'state_province_id'
     ));
   }
@@ -71,10 +79,7 @@ class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_
    * @return array
    */
   public function setDefaultValues() {
-    $defaults = array(
-      'country_id' => Civi::settings()->get('defaultContactCountry'),
-    );
-    return $defaults;
+    return [];
   }
 
   /**
@@ -178,7 +183,7 @@ class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_
    */
   function where($includeContactIDs = FALSE) {
     $params = [];
-    $clause = ['1 = 1'];
+    $clause = ["contact_a.contact_type = 'Individual'"];
 
     $stateId = CRM_Utils_Array::value('state_province_id', $this->_formValues);
 
@@ -187,12 +192,8 @@ class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_
       $clause[] = "ca.state_province_id = %1";
     }
 
-    $countryId = CRM_Utils_Array::value('country_id', $this->_formValues);
-
-    if ($countryId) {
-      $params[2] = [$countryId, 'Integer'];
-      $clause[] = 'cc.id = %2';
-    }
+    // Admitted, this is a little stupid since there is at most 1 clause.
+    // But hey, now we can add more filters to the form if needed.
 
     if (!empty($clause)) {
       $where = implode(' AND ', $clause);
