@@ -176,4 +176,27 @@ function idiotproof_civicrm_navigationMenu(&$menu) {
   ));
 
   _idiotproof_civix_navigationMenu($menu);
-} // */
+}
+
+function idiotproof_civicrm_searchTasks($objectType, &$tasks) {
+  if ($objectType != 'contact') {
+    return;
+  }
+
+  // TODO: make this configurable
+  $allowed = [
+    CRM_Contact_Task::TAG_CONTACTS,
+    CRM_Contact_Task::REMOVE_CONTACTS,
+    CRM_Contact_Task::EXPORT_CONTACTS,
+    CRM_Contact_Task::MERGE_CONTACTS,
+    CRM_Contact_Task::ADD_EVENT,
+  ];
+
+  foreach ($tasks as $key => $value) {
+    if (!in_array($key, $allowed)) {
+      unset($tasks[$key]);
+    }
+  }
+
+  return;
+}
