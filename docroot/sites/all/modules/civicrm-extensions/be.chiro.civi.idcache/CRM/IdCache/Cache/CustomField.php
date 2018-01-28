@@ -46,8 +46,7 @@ class CRM_IdCache_Cache_CustomField extends CRM_IdCache_Cache {
   /**
    * @return array of entity type names that this class supports.
    */
-  public static function acceptedEntityTypes()
-  {
+  public static function acceptedEntityTypes() {
     return ['CustomField'];
   }
 
@@ -58,8 +57,7 @@ class CRM_IdCache_Cache_CustomField extends CRM_IdCache_Cache {
    * @param string $extra name of the custom field set
    * @return array
    */
-  protected static function getApiParams($name, $extra)
-  {
+  protected static function getApiParams($name, $extra) {
     return [
       'name' => $name,
       'custom_group_id' => $extra,
