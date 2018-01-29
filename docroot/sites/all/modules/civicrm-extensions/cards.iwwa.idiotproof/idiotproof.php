@@ -186,7 +186,7 @@ function idiotproof_civicrm_searchTasks($objectType, &$tasks) {
   // TODO: make this configurable
   $allowed = [
     CRM_Contact_Task::TAG_CONTACTS,
-    CRM_Contact_Task::REMOVE_CONTACTS,
+    CRM_Contact_Task::REMOVE_TAGS,
     CRM_Contact_Task::EXPORT_CONTACTS,
     CRM_Contact_Task::MERGE_CONTACTS,
     CRM_Contact_Task::ADD_EVENT,
