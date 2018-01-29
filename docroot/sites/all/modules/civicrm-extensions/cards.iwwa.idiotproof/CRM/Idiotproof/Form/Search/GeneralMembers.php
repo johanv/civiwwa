@@ -100,18 +100,20 @@ class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_
   /**
    * Construct a full SQL query which returns one page worth of results
    *
-   * @param int $offset
-   * @param int $rowcount
+   * @param int  $offset
+   * @param int  $rowcount
    * @param null $sort
    * @param bool $includeContactIDs
    * @param bool $justIDs
+   *
    * @return string, sql
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $justIDs = FALSE) {
     // delegate to $this->sql(), $this->select(), $this->from(), $this->where(), etc.
     // Let's group by contact_a.id, so we don't get dupes if a contact is in multiple clubs.
     $groupBy = 'GROUP BY contact_a.id';
-    return $this->sql($this->select(), $offset, $rowcount, $sort, $includeContactIDs, $groupBy);
+    $sql = $this->sql($this->select(), $offset, $rowcount, $sort, $includeContactIDs, $groupBy);
+    return $sql;
   }
 
   /**
@@ -162,11 +164,28 @@ class CRM_Idiotproof_Form_Search_GeneralMembers extends CRM_Contact_Form_Search_
         LEFT OUTER JOIN civicrm_contact clb ON r.contact_id_b = clb.id ";
     }
 
-    // TODO: filter on 'members' smart group.
+    $groupJoin = '';
+    // Check for a smart group with 'general members'
+    $groupNameResult = civicrm_api3(
+      'Setting',
+      'get',
+      ['return' => 'idiotproof_general_members_group_name']
+    );
+    if ($groupNameResult['count']) {
+      $value = CRM_Utils_Array::first($groupNameResult['values']);
+      $name = $value['idiotproof_general_members_group_name'];
+      $groupId = CRM_IdCache_Cache_Generic::getId('Group', $name);
+      is_numeric($groupId) or die ('Group ID should be numeric');
+      // Make sure the contacts of the members group are preloaded
+      CRM_Contact_BAO_GroupContactCache::loadAll($groupId);
+      $groupJoin = "JOIN civicrm_group_contact_cache gcc ON contact_a.id = gcc.contact_id
+        AND gcc.group_id=$groupId ";
+    }
 
     $from = "
       FROM civicrm_contact contact_a
       $relationshipJoins
+      $groupJoin
       LEFT OUTER JOIN civicrm_address ca ON ca.contact_id = contact_a.id AND ca.is_primary = 1
       LEFT OUTER JOIN civicrm_country cc ON ca.country_id = cc.id
       LEFT OUTER JOIN civicrm_email ce ON ce.contact_id = contact_a.id AND ce.is_primary = 1
