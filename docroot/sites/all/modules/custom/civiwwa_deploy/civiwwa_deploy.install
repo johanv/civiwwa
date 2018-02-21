@@ -120,6 +120,8 @@ function civiwwa_deploy_update_7109(&$sandbox) {
 
 /**
  * Enable smartgroups and idotproof extensions (#73).
+ *
+ * @throws CiviCRM_API3_Exception
  */
 function civiwwa_deploy_update_7110(&$sandbox) {
   civicrm_initialize();
@@ -127,5 +129,16 @@ function civiwwa_deploy_update_7110(&$sandbox) {
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.settingsform']);
   civicrm_api3('Extension', 'enable', ['key' => 'ca.bidon.civiexportexcel']);
   civicrm_api3('Extension', 'enable', ['key' => 'cards.iwwa.idiotproof']);
+}
+
+/**
+ * Enables the exportpermission extension (#79).
+ * @param $sandbox
+ *
+ * @throws CiviCRM_API3_Exception
+ */
+function civiwwa_deploy_update_7111(&$sandbox) {
+  civicrm_initialize();
+  civicrm_api3('Extension', 'enable', ['key' => 'net.ourpowerbase.exportpermission']);
 }
 
