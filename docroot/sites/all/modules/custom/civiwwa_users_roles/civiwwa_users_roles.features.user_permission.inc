@@ -100,6 +100,15 @@ function civiwwa_users_roles_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'access export menu'.
+  $permissions['access export menu'] = array(
+    'name' => 'access export menu',
+    'roles' => array(
+      'CivIWWA power user' => 'CivIWWA power user',
+    ),
+    'module' => 'civicrm',
+  );
+
   // Exported permission: 'access uploaded files'.
   $permissions['access uploaded files'] = array(
     'name' => 'access uploaded files',
