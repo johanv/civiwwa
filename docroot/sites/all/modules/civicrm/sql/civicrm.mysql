@@ -2241,6 +2241,7 @@ CREATE TABLE `civicrm_navigation` (
      `label` varchar(255)    COMMENT 'Navigation Title',
      `name` varchar(255)    COMMENT 'Internal Name',
      `url` varchar(255)    COMMENT 'url in case of custom navigation link',
+     `icon` varchar(255) NULL  DEFAULT NULL COMMENT 'CSS class name for an icon',
      `permission` varchar(255)    COMMENT 'Permission for menu item',
      `permission_operator` varchar(3)    COMMENT 'Permission Operator',
      `parent_id` int unsigned    COMMENT 'Parent navigation item, used for grouping',
@@ -2724,7 +2725,7 @@ CREATE TABLE `civicrm_subscription_history` (
      `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Internal Id',
      `contact_id` int unsigned NOT NULL   COMMENT 'Contact Id',
      `group_id` int unsigned    COMMENT 'Group Id',
-     `date` datetime NOT NULL   COMMENT 'Date of the (un)subscription',
+     `date` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP COMMENT 'Date of the (un)subscription',
      `method` varchar(8)    COMMENT 'How the (un)subscription was triggered',
      `status` varchar(8)    COMMENT 'The state of the contact within the group',
      `tracking` varchar(255)    COMMENT 'IP address or other tracking info' 
@@ -3115,7 +3116,7 @@ CREATE TABLE `civicrm_membership_type` (
      `description` varchar(255)    COMMENT 'Description of Membership Type',
      `member_of_contact_id` int unsigned NOT NULL   COMMENT 'Owner organization for this membership type. FK to Contact ID',
      `financial_type_id` int unsigned NOT NULL   COMMENT 'If membership is paid by a contribution - what financial type should be used. FK to civicrm_financial_type.id',
-     `minimum_fee` decimal(20,2)   DEFAULT 0 COMMENT 'Minimum fee for this membership (0 for free/complimentary memberships).',
+     `minimum_fee` decimal(18,9)   DEFAULT 0 COMMENT 'Minimum fee for this membership (0 for free/complimentary memberships).',
      `duration_unit` varchar(8)    COMMENT 'Unit in which membership period is expressed.',
      `duration_interval` int    COMMENT 'Number of duration units in membership period (e.g. 1 year, 12 months).',
      `period_type` varchar(8)    COMMENT 'Rolling membership period starts on signup date. Fixed membership periods start on fixed_period_start_day.',
@@ -3755,7 +3756,8 @@ CREATE TABLE `civicrm_mailing` (
      `msg_template_id` int unsigned    COMMENT 'FK to the message template.',
      `override_verp` tinyint   DEFAULT 0 COMMENT 'Should we overrite VERP address in Reply-To',
      `created_id` int unsigned    COMMENT 'FK to Contact ID who first created this mailing',
-     `created_date` timestamp NULL  DEFAULT CURRENT_TIMESTAMP COMMENT 'Date and time this mailing was created.',
+     `created_date` timestamp NULL  DEFAULT NULL COMMENT 'Date and time this mailing was created.',
+     `modified_date` timestamp NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the mailing (or closely related entity) was created or modified or deleted.',
      `scheduled_id` int unsigned    COMMENT 'FK to Contact ID who scheduled this mailing',
      `scheduled_date` timestamp NULL  DEFAULT NULL COMMENT 'Date and time this mailing was scheduled.',
      `approver_id` int unsigned    COMMENT 'FK to Contact ID who approved this mailing',
@@ -4396,7 +4398,7 @@ CREATE TABLE `civicrm_price_field_value` (
      `description` text   DEFAULT NULL COMMENT '>Price field option description.',
      `help_pre` text   DEFAULT NULL COMMENT 'Price field option pre help text.',
      `help_post` text   DEFAULT NULL COMMENT 'Price field option post field help.',
-     `amount` varchar(512) NOT NULL   COMMENT 'Price field option amount',
+     `amount` decimal(18,9) NOT NULL   COMMENT 'Price field option amount',
      `count` int unsigned   DEFAULT NULL COMMENT 'Number of participants per field option',
      `max_value` int unsigned   DEFAULT NULL COMMENT 'Max number of participants per field options',
      `weight` int   DEFAULT 1 COMMENT 'Order in which the field options should appear',
@@ -4405,7 +4407,8 @@ CREATE TABLE `civicrm_price_field_value` (
      `is_default` tinyint   DEFAULT 0 COMMENT 'Is this default price field option',
      `is_active` tinyint   DEFAULT 1 COMMENT 'Is this price field value active',
      `financial_type_id` int unsigned   DEFAULT NULL COMMENT 'FK to Financial Type.',
-     `non_deductible_amount` decimal(20,2) NOT NULL  DEFAULT 0.0 COMMENT 'Portion of total amount which is NOT tax deductible.' 
+     `non_deductible_amount` decimal(20,2) NOT NULL  DEFAULT 0.0 COMMENT 'Portion of total amount which is NOT tax deductible.',
+     `visibility_id` int unsigned   DEFAULT 1 COMMENT 'Implicit FK to civicrm_option_group with name = \'visibility\'' 
 ,
         PRIMARY KEY (`id`)
  

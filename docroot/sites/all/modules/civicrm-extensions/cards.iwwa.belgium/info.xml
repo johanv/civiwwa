@@ -25,6 +25,7 @@
   </civix>
   <requires>
     <ext>be.chiro.civi.queryapitools</ext>
-    <ext>org.civicoop.configitems</ext>
+    <ext>cards.iwwa.settingsform</ext>
+    <ext>ca.bidon.civiexportexcel</ext>
   </requires>
 </extension>

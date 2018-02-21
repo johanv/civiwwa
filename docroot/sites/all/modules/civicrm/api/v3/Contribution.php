@@ -45,6 +45,9 @@ function civicrm_api3_contribution_create(&$params) {
   $values = array();
   _civicrm_api3_custom_format_params($params, $values, 'Contribution');
   $params = array_merge($params, $values);
+  // The BAO should not clean money - it should be done in the form layer & api wrapper
+  // (although arguably the api should expect pre-cleaned it seems to do some cleaning.)
+  $params['skipCleanMoney'] = TRUE;
 
   if (CRM_Financial_BAO_FinancialType::isACLFinancialTypeStatus()) {
     if (empty($params['id'])) {
@@ -525,8 +528,7 @@ function civicrm_api3_contribution_completetransaction(&$params) {
   }
   $contribution = new CRM_Contribute_BAO_Contribution();
   $contribution->id = $params['id'];
-  $contribution->find(TRUE);
-  if (!$contribution->id == $params['id']) {
+  if (!$contribution->find(TRUE)) {
     throw new API_Exception('A valid contribution ID is required', 'invalid_data');
   }
 
