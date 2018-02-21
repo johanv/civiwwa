@@ -18,6 +18,7 @@ features[user_permission][] = access all custom data
 features[user_permission][] = access contact reference fields
 features[user_permission][] = access content
 features[user_permission][] = access content overview
+features[user_permission][] = access export menu
 features[user_permission][] = access uploaded files
 features[user_permission][] = add contacts
 features[user_permission][] = administer Tagsets
