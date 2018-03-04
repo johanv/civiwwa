@@ -31,10 +31,7 @@ class CRM_Belgium_Logic {
    * TODO: import provinces from CSV, and use (cached) provinces from database.
    */
   public static function getProvince($postalCode) {
-    if (!is_numeric($postalCode)) {
-      // TODO: some logging would not hurt.
-      return;
-    }
+    is_numeric($postalCode) || die('$postalCode should be numerical.');
     if ($postalCode < 1300) {
       // Brussels Hoofdstedelijk Gewest
       $stateProvinceId = 5217;
