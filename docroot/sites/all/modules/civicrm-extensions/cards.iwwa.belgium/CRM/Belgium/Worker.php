@@ -33,6 +33,10 @@ class CRM_Belgium_Worker {
    * in advance, we can do all logic in one chained call.
    */
   public function updateProvince($addressId, $postalCode) {
+    if (!is_numeric($postalCode)) {
+      // TODO: some logging would not hurt.
+      return;
+    }
     is_numeric($addressId) or die('$addressId should be numerical.');
     $stateProvinceId = CRM_Belgium_Logic::getProvince($postalCode);
     $result = civicrm_api3('Address', 'get', [
