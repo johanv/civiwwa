@@ -57,8 +57,10 @@ class CRM_Belgium_Worker {
    * FIXME: Inconsistency: This function doesn't overwrite, updateProvince does.
    */
   public function updatePreferredLanguage($addressId, $postalCode) {
-    is_numeric($addressId) or die('$addressId should be numerical.');
-    is_numeric($postalCode) or die('$postalCode should be numerical.');
+    if (!is_numeric($addressId) || !is_numeric($postalCode)) {
+      // TODO: some logging would not hurt.
+      return;
+    }
     $lang = CRM_Belgium_Logic::getLanguage($postalCode);
     if (!empty($lang)) {
       // Only change preferred language if it isn't already set.
