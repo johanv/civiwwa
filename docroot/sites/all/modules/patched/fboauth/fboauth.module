@@ -412,7 +412,8 @@ function fboauth_action_link_properties($action_name, $redirect = NULL, $app_id 
   $return = array(
     'query' => array(
       'client_id' => $app_id,
-      'redirect_uri' => fboauth_action_url('fboauth/' . $action_name, array('absolute' => TRUE, 'query' => $query)),
+      'redirect_uri' => fboauth_action_url('fboauth/' . $action_name, array('absolute' => TRUE)),
+      'state' => serialize($query),
     ),
     'href' => 'https://www.facebook.com/'.variable_get('fboauth_apiversion', 'v2.3').'/dialog/oauth',
     'attributes' => array(),
