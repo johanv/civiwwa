@@ -56,7 +56,14 @@ function fboauth_action_page($action) {
   elseif ($access_token = fboauth_access_token($_REQUEST['code'], $action_name, $app_id, $app_secret)) {
     $destination = fboauth_action_invoke($action_name, $app_id, $access_token);
     if (empty($destination)) {
-      $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : '<front>';
+      $destination = '<front>';
+      if (isset($_REQUEST['state'])) {
+        $state = unserialize($_REQUEST['state']);
+        if (isset($state['destination'])) {
+          $destination = parse_url($state['destination'], PHP_URL_PATH);
+          $_GET['destination'] = $destination;
+        }
+      }
     }
     if (variable_get('fboauth_popup', 1)) {
       // Close the popup and set the parent window to the target destination.
