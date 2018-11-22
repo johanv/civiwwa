@@ -1,10 +1,10 @@
 # CivIWWA
 
-Just another CiviCRM instance.
+This project is dead, because I didn't have enough time to take care for this
+CiviCRM instance :-(
 
-I'll post some documentation later on.
 
-# How to run locally
+## How to run locally
 
 Remove the `.dist` from the files in `docroot/sites/default`.
 ```
